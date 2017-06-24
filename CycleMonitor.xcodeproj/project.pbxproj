@@ -12,6 +12,8 @@
 		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
 		D3F5B7161EFF08530020290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7141EFF08530020290A /* Main.storyboard */; };
 		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
+		D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */; };
+		D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,8 @@
 		D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleMonitorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleMonitorTests.swift; sourceTree = "<group>"; };
 		D3F5B7221EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
+		D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 				D3F5B7101EFF08530020290A /* ViewController.swift */,
 				D3F5B7121EFF08530020290A /* Assets.xcassets */,
 				D3F5B7141EFF08530020290A /* Main.storyboard */,
+				D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */,
+				D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */,
 				D3F5B7171EFF08530020290A /* Info.plist */,
 			);
 			path = CycleMonitor;
@@ -176,6 +182,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */,
 				D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */,
 				D3F5B7161EFF08530020290A /* Main.storyboard in Resources */,
 			);
@@ -196,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3F5B7111EFF08530020290A /* ViewController.swift in Sources */,
+				D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */,
 				D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
