@@ -1,0 +1,410 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B70E1EFF08530020290A /* AppDelegate.swift */; };
+		D3F5B7111EFF08530020290A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7101EFF08530020290A /* ViewController.swift */; };
+		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
+		D3F5B7161EFF08530020290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7141EFF08530020290A /* Main.storyboard */; };
+		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D3F5B71D1EFF08530020290A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3F5B7031EFF08530020290A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3F5B70A1EFF08530020290A;
+			remoteInfo = CycleMonitor;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D3F5B70B1EFF08530020290A /* CycleMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F5B70E1EFF08530020290A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D3F5B7101EFF08530020290A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D3F5B7121EFF08530020290A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D3F5B7151EFF08530020290A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D3F5B7171EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleMonitorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleMonitorTests.swift; sourceTree = "<group>"; };
+		D3F5B7221EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D3F5B7081EFF08530020290A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F5B7191EFF08530020290A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D3F5B7021EFF08530020290A = {
+			isa = PBXGroup;
+			children = (
+				D3F5B70D1EFF08530020290A /* CycleMonitor */,
+				D3F5B71F1EFF08530020290A /* CycleMonitorTests */,
+				D3F5B70C1EFF08530020290A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D3F5B70C1EFF08530020290A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D3F5B70B1EFF08530020290A /* CycleMonitor.app */,
+				D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D3F5B70D1EFF08530020290A /* CycleMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				D3F5B70E1EFF08530020290A /* AppDelegate.swift */,
+				D3F5B7101EFF08530020290A /* ViewController.swift */,
+				D3F5B7121EFF08530020290A /* Assets.xcassets */,
+				D3F5B7141EFF08530020290A /* Main.storyboard */,
+				D3F5B7171EFF08530020290A /* Info.plist */,
+			);
+			path = CycleMonitor;
+			sourceTree = "<group>";
+		};
+		D3F5B71F1EFF08530020290A /* CycleMonitorTests */ = {
+			isa = PBXGroup;
+			children = (
+				D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */,
+				D3F5B7221EFF08530020290A /* Info.plist */,
+			);
+			path = CycleMonitorTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D3F5B70A1EFF08530020290A /* CycleMonitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3F5B7251EFF08530020290A /* Build configuration list for PBXNativeTarget "CycleMonitor" */;
+			buildPhases = (
+				D3F5B7071EFF08530020290A /* Sources */,
+				D3F5B7081EFF08530020290A /* Frameworks */,
+				D3F5B7091EFF08530020290A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CycleMonitor;
+			productName = CycleMonitor;
+			productReference = D3F5B70B1EFF08530020290A /* CycleMonitor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D3F5B71B1EFF08530020290A /* CycleMonitorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D3F5B7281EFF08530020290A /* Build configuration list for PBXNativeTarget "CycleMonitorTests" */;
+			buildPhases = (
+				D3F5B7181EFF08530020290A /* Sources */,
+				D3F5B7191EFF08530020290A /* Frameworks */,
+				D3F5B71A1EFF08530020290A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D3F5B71E1EFF08530020290A /* PBXTargetDependency */,
+			);
+			name = CycleMonitorTests;
+			productName = CycleMonitorTests;
+			productReference = D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D3F5B7031EFF08530020290A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Brian Semiglia";
+				TargetAttributes = {
+					D3F5B70A1EFF08530020290A = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					D3F5B71B1EFF08530020290A = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = D3F5B70A1EFF08530020290A;
+					};
+				};
+			};
+			buildConfigurationList = D3F5B7061EFF08530020290A /* Build configuration list for PBXProject "CycleMonitor" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D3F5B7021EFF08530020290A;
+			productRefGroup = D3F5B70C1EFF08530020290A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D3F5B70A1EFF08530020290A /* CycleMonitor */,
+				D3F5B71B1EFF08530020290A /* CycleMonitorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D3F5B7091EFF08530020290A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */,
+				D3F5B7161EFF08530020290A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F5B71A1EFF08530020290A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D3F5B7071EFF08530020290A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F5B7111EFF08530020290A /* ViewController.swift in Sources */,
+				D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D3F5B7181EFF08530020290A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D3F5B71E1EFF08530020290A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3F5B70A1EFF08530020290A /* CycleMonitor */;
+			targetProxy = D3F5B71D1EFF08530020290A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D3F5B7141EFF08530020290A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D3F5B7151EFF08530020290A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D3F5B7231EFF08530020290A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D3F5B7241EFF08530020290A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		D3F5B7261EFF08530020290A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CycleMonitor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		D3F5B7271EFF08530020290A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CycleMonitor/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		D3F5B7291EFF08530020290A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CycleMonitorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
+			};
+			name = Debug;
+		};
+		D3F5B72A1EFF08530020290A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CycleMonitorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D3F5B7061EFF08530020290A /* Build configuration list for PBXProject "CycleMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3F5B7231EFF08530020290A /* Debug */,
+				D3F5B7241EFF08530020290A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D3F5B7251EFF08530020290A /* Build configuration list for PBXNativeTarget "CycleMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3F5B7261EFF08530020290A /* Debug */,
+				D3F5B7271EFF08530020290A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D3F5B7281EFF08530020290A /* Build configuration list for PBXNativeTarget "CycleMonitorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D3F5B7291EFF08530020290A /* Debug */,
+				D3F5B72A1EFF08530020290A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D3F5B7031EFF08530020290A /* Project object */;
+}
