@@ -7,15 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694B1F0B12DA004A0135 /* DriverViewItem.swift */; };
+		D31169511F0B12DA004A0135 /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694C1F0B12DA004A0135 /* DriverViewItem.xib */; };
+		D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */; };
+		D31169531F0B12DA004A0135 /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */; };
+		D31169541F0B12DA004A0135 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* ViewController.swift */; };
 		D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B70E1EFF08530020290A /* AppDelegate.swift */; };
-		D3F5B7111EFF08530020290A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7101EFF08530020290A /* ViewController.swift */; };
 		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
-		D3F5B7161EFF08530020290A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7141EFF08530020290A /* Main.storyboard */; };
 		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
-		D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */; };
-		D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */; };
-		D3F5B7341EFF245F0020290A /* DriverViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7331EFF245F0020290A /* DriverViewItem.swift */; };
-		D3F5B7361EFF24970020290A /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7351EFF24970020290A /* DriverViewItem.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,19 +28,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D311694B1F0B12DA004A0135 /* DriverViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverViewItem.swift; sourceTree = "<group>"; };
+		D311694C1F0B12DA004A0135 /* DriverViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverViewItem.xib; sourceTree = "<group>"; };
+		D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
+		D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
+		D311694F1F0B12DA004A0135 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D3F5B70B1EFF08530020290A /* CycleMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F5B70E1EFF08530020290A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D3F5B7101EFF08530020290A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D3F5B7121EFF08530020290A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D3F5B7151EFF08530020290A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D3F5B7171EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CycleMonitorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleMonitorTests.swift; sourceTree = "<group>"; };
 		D3F5B7221EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
-		D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
-		D3F5B7331EFF245F0020290A /* DriverViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverViewItem.swift; sourceTree = "<group>"; };
-		D3F5B7351EFF24970020290A /* DriverViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverViewItem.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +60,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D311694A1F0B12DA004A0135 /* Timeline View */ = {
+			isa = PBXGroup;
+			children = (
+				D311694B1F0B12DA004A0135 /* DriverViewItem.swift */,
+				D311694C1F0B12DA004A0135 /* DriverViewItem.xib */,
+				D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */,
+				D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */,
+				D311694F1F0B12DA004A0135 /* ViewController.swift */,
+			);
+			path = "Timeline View";
+			sourceTree = "<group>";
+		};
 		D3F5B7021EFF08530020290A = {
 			isa = PBXGroup;
 			children = (
@@ -84,14 +94,9 @@
 			isa = PBXGroup;
 			children = (
 				D3F5B70E1EFF08530020290A /* AppDelegate.swift */,
-				D3F5B7101EFF08530020290A /* ViewController.swift */,
 				D3F5B7121EFF08530020290A /* Assets.xcassets */,
-				D3F5B7141EFF08530020290A /* Main.storyboard */,
-				D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */,
-				D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */,
-				D3F5B7331EFF245F0020290A /* DriverViewItem.swift */,
-				D3F5B7351EFF24970020290A /* DriverViewItem.xib */,
 				D3F5B7171EFF08530020290A /* Info.plist */,
+				D311694A1F0B12DA004A0135 /* Timeline View */,
 			);
 			path = CycleMonitor;
 			sourceTree = "<group>";
@@ -188,10 +193,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */,
-				D3F5B7361EFF24970020290A /* DriverViewItem.xib in Resources */,
+				D31169531F0B12DA004A0135 /* TimelineViewItem.xib in Resources */,
 				D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */,
-				D3F5B7161EFF08530020290A /* Main.storyboard in Resources */,
+				D31169511F0B12DA004A0135 /* DriverViewItem.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,10 +213,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3F5B7111EFF08530020290A /* ViewController.swift in Sources */,
-				D3F5B7341EFF245F0020290A /* DriverViewItem.swift in Sources */,
-				D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */,
 				D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */,
+				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
+				D31169541F0B12DA004A0135 /* ViewController.swift in Sources */,
+				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,17 +237,6 @@
 			targetProxy = D3F5B71D1EFF08530020290A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		D3F5B7141EFF08530020290A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D3F5B7151EFF08530020290A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D3F5B7231EFF08530020290A /* Debug */ = {
@@ -411,6 +404,7 @@
 				D3F5B7271EFF08530020290A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D3F5B7281EFF08530020290A /* Build configuration list for PBXNativeTarget "CycleMonitorTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +413,7 @@
 				D3F5B72A1EFF08530020290A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
