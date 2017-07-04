@@ -11,6 +11,7 @@ import Cocoa
 class TimelineViewItem: NSCollectionViewItem {}
 
 @IBDesignable class BackgroundColoredView: NSView {
+  
   @IBInspectable var backgroundColor: NSColor?
   
   override func awakeFromNib() {

@@ -14,6 +14,8 @@
 		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
 		D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */; };
 		D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */; };
+		D3F5B7341EFF245F0020290A /* DriverViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7331EFF245F0020290A /* DriverViewItem.swift */; };
+		D3F5B7361EFF24970020290A /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7351EFF24970020290A /* DriverViewItem.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,8 @@
 		D3F5B7221EFF08530020290A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
 		D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
+		D3F5B7331EFF245F0020290A /* DriverViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverViewItem.swift; sourceTree = "<group>"; };
+		D3F5B7351EFF24970020290A /* DriverViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverViewItem.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +89,8 @@
 				D3F5B7141EFF08530020290A /* Main.storyboard */,
 				D3F5B72B1EFF17260020290A /* TimelineViewItem.swift */,
 				D3F5B72C1EFF17260020290A /* TimelineViewItem.xib */,
+				D3F5B7331EFF245F0020290A /* DriverViewItem.swift */,
+				D3F5B7351EFF24970020290A /* DriverViewItem.xib */,
 				D3F5B7171EFF08530020290A /* Info.plist */,
 			);
 			path = CycleMonitor;
@@ -183,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3F5B72E1EFF17260020290A /* TimelineViewItem.xib in Resources */,
+				D3F5B7361EFF24970020290A /* DriverViewItem.xib in Resources */,
 				D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */,
 				D3F5B7161EFF08530020290A /* Main.storyboard in Resources */,
 			);
@@ -203,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3F5B7111EFF08530020290A /* ViewController.swift in Sources */,
+				D3F5B7341EFF245F0020290A /* DriverViewItem.swift in Sources */,
 				D3F5B72D1EFF17260020290A /* TimelineViewItem.swift in Sources */,
 				D3F5B70F1EFF08530020290A /* AppDelegate.swift in Sources */,
 			);
