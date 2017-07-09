@@ -136,9 +136,9 @@ class ViewController:
     }
     timeline?.enclosingScrollView?.contentInsets = EdgeInsets(
       top: 0,
-      left: (view.bounds.size.width - 44.0) / 2.0,
+      left: (view.bounds.size.width - cell.width) / 2.0,
       bottom: 0,
-      right: (view.bounds.size.width - 44.0) / 2.0
+      right: (view.bounds.size.width - cell.width) / 2.0
     )
     
     if shouldForceRender || new.presentedState != old.presentedState {
@@ -209,10 +209,7 @@ class ViewController:
     layout collectionViewLayout: NSCollectionViewLayout,
     sizeForItemAt indexPath: IndexPath
   ) -> NSSize {
-    return NSSize(
-      width: 60.0,
-      height: 138.0
-    )
+    return cell
   }
 
   func newDriverViewItem() -> DriverViewItem? {
@@ -222,6 +219,13 @@ class ViewController:
       topLevelObjects: &x
     )
     return x.first { $0 is DriverViewItem } as! DriverViewItem?
+  }
+  
+  var cell: NSSize { return
+    NSSize(
+      width: 60.0,
+      height: 138.0
+    )
   }
 }
 
