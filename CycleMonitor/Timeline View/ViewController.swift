@@ -223,7 +223,7 @@ class ViewController:
   
   var cell: NSSize { return
     NSSize(
-      width: 60.0,
+      width: 44.0,
       height: 138.0
     )
   }
