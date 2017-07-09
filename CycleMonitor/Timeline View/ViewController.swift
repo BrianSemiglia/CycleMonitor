@@ -8,11 +8,13 @@
 
 import Cocoa
 import Foundation
+import RxSwift
 
 class ViewController:
-  NSViewController,
-  NSCollectionViewDataSource,
-  NSCollectionViewDelegateFlowLayout {
+      NSViewController,
+      NSCollectionViewDataSource,
+      NSCollectionViewDelegateFlowLayout,
+      NSViewControllerProviding {
   
   struct Model {
     struct Driver {
@@ -24,87 +26,48 @@ class ViewController:
       let cause: String
       let effect: String
     }
-    let drivers: [Driver]
-    let causesEffects: [CauseEffect]
-    let state: String
+    var drivers: [Driver]
+    var causesEffects: [CauseEffect]
+    var presentedState: String
+    var selectedIndex: Int
   }
   
   enum Action {
-    case selected(Int)
+    case none
+    case scrolledToIndex(Int)
   }
 
-  @IBOutlet var drivers: NSStackView!
-  @IBOutlet var timeline: NSCollectionView!
+  @IBOutlet var drivers: NSStackView?
+  @IBOutlet var timeline: NSCollectionView?
+  @IBOutlet var presentedState: NSTextView?
   var shouldForceRender = false
 
   var model = Model(
-    drivers: [
-      Model.Driver(name: "driver 1", action: "event", color: .red),
-      Model.Driver(name: "driver 2", action: "event", color: .yellow),
-      Model.Driver(name: "driver 3", action: "event", color: .purple),
-      Model.Driver(name: "driver 4", action: "event", color: .green)
-    ],
-    causesEffects: [
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect"),
-      Model.CauseEffect(cause: "cause", effect: "effect")
-    ],
-    state: ""
-  ) {
-    didSet {
-      render(
-        old: oldValue,
-        new: model
-      )
-    }
-  }
-  
-  func didReceive(action: Action) {
-    
-  }
+    drivers: [],
+    causesEffects: [],
+    presentedState: "",
+    selectedIndex: 0
+  )
   
   override func viewDidLoad() {
     super.viewDidLoad()
     shouldForceRender = true
-    timeline.enclosingScrollView?.automaticallyAdjustsContentInsets = false
-    timeline.postsBoundsChangedNotifications = true
+    timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
+    timeline?.postsBoundsChangedNotifications = true
     NotificationCenter.default.addObserver(
       forName: .NSViewBoundsDidChange,
       object: nil,
       queue: .main,
       using: { [weak self] _ in
-        if let `self` = self {
+        if let `self` = self, let timeline = self.timeline {
           let point = CGPoint(
-            x: self.timeline.enclosingScrollView!.documentVisibleRect.origin.x +
-              (self.timeline.bounds.width / CGFloat(2.0)) - 44.0 - 10.0,
-            y: self.timeline.bounds.height / CGFloat(2)
+            x: timeline.enclosingScrollView!.documentVisibleRect.origin.x +
+                (self.view.bounds.size.width / 2.0),
+            y: timeline.bounds.height / CGFloat(2)
           )
-          if let x = self.timeline.indexPathForItem(at:point)?.item {
-            self.didReceive(
-              action: .selected(x)
-            )
+          if let x = timeline.indexPathForItem(at:point)?.item {
+            self.output.on(.next(.scrolledToIndex(x)))
           }
-          self.render(
-            old: self.model,
-            new: self.model
-          )
         }
       }
     )
@@ -123,10 +86,32 @@ class ViewController:
     )
   }
   
+  var root: NSViewController {
+    return self
+  }
+  
+  var cleanup = DisposeBag()
+  private let output = BehaviorSubject(value: Action.none)
+
+  func rendered(_ input: Observable<Model>) -> Observable<Action> {
+    input.subscribe {
+      if let element = $0.element {
+        DispatchQueue.main.async {
+          self.render(
+            old: self.model,
+            new: element
+          )
+          self.model = element
+        }
+      }
+    }.disposed(by: cleanup)
+    return output
+  }
+  
   func render(old: Model, new: Model) {
     if shouldForceRender || old.drivers != new.drivers {
-      drivers.arrangedSubviews.forEach {
-        drivers.removeArrangedSubview($0)
+      drivers?.arrangedSubviews.forEach {
+        drivers?.removeArrangedSubview($0)
       }
       new.drivers
         .flatMap { (x: Model.Driver) -> DriverViewItem? in
@@ -137,15 +122,41 @@ class ViewController:
           return y
         }
         .forEach {
-          drivers.addArrangedSubview($0)
+          drivers?.addArrangedSubview($0)
       }
     }
-    timeline.enclosingScrollView?.contentInsets = EdgeInsets(
+    timeline?.enclosingScrollView?.contentInsets = EdgeInsets(
       top: 0,
       left: (view.bounds.size.width - 44.0) / 2.0,
       bottom: 0,
       right: (view.bounds.size.width - 44.0) / 2.0
     )
+    
+    if shouldForceRender || new.presentedState != old.presentedState {
+      presentedState?.string = new.presentedState
+    }
+    
+    if shouldForceRender || new.causesEffects != old.causesEffects {
+      timeline?.reloadData()
+    }
+    
+    if shouldForceRender ||
+       new.selectedIndex != old.selectedIndex &&
+       new.selectedIndex > 0 {
+      if new.causesEffects.count > 0 {
+        NSAnimationContext.current().allowsImplicitAnimation = true
+        self.timeline?.scrollToItems(
+          at: [
+            IndexPath(
+              item: new.causesEffects.count - 1,
+              section: 0
+            )
+          ],
+          scrollPosition: .centeredHorizontally
+        )
+        NSAnimationContext.current().allowsImplicitAnimation = false
+      }
+    }
   }
   
   public func collectionView(
@@ -188,6 +199,14 @@ class ViewController:
       topLevelObjects: &x
     )
     return x.first { $0 is DriverViewItem } as! DriverViewItem?
+  }
+}
+
+extension ViewController {
+  static func new(model: ViewController.Model) -> ViewController {
+    let x = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "MainViewController") as! ViewController
+    x.model = model
+    return x
   }
 }
 
