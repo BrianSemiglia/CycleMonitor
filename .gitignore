@@ -218,3 +218,8 @@ Pods/
 ####
 # UNKNOWN: recommended by others, but I can't discover what these files are
 #
+
+
+*.xcscheme
+
+*.xcworkspacedata
