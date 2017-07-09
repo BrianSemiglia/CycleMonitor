@@ -86,6 +86,8 @@ class MultipeerJSON:
       output.on(.next(.connecting))
     case .notConnected:
       output.on(.next(.disconnected))
+      self.session = nil
+      advertiser.startAdvertisingPeer()
     }
   }
   
