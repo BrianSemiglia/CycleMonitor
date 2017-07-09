@@ -49,7 +49,9 @@ class ViewController:
   @IBOutlet var connection: NSProgressIndicator?
   @IBOutlet var disconnected: NSTextField?
   
-  var shouldForceRender = false
+  private var cleanup = DisposeBag()
+  private let output = BehaviorSubject(value: Action.none)
+  private var shouldForceRender = false
 
   var model = Model(
     drivers: [],
@@ -100,9 +102,6 @@ class ViewController:
     return self
   }
   
-  var cleanup = DisposeBag()
-  private let output = BehaviorSubject(value: Action.none)
-
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
     input.subscribe {
       if let element = $0.element {
