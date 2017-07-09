@@ -64,7 +64,8 @@ struct CycleMonitorApp: SinkSourceConverting {
       drivers: [],
       causesEffects: [],
       presentedState: "",
-      selectedIndex: 0
+      selectedIndex: 0,
+      connection: .disconnected
     )
     var application = AppDelegateStub.Model()
   }
@@ -126,20 +127,37 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
   }
 }
 
-extension ObservableType where E == ([AnyHashable: Any], CycleMonitorApp.Model) {
+extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
-      if let action = event["action"] as? String, let effect = event["effect"] as? String {
+      switch event {
+      case .received(let data):
+        if let action = data["action"] as? String, let effect = data["effect"] as? String {
+          var new = context
+          new.screen.presentedState = effect
+          new.screen.causesEffects = context.screen.causesEffects + [
+            ViewController.Model.CauseEffect(
+              cause: action,
+              effect: effect
+            )
+          ]
+          return new
+        } else {
+          return context
+        }
+      case .connected:
         var new = context
-        new.screen.presentedState = effect
-        new.screen.causesEffects = context.screen.causesEffects + [
-          ViewController.Model.CauseEffect(
-            cause: action,
-            effect: effect
-          )
-        ]
+        new.screen.connection = .connected
         return new
-      } else {
+      case .connecting:
+        var new = context
+        new.screen.connection = .connecting
+        return new
+      case .disconnected:
+        var new = context
+        new.screen.connection = .disconnected
+        return new
+      default:
         return context
       }
     }

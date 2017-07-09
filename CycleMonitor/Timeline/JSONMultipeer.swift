@@ -15,15 +15,23 @@ class MultipeerJSON:
       MCNearbyServiceAdvertiserDelegate,
       MCSessionDelegate {
 
+  enum Action {
+    case launching
+    case connecting
+    case connected
+    case disconnected
+    case received(data: [AnyHashable: Any])
+  }
+  
   private let cleanup = DisposeBag()
-  public let output: BehaviorSubject<[AnyHashable: Any]>
+  public let output: BehaviorSubject<Action>
   
   var session: MCSession?
   let mine: MCPeerID
   let advertiser: MCNearbyServiceAdvertiser
   
   override init() {
-    output = BehaviorSubject<[AnyHashable: Any]>(value: [:])
+    output = BehaviorSubject<Action>(value: .launching)
     mine = MCPeerID(
       displayName: Host.current().localizedName ?? "Unknown"
     )
@@ -73,11 +81,11 @@ class MultipeerJSON:
   ) {
     switch state {
     case .connected:
-      print("--- connected")
+      output.on(.next(.connected))
     case .connecting:
-      print("--- connecting")
+      output.on(.next(.connecting))
     case .notConnected:
-      print("--- not connected")
+      output.on(.next(.disconnected))
     }
   }
   
@@ -97,7 +105,7 @@ class MultipeerJSON:
       }
     
     if let info = info {
-      output.on(.next(info))
+      output.on(.next(.received(data: info)))
     }
   }
   
@@ -129,8 +137,4 @@ class MultipeerJSON:
     
   }
   
-  deinit {
-    print("bye!")
-  }
-
 }

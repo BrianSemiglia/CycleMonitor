@@ -26,10 +26,16 @@ class ViewController:
       let cause: String
       let effect: String
     }
+    enum Connection {
+      case connecting
+      case connected
+      case disconnected
+    }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selectedIndex: Int
+    var connection: Connection
   }
   
   enum Action {
@@ -40,13 +46,17 @@ class ViewController:
   @IBOutlet var drivers: NSStackView?
   @IBOutlet var timeline: NSCollectionView?
   @IBOutlet var presentedState: NSTextView?
+  @IBOutlet var connection: NSProgressIndicator?
+  @IBOutlet var disconnected: NSTextField?
+  
   var shouldForceRender = false
 
   var model = Model(
     drivers: [],
     causesEffects: [],
     presentedState: "",
-    selectedIndex: 0
+    selectedIndex: 0,
+    connection: .disconnected
   )
   
   override func viewDidLoad() {
@@ -157,6 +167,20 @@ class ViewController:
         NSAnimationContext.current().allowsImplicitAnimation = false
       }
     }
+    
+    if shouldForceRender || new.connection != old.connection {
+      switch new.connection {
+      case .connecting:
+        connection?.startAnimation(self)
+        disconnected?.isHidden = true
+      case .connected:
+        connection?.stopAnimation(self)
+        disconnected?.isHidden = true
+      case .disconnected:
+        connection?.stopAnimation(true)
+        disconnected?.isHidden = false
+      }
+    }
   }
   
   public func collectionView(
@@ -235,5 +259,19 @@ extension ViewController.Model.Driver: Equatable {
     left.name == right.name &&
     left.action == right.action &&
     left.color == right.color
+  }
+}
+
+extension ViewController.Model.Connection: Equatable {
+  static func ==(
+    left: ViewController.Model.Connection,
+    right: ViewController.Model.Connection
+  ) -> Bool {
+    switch (left, right) {
+    case (.connecting, .connecting): return true
+    case (.connected, connected): return true
+    case (.disconnected, disconnected): return true
+    default: return false
+    }
   }
 }
