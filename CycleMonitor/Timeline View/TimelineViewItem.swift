@@ -12,11 +12,17 @@ class TimelineViewItem: NSCollectionViewItem {}
 
 @IBDesignable class BackgroundColoredView: NSView {
   
-  @IBInspectable var backgroundColor: NSColor?
+  @IBInspectable var backgroundColor: NSColor? {
+    didSet {
+      setNeedsDisplay(frame)
+      display()
+    }
+  }
   
   override func awakeFromNib() {
     wantsLayer = true;  // NSView will create a CALayer automatically
     setNeedsDisplay(frame)
+    display()
   }
   
   override func updateLayer() {

@@ -106,11 +106,12 @@ class ViewController:
     input.subscribe {
       if let element = $0.element {
         DispatchQueue.main.async {
+          let old = self.model
+          self.model = element
           self.render(
-            old: self.model,
+            old: old,
             new: element
           )
-          self.model = element
         }
       }
     }.disposed(by: cleanup)
@@ -132,7 +133,7 @@ class ViewController:
         }
         .forEach {
           drivers?.addArrangedSubview($0)
-      }
+        }
     }
     timeline?.enclosingScrollView?.contentInsets = EdgeInsets(
       top: 0,
@@ -149,22 +150,28 @@ class ViewController:
       timeline?.reloadData()
     }
     
+    if new.selectedIndex != old.selectedIndex, let timeline = timeline {
+      timeline.reloadItems(
+        at: timeline.indexPathsForVisibleItems()
+      )
+    }
+    
     if shouldForceRender ||
        new.selectedIndex != old.selectedIndex &&
        new.selectedIndex > 0 {
-      if new.causesEffects.count > 0 {
-        NSAnimationContext.current().allowsImplicitAnimation = true
-        self.timeline?.scrollToItems(
-          at: [
-            IndexPath(
-              item: new.causesEffects.count - 1,
-              section: 0
-            )
-          ],
-          scrollPosition: .centeredHorizontally
-        )
-        NSAnimationContext.current().allowsImplicitAnimation = false
-      }
+//      if new.causesEffects.count > 0 {
+//        NSAnimationContext.current().allowsImplicitAnimation = true
+//        self.timeline?.scrollToItems(
+//          at: [
+//            IndexPath(
+//              item: new.causesEffects.count - 1,
+//              section: 0
+//            )
+//          ],
+//          scrollPosition: .centeredHorizontally
+//        )
+//        NSAnimationContext.current().allowsImplicitAnimation = false
+//      }
     }
     
     if shouldForceRender || new.connection != old.connection {
@@ -179,6 +186,15 @@ class ViewController:
         connection?.stopAnimation(true)
         disconnected?.isHidden = false
       }
+    }
+  }
+  
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    didSelectItemsAt indexPaths: Set<IndexPath>
+  ) {
+    if let index = indexPaths.first?.item {
+      output.on(.next(.scrolledToIndex(index)))
     }
   }
   
@@ -200,7 +216,12 @@ class ViewController:
     let x = caller.makeItem(
       withIdentifier: "TimelineViewItem",
       for: path
-    )
+    ) as! TimelineViewItem
+    if let view = x.view as? BackgroundColoredView {
+      view.backgroundColor = path.item == model.selectedIndex
+        ? .lightGray
+        : .white
+    }
     return x
   }
   
@@ -224,7 +245,7 @@ class ViewController:
   var cell: NSSize { return
     NSSize(
       width: 44.0,
-      height: 138.0
+      height: 98.0
     )
   }
 }

@@ -118,7 +118,7 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
       if case .scrolledToIndex(let index) = event {
         var new = context
         new.screen.presentedState = context.screen.causesEffects[index].effect
-//        new.screen.selectedIndex = index
+        new.screen.selectedIndex = index
         return new
       } else {
         return context
