@@ -67,6 +67,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       selectedIndex: 0,
       connection: .disconnected
     )
+    var driversTimeline: [[ViewController.Model.Driver]] = []
     var application = AppDelegateStub.Model()
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
@@ -117,6 +118,7 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
     map { event, context in
       if case .scrolledToIndex(let index) = event {
         var new = context
+        new.screen.drivers = context.driversTimeline[index]
         new.screen.presentedState = context.screen.causesEffects[index].effect
         new.screen.selectedIndex = index
         return new
@@ -132,8 +134,26 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
     map { event, context in
       switch event {
       case .received(let data):
-        if let action = data["action"] as? String, let effect = data["effect"] as? String {
+        if
+        let drivers = data["drivers"] as? [[AnyHashable: Any]],
+        let action = data["action"] as? String,
+        let effect = data["effect"] as? String {
           var new = context
+          
+          let newest: [ViewController.Model.Driver]? = drivers.flatMap {
+            if let label = $0["label"].flatMap({ $0 as? String }) {
+              return ViewController.Model.Driver(
+                name: label,
+                action: $0["action"].flatMap({ $0 as? String }) ?? "",
+                color: $0["action"].flatMap({ $0 as? String }) == nil ? .yellow : .red
+              )
+            } else {
+              return nil
+            }
+          }
+          
+          new.driversTimeline = new.driversTimeline + (newest.map { [$0] } ?? [[]])
+          new.screen.drivers = newest ?? []
           new.screen.presentedState = effect
           new.screen.causesEffects = context.screen.causesEffects + [
             ViewController.Model.CauseEffect(
