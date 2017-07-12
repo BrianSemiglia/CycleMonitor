@@ -72,11 +72,7 @@ class ViewController:
       queue: .main,
       using: { [weak self] _ in
         if let `self` = self, let timeline = self.timeline {
-          let point = CGPoint(
-            x: timeline.enclosingScrollView!.documentVisibleRect.origin.x +
-                (self.view.bounds.size.width / 2.0),
-            y: timeline.bounds.height / CGFloat(2)
-          )
+          let point = timeline.enclosingScrollView!.documentVisibleCenter
           if let x = timeline.indexPathForItem(at:point)?.item {
             self.output.on(.next(.scrolledToIndex(x)))
           }
@@ -298,4 +294,14 @@ extension ViewController.Model.Connection: Equatable {
     default: return false
     }
   }
+}
+
+extension NSScrollView {
+    var documentVisibleCenter: NSPoint { return
+        CGPoint(
+            x: documentVisibleRect.origin.x +
+                (bounds.size.width / 2.0),
+            y: bounds.height / CGFloat(2)
+        )
+    }
 }
