@@ -117,7 +117,7 @@ class ViewController:
   func render(old: Model, new: Model) {
     if shouldForceRender || old.drivers != new.drivers {
       drivers?.arrangedSubviews.forEach {
-        drivers?.removeArrangedSubview($0)
+        $0.removeFromSuperview()
       }
       new.drivers
         .flatMap { (x: Model.Driver) -> DriverViewItem? in
@@ -129,7 +129,7 @@ class ViewController:
         }
         .forEach {
           drivers?.addArrangedSubview($0)
-        }
+      }
     }
     timeline?.enclosingScrollView?.contentInsets = EdgeInsets(
       top: 0,
