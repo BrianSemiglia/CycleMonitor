@@ -70,17 +70,24 @@ struct CycleMonitorApp: SinkSourceConverting {
     )
     var driversTimeline: [[ViewController.Model.Driver]] = []
     var application = AppDelegateStub.Model()
+    var browser = BrowserDriver.Model(state: .idle)
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: ViewController
     let json: MultipeerJSON
     let application: AppDelegateStub
+    let browser: BrowserDriver
   }
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
-      screen: ViewController.new(model: initial.screen),
+      screen: ViewController.new(
+        model: initial.screen
+      ),
       json: MultipeerJSON(),
-      application: AppDelegateStub()
+      application: AppDelegateStub(),
+      browser: BrowserDriver(
+        initial: initial.browser
+      )
     )
   }
   func effectsFrom(
@@ -103,10 +110,17 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
+    let browser = drivers
+      .browser
+      .rendered(events.map { $0.browser })
+      .tupledWithLatestFrom(events)
+      .reduced()
+    
     return Observable.of(
       screen,
       application,
-      json
+      json,
+      browser
     ).merge()
   }
 }
@@ -120,13 +134,18 @@ extension ObservableType {
 extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
-      if case .scrolledToIndex(let index) = event {
+      switch event {
+      case .scrolledToIndex(let index):
         var new = context
         new.screen.drivers = context.driversTimeline[index]
         new.screen.presentedState = context.screen.causesEffects[index].effect
         new.screen.selectedIndex = index
         return new
-      } else {
+      case .opening:
+        var new = context
+        new.browser.state = .opening
+        return new
+      default:
         return context
       }
     }
@@ -168,6 +187,21 @@ extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Mod
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       return context
+    }
+  }
+}
+
+extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model) {
+  func reduced() -> Observable<CycleMonitorApp.Model> { return
+    map { event, context in
+      switch event {
+      case .didOpen:
+        var new = context
+        new.browser.state = .idle
+        return new
+      default:
+        return context
+      }
     }
   }
 }

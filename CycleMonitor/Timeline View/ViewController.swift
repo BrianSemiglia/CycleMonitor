@@ -42,6 +42,7 @@ class ViewController:
   enum Action {
     case none
     case scrolledToIndex(Int)
+    case opening
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -186,6 +187,10 @@ class ViewController:
         disconnected?.isHidden = false
       }
     }
+  }
+  
+  @IBAction func didReceiveEventFromImport(_ sender: NSButton) {
+    output.on(.next(.opening))
   }
   
   func collectionView(
