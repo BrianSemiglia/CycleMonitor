@@ -7,6 +7,8 @@ target 'CycleMonitor' do
 
   # Pods for CycleMonitor
   pod 'RxSwift'
+  pod 'Argo', '~> 4.0'
+  pod 'Curry', '~> 3.0'
 
   target 'CycleMonitorTests' do
     inherit! :search_paths

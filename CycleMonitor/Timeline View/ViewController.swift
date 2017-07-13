@@ -18,8 +18,8 @@ class ViewController:
   
   struct Model {
     struct Driver {
-      let name: String
-      let action: String
+      let label: String
+      let action: String?
       let color: NSColor
     }
     struct CauseEffect {
@@ -124,8 +124,8 @@ class ViewController:
       new.drivers
         .flatMap { (x: Model.Driver) -> DriverViewItem? in
           let y = newDriverViewItem()
-          y?.set(labelTop: x.name)
-          y?.set(labelBottom: x.action)
+          y?.set(labelTop: x.label)
+          y?.set(labelBottom: x.action ?? "")
           y?.set(background: x.color)
           return y
         }
@@ -279,7 +279,7 @@ extension ViewController.Model.Driver: Equatable {
     left: ViewController.Model.Driver,
     right: ViewController.Model.Driver
   ) -> Bool { return
-    left.name == right.name &&
+    left.label == right.label &&
     left.action == right.action &&
     left.color == right.color
   }

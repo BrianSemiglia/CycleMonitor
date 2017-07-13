@@ -1,12 +1,21 @@
 PODS:
+  - Argo (4.1.2):
+    - Runes (>= 4.0.0)
+  - Curry (3.0.0)
+  - Runes (4.1.0)
   - RxSwift (3.5.0)
 
 DEPENDENCIES:
+  - Argo (~> 4.0)
+  - Curry (~> 3.0)
   - RxSwift
 
 SPEC CHECKSUMS:
+  Argo: 5db06502fc1222d83011f574243089dab25202ff
+  Curry: eb3d2c75aec678b3cc7fb2729d2ad6dd121531d1
+  Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
   RxSwift: 18ee9d78b45edb3b0b7e79916b47a116e6dbc842
 
-PODFILE CHECKSUM: 878b951faa79d7259a1b0b45a0fa7a3e754ea46d
+PODFILE CHECKSUM: 0d68d030560975293286f6a07150a0b722c0ee62
 
 COCOAPODS: 1.2.1

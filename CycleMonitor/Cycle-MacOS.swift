@@ -83,7 +83,10 @@ struct CycleMonitorApp: SinkSourceConverting {
       application: AppDelegateStub()
     )
   }
-  func effectsFrom(events: Observable<Model>, drivers: Drivers) -> Observable<Model> {
+  func effectsFrom(
+    events: Observable<Model>,
+    drivers: Drivers
+  ) -> Observable<Model> {
     let screen = drivers
       .screen
       .rendered(events.map { $0.screen })
@@ -135,38 +138,13 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
     map { event, context in
       switch event {
       case .received(let data):
-        if
-        let drivers = data["drivers"] as? [[AnyHashable: Any]],
-        let action = data["action"] as? String,
-        let effect = data["effect"] as? String {
-          var new = context
-          
-          let newest: [ViewController.Model.Driver]? = drivers.flatMap {
-            if let label = $0["label"].flatMap({ $0 as? String }) {
-              return ViewController.Model.Driver(
-                name: label,
-                action: $0["action"].flatMap({ $0 as? String }) ?? "",
-                color: $0["action"].flatMap({ $0 as? String }) == nil ? .yellow : .red
-              )
-            } else {
-              return nil
-            }
-          }
-          
-          new.driversTimeline = new.driversTimeline + (newest.map { [$0] } ?? [[]])
-          new.screen.drivers = newest ?? []
-          new.screen.presentedState = effect
-          new.screen.causesEffects = context.screen.causesEffects + [
-            ViewController.Model.CauseEffect(
-              cause: action,
-              effect: effect
-            )
-          ]
-          new.screen.focused = new.screen.causesEffects.count - 1
-          return new
-        } else {
-          return context
-        }
+        var new = context
+        new.driversTimeline += data["drivers"].flatMap(decode).map {[$0]} ?? [[]]
+        new.screen.drivers = data["drivers"].flatMap(decode) ?? []
+        new.screen.presentedState = data["effect"].flatMap(decode) ?? ""
+        new.screen.causesEffects += decode(data).map {[$0]} ?? []
+        new.screen.focused = new.screen.causesEffects.count - 1
+        return new
       case .connected:
         var new = context
         new.screen.connection = .connected
@@ -193,6 +171,38 @@ extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Mod
     }
   }
 }
+
+import Argo
+import Runes
+import Curry
+
+extension ViewController.Model.Driver: Decodable {
+  static func decode(_ json: JSON) -> Decoded<ViewController.Model.Driver> {
+    return curry(ViewController.Model.Driver.init)
+      <^> json <| "label"
+      <*> json <|? "action"
+  }
+}
+
+extension ViewController.Model.Driver {
+  init(label: String, action: String?) {
+    self.init(
+      label: label,
+      action: action,
+      color: action == nil ? .yellow : .red
+    )
+  }
+}
+
+extension ViewController.Model.CauseEffect: Decodable {
+  public static func decode(_ json: JSON) -> Decoded<ViewController.Model.CauseEffect> {
+    return curry(ViewController.Model.CauseEffect.init)
+      <^> json <| "action"
+      <*> json <| "effect"
+  }
+}
+
+// Cycle Mac
 
 public final class Cycle<E: SinkSourceConverting> {
   private var events: Observable<E.Source>?
@@ -247,3 +257,4 @@ public protocol NSApplicationDelegateProviding {
   associatedtype Delegate: NSApplicationDelegate
   var application: Delegate { get }
 }
+
