@@ -35,6 +35,7 @@ class ViewController:
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selectedIndex: Int
+    var focused: Int
     var connection: Connection
   }
   
@@ -58,6 +59,7 @@ class ViewController:
     causesEffects: [],
     presentedState: "",
     selectedIndex: 0,
+    focused: 0,
     connection: .disconnected
   )
   
@@ -153,21 +155,22 @@ class ViewController:
     }
     
     if shouldForceRender ||
-       new.selectedIndex != old.selectedIndex &&
-       new.selectedIndex > 0 {
-//      if new.causesEffects.count > 0 {
-//        NSAnimationContext.current().allowsImplicitAnimation = true
-//        self.timeline?.scrollToItems(
-//          at: [
-//            IndexPath(
-//              item: new.causesEffects.count - 1,
-//              section: 0
-//            )
-//          ],
-//          scrollPosition: .centeredHorizontally
-//        )
-//        NSAnimationContext.current().allowsImplicitAnimation = false
-//      }
+       new.focused != old.focused &&
+       new.focused > 0,
+       new.focused != new.selectedIndex {
+      if new.causesEffects.count > 0 {
+        NSAnimationContext.current().allowsImplicitAnimation = true
+        self.timeline?.scrollToItems(
+          at: [
+            IndexPath(
+              item: new.causesEffects.count - 1,
+              section: 0
+            )
+          ],
+          scrollPosition: .centeredHorizontally
+        )
+        NSAnimationContext.current().allowsImplicitAnimation = false
+      }
     }
     
     if shouldForceRender || new.connection != old.connection {

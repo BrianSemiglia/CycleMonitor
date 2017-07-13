@@ -65,6 +65,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       causesEffects: [],
       presentedState: "",
       selectedIndex: 0,
+      focused: 0,
       connection: .disconnected
     )
     var driversTimeline: [[ViewController.Model.Driver]] = []
@@ -161,6 +162,7 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
               effect: effect
             )
           ]
+          new.screen.focused = new.screen.causesEffects.count - 1
           return new
         } else {
           return context
