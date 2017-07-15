@@ -22,7 +22,8 @@ class CycledApplicationDelegate:
   }
   
   func applicationWillFinishLaunching(_ notification: Notification) {
-    main = NSStoryboard(name : "Main", bundle: nil).instantiateController(withIdentifier: "MainWindow") as? NSWindowController
+    main = NSStoryboard(name : "Main", bundle: nil)
+      .instantiateController(withIdentifier: "MainWindow") as? NSWindowController
     main?.window?.contentViewController = cycle.root
     main?.window?.makeKeyAndOrderFront(nil)
   }
@@ -41,7 +42,9 @@ class CycledApplicationDelegate:
         )
       )
     }
-    return cycle.delegate.responds(to: input)
+    return cycle.delegate.responds(
+      to: input
+    )
   }
 
 }
@@ -55,7 +58,6 @@ class AppDelegateStub: NSObject, NSApplicationDelegate {
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
     return output
   }
-
 }
 
 struct CycleMonitorApp: SinkSourceConverting {
