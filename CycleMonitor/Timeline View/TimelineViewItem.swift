@@ -9,6 +9,7 @@
 import Cocoa
 import RxSwift
 import RxCocoa
+import Runes
 
 class TimelineViewItem: NSCollectionViewItem {
   enum Output {
@@ -24,9 +25,7 @@ class TimelineViewItem: NSCollectionViewItem {
   
   var model: Model? {
     didSet {
-      if let new = model {
-        render(new)
-      }
+      render <^> model
     }
   }
   @IBOutlet private var checkbox: NSButton!
@@ -50,9 +49,12 @@ class TimelineViewItem: NSCollectionViewItem {
 }
 
 extension TimelineViewItem.Model: Equatable {
-  static func ==(left: TimelineViewItem.Model, right: TimelineViewItem.Model) -> Bool {
-    return left.color == right.color &&
-    left.selected == right.selected
+  static func ==(
+    left: TimelineViewItem.Model,
+    right: TimelineViewItem.Model
+  ) -> Bool { return
+    left.selected == right.selected &&
+    left.color == right.color
   }
 }
 

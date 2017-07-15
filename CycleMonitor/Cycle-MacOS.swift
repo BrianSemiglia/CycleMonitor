@@ -66,7 +66,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       drivers: [],
       causesEffects: [],
       presentedState: "",
-      selectedIndex: 0,
+      selected: nil,
       focused: 0,
       connection: .disconnected
     )
@@ -141,7 +141,15 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
         var new = context
         new.screen.drivers = context.driversTimeline[index]
         new.screen.presentedState = context.screen.causesEffects[index].effect
-        new.screen.selectedIndex = index
+        new.screen.selected = ViewController.Model.Selection(
+          color: NSColor(
+            red: 232.0/255.0,
+            green: 232.0/255.0,
+            blue: 232.0/255.0,
+            alpha: 1
+          ),
+          index: index
+        )
         return new
       case .opening:
         var new = context

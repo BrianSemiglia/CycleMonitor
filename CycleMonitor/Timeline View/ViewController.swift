@@ -37,10 +37,14 @@ class ViewController:
       case connected
       case disconnected
     }
+    struct Selection {
+      var color: NSColor
+      let index: Int
+    }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
     var presentedState: String
-    var selectedIndex: Int
+    var selected: Selection?
     var focused: Int
     var connection: Connection
   }
@@ -66,7 +70,7 @@ class ViewController:
     drivers: [],
     causesEffects: [],
     presentedState: "",
-    selectedIndex: 0,
+    selected: nil,
     focused: 0,
     connection: .disconnected
   )
@@ -153,7 +157,11 @@ class ViewController:
       timeline?.reloadData()
     }
     
-    if new.selectedIndex != old.selectedIndex, let timeline = timeline {
+    if
+      let new = new.selected,
+      old.selected != new,
+      let timeline = timeline
+    {
       timeline.reloadItems(
         at: timeline.indexPathsForVisibleItems()
       )
@@ -162,7 +170,7 @@ class ViewController:
     if shouldForceRender ||
        new.focused != old.focused &&
        new.focused > 0,
-       new.focused != new.selectedIndex {
+       new.selected.map({ $0.index != new.focused }) == true {
       if new.causesEffects.count > 0 {
         NSAnimationContext.current().allowsImplicitAnimation = true
         self.timeline?.scrollToItems(
@@ -226,9 +234,10 @@ class ViewController:
       for: path
     ) as! TimelineViewItem
     x.model = TimelineViewItem.Model(
-      color: path.item == model.selectedIndex
-        ? .lightGray
-        : .white,
+      color: model.selected
+        .flatMap { $0.index == path.item ? $0 : nil }
+        .map { $0.color }
+        ?? .white,
       selected: model.causesEffects[path.item].approved,
       selection: { [weak self] isSelected in
         self?.output.on(
@@ -297,7 +306,7 @@ extension ViewController.Model: Equatable {
     left.connection == right.connection &&
     left.focused == right.focused &&
     left.presentedState == right.presentedState &&
-    left.selectedIndex == left.selectedIndex
+    left.selected == left.selected
   }
 }
 
@@ -351,6 +360,16 @@ extension ViewController.Model.Connection: Equatable {
     case (.disconnected, disconnected): return true
     default: return false
     }
+  }
+}
+
+extension ViewController.Model.Selection: Equatable {
+  static func ==(
+    left: ViewController.Model.Selection,
+    right: ViewController.Model.Selection
+  ) -> Bool { return
+    left.color == right.color &&
+    left.index == right.index
   }
 }
 
