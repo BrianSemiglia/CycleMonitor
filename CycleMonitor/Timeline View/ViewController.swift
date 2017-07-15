@@ -134,12 +134,8 @@ class ViewController:
           drivers?.addArrangedSubview($0)
       }
     }
-    timeline?.enclosingScrollView?.contentInsets = EdgeInsets(
-      top: 0,
-      left: (view.bounds.size.width - cell.width) / 2.0,
-      bottom: 0,
-      right: (view.bounds.size.width - cell.width) / 2.0
-    )
+    
+    timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     
     if shouldForceRender || new.presentedState != old.presentedState {
       presentedState?.string = new.presentedState
@@ -235,6 +231,19 @@ class ViewController:
     sizeForItemAt indexPath: IndexPath
   ) -> NSSize {
     return cell
+  }
+  
+  func collectionView(
+    _ collectionView: NSCollectionView,
+    layout collectionViewLayout: NSCollectionViewLayout,
+    insetForSectionAt section: Int
+  ) -> EdgeInsets {
+    return EdgeInsets(
+      top: 0,
+      left: (view.bounds.size.width - cell.width) / 2.0,
+      bottom: 0,
+      right: (view.bounds.size.width - cell.width) / 2.0
+    )
   }
 
   func newDriverViewItem() -> DriverViewItem? {
