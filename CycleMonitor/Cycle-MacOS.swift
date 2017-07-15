@@ -147,6 +147,10 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
         var new = context
         new.browser.state = .opening
         return new
+      case .toggledApproval(let index, let isApproved):
+        var new = context
+        new.screen.causesEffects[index].approved = isApproved
+        return new
       default:
         return context
       }
@@ -235,6 +239,7 @@ extension ViewController.Model.CauseEffect: Decodable {
     return curry(ViewController.Model.CauseEffect.init)
       <^> json <| "action"
       <*> json <| "effect"
+      <*> .success(false) // need to find a way to honor default (vs. setting here)
   }
 }
 

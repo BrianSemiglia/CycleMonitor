@@ -23,8 +23,14 @@ class ViewController:
       let color: NSColor
     }
     struct CauseEffect {
-      let cause: String
-      let effect: String
+      var cause: String
+      var effect: String
+      var approved: Bool
+      init(cause: String, effect: String, approved: Bool = false) {
+        self.cause = cause
+        self.effect = effect
+        self.approved = approved
+      }
     }
     enum Connection {
       case connecting
@@ -43,6 +49,7 @@ class ViewController:
     case none
     case scrolledToIndex(Int)
     case opening
+    case toggledApproval(Int, Bool)
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -67,6 +74,7 @@ class ViewController:
   override func viewDidLoad() {
     super.viewDidLoad()
     shouldForceRender = true
+    timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
     timeline?.postsBoundsChangedNotifications = true
     NotificationCenter.default.addObserver(
@@ -217,11 +225,22 @@ class ViewController:
       withIdentifier: "TimelineViewItem",
       for: path
     ) as! TimelineViewItem
-    if let view = x.view as? BackgroundColoredView {
-      view.backgroundColor = path.item == model.selectedIndex
+    x.model = TimelineViewItem.Model(
+      color: path.item == model.selectedIndex
         ? .lightGray
-        : .white
-    }
+        : .white,
+      selected: model.causesEffects[path.item].approved,
+      selection: { [weak self] isSelected in
+        self?.output.on(
+          .next(
+            .toggledApproval(
+              path.item,
+              isSelected
+            )
+          )
+        )
+      }
+    )
     return x
   }
   
@@ -258,7 +277,7 @@ class ViewController:
   var cell: NSSize { return
     NSSize(
       width: 44.0,
-      height: 98.0
+      height: 118.0
     )
   }
 }
@@ -274,7 +293,28 @@ extension ViewController {
 extension ViewController.Model: Equatable {
   static func ==(left: ViewController.Model, right: ViewController.Model) -> Bool {
     return left.causesEffects == right.causesEffects &&
-    left.drivers == right.drivers
+    left.drivers == right.drivers &&
+    left.connection == right.connection &&
+    left.focused == right.focused &&
+    left.presentedState == right.presentedState &&
+    left.selectedIndex == left.selectedIndex
+  }
+}
+
+extension ViewController.Action: Equatable {
+  static func ==(left: ViewController.Action, right: ViewController.Action) -> Bool {
+    switch (left, right) {
+    case (.none, .none):
+      return true
+    case (scrolledToIndex(let a), scrolledToIndex(let b)):
+      return a == b
+    case (.opening, .opening):
+      return true
+    case (.toggledApproval(let a, let c), .toggledApproval(let b, let d)):
+      return a == b && c == d
+    default:
+      return false
+    }
   }
 }
 
@@ -284,7 +324,8 @@ extension ViewController.Model.CauseEffect: Equatable {
     right: ViewController.Model.CauseEffect
   ) -> Bool { return
     left.cause == right.cause &&
-    left.effect == right.effect
+    left.effect == right.effect &&
+    left.approved == right.approved
   }
 }
 

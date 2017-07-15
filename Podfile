@@ -7,6 +7,7 @@ target 'CycleMonitor' do
 
   # Pods for CycleMonitor
   pod 'RxSwift'
+  pod 'RxCocoa'
   pod 'Argo', '~> 4.0'
   pod 'Curry', '~> 3.0'
 
