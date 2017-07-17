@@ -73,12 +73,22 @@ struct CycleMonitorApp: SinkSourceConverting {
     var driversTimeline: [[ViewController.Model.Driver]] = []
     var application = AppDelegateStub.Model()
     var browser = BrowserDriver.Model(state: .idle)
+    var menuBar = MenuBarDriver.Model(
+      items: [
+        MenuBarDriver.Model.Item(
+          title: "Import",
+          enabled: true,
+          id: "import"
+        )
+      ]
+    )
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: ViewController
     let json: MultipeerJSON
     let application: AppDelegateStub
     let browser: BrowserDriver
+    let menuBar: MenuBarDriver
   }
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
@@ -89,6 +99,9 @@ struct CycleMonitorApp: SinkSourceConverting {
       application: AppDelegateStub(),
       browser: BrowserDriver(
         initial: initial.browser
+      ),
+      menuBar: MenuBarDriver(
+        model: initial.menuBar
       )
     )
   }
@@ -118,11 +131,18 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
+    let menuBar = drivers
+      .menuBar
+      .rendered(events.map { $0.menuBar })
+      .tupledWithLatestFrom(events)
+      .reduced()
+    
     return Observable.of(
       screen,
       application,
       json,
-      browser
+      browser,
+      menuBar
     ).merge()
   }
 }
@@ -150,10 +170,6 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
           ),
           index: index
         )
-        return new
-      case .opening:
-        var new = context
-        new.browser.state = .opening
         return new
       case .toggledApproval(let index, let isApproved):
         var new = context
@@ -216,6 +232,22 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       default:
         return context
       }
+    }
+  }
+}
+
+extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model) {
+  func reduced() -> Observable<CycleMonitorApp.Model> { return
+    map { event, context in
+      switch event {
+      case .didSelectItemWith(id: let id) where id == "import":
+        var new = context
+        new.browser.state = .opening
+        return new
+      default:
+        break
+      }
+      return context
     }
   }
 }
