@@ -9,46 +9,6 @@
 import Cocoa
 import RxSwift
 
-class CycledApplicationDelegate:
-                         NSObject,
-                         NSApplicationDelegate {
-  
-  private var cycle: Cycle<CycleMonitorApp>
-  var main: NSWindowController?
-
-  public override init() {
-    cycle = Cycle(transformer: CycleMonitorApp())
-    super.init()
-  }
-  
-  func applicationWillFinishLaunching(_ notification: Notification) {
-    main = NSStoryboard(name : "Main", bundle: nil)
-      .instantiateController(withIdentifier: "MainWindow") as? NSWindowController
-    main?.window?.contentViewController = cycle.root
-    main?.window?.makeKeyAndOrderFront(nil)
-  }
-
-  override open func forwardingTarget(for input: Selector!) -> Any? { return
-    cycle.delegate
-  }
-  
-  override open func responds(to input: Selector!) -> Bool {
-    if input == #selector(applicationWillFinishLaunching(_:)) {
-      applicationWillFinishLaunching(
-        Notification(
-          name: Notification.Name(
-            rawValue: ""
-          )
-        )
-      )
-    }
-    return cycle.delegate.responds(
-      to: input
-    )
-  }
-
-}
-
 class AppDelegateStub: NSObject, NSApplicationDelegate {
   struct Model {}
   enum Action {
@@ -245,7 +205,7 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .didSelectItemWith(id: let id) where id == "import":
+      case .didSelectItemWith(id: let id) where id == "open":
         var new = context
         new.browser.state = .opening
         return new
@@ -286,6 +246,48 @@ extension ViewController.Model.CauseEffect: Decodable {
       <*> json <| "effect"
       <*> .success(false) // need to find a way to honor default (vs. setting here)
   }
+}
+
+// Cycle Application Delegate
+
+class CycledApplicationDelegate:
+      NSObject,
+      NSApplicationDelegate {
+  
+  private var cycle: Cycle<CycleMonitorApp>
+  var main: NSWindowController?
+  
+  public override init() {
+    cycle = Cycle(transformer: CycleMonitorApp())
+    super.init()
+  }
+  
+  func applicationWillFinishLaunching(_ notification: Notification) {
+    main = NSStoryboard(name : "Main", bundle: nil)
+      .instantiateController(withIdentifier: "MainWindow") as? NSWindowController
+    main?.window?.contentViewController = cycle.root
+    main?.window?.makeKeyAndOrderFront(nil)
+  }
+  
+  override open func forwardingTarget(for input: Selector!) -> Any? { return
+    cycle.delegate
+  }
+  
+  override open func responds(to input: Selector!) -> Bool {
+    if input == #selector(applicationWillFinishLaunching(_:)) {
+      applicationWillFinishLaunching(
+        Notification(
+          name: Notification.Name(
+            rawValue: ""
+          )
+        )
+      )
+    }
+    return cycle.delegate.responds(
+      to: input
+    )
+  }
+  
 }
 
 // Cycle Mac
