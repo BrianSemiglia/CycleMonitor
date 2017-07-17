@@ -691,36 +691,26 @@
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77e-YU-ebm">
                                 <rect key="frame" x="20" y="20" width="747" height="748"/>
                                 <subviews>
-                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wxX-SF-A2K">
-                                        <rect key="frame" x="334" y="720" width="80" height="32"/>
-                                        <buttonCell key="cell" type="push" title="Import" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cKR-ch-SIP">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="didReceiveEventFromImport:" target="XfG-lQ-9wD" id="giZ-7p-ahD"/>
-                                        </connections>
-                                    </button>
                                     <stackView distribution="fillProportionally" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-26-3Vw">
-                                        <rect key="frame" x="0.0" y="146" width="747" height="573"/>
+                                        <rect key="frame" x="0.0" y="146" width="747" height="602"/>
                                         <subviews>
                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="1000" verticalStackHuggingPriority="1" horizontalHuggingPriority="1000" verticalCompressionResistancePriority="999" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzx-RN-ga6">
-                                                <rect key="frame" x="0.0" y="0.0" width="140" height="573"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="602"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="140" id="nYv-Fd-sfs"/>
                                                 </constraints>
                                             </stackView>
                                             <scrollView wantsLayer="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQa-Wm-BzR">
-                                                <rect key="frame" x="148" y="0.0" width="599" height="573"/>
+                                                <rect key="frame" x="148" y="0.0" width="599" height="602"/>
                                                 <clipView key="contentView" id="SJT-hB-Gye">
-                                                    <rect key="frame" x="1" y="1" width="597" height="571"/>
+                                                    <rect key="frame" x="1" y="1" width="597" height="600"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textView editable="NO" importsGraphics="NO" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
-                                                            <rect key="frame" x="0.0" y="0.0" width="597" height="571"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="597" height="600"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <size key="minSize" width="597" height="571"/>
+                                                            <size key="minSize" width="597" height="600"/>
                                                             <size key="maxSize" width="599" height="10000000"/>
                                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                         </textView>
@@ -732,7 +722,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="C8C-a1-IXc">
-                                                    <rect key="frame" x="582" y="1" width="16" height="571"/>
+                                                    <rect key="frame" x="582" y="1" width="16" height="600"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -793,10 +783,8 @@
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
-                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
-                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>

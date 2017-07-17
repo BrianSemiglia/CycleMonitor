@@ -52,7 +52,6 @@ class ViewController:
   enum Action {
     case none
     case scrolledToIndex(Int)
-    case opening
     case toggledApproval(Int, Bool)
   }
 
@@ -201,16 +200,16 @@ class ViewController:
     }
   }
   
-  @IBAction func didReceiveEventFromImport(_ sender: NSButton) {
-    output.on(.next(.opening))
-  }
-  
   func collectionView(
     _ collectionView: NSCollectionView,
     didSelectItemsAt indexPaths: Set<IndexPath>
   ) {
     if let index = indexPaths.first?.item {
-      output.on(.next(.scrolledToIndex(index)))
+      output.on(
+        .next(
+          .scrolledToIndex(index)
+        )
+      )
     }
   }
   
@@ -317,8 +316,6 @@ extension ViewController.Action: Equatable {
       return true
     case (scrolledToIndex(let a), scrolledToIndex(let b)):
       return a == b
-    case (.opening, .opening):
-      return true
     case (.toggledApproval(let a, let c), .toggledApproval(let b, let d)):
       return a == b && c == d
     default:
@@ -376,8 +373,7 @@ extension ViewController.Model.Selection: Equatable {
 extension NSScrollView {
     var documentVisibleCenter: NSPoint { return
         CGPoint(
-            x: documentVisibleRect.origin.x +
-                (bounds.size.width / 2.0),
+            x: documentVisibleRect.origin.x + (bounds.size.width / 2.0),
             y: bounds.height / CGFloat(2)
         )
     }
