@@ -7,14 +7,16 @@
 //
 
 import AppKit
+import Foundation
 import RxSwift
+import Runes
 
 class BrowserDriver {
   
   struct Model {
     enum State {
       case idle
-      case saving
+      case saving([AnyHashable: Any])
       case opening
     }
     var state: State
@@ -24,7 +26,7 @@ class BrowserDriver {
     case none
     case saving
     case opening(URL)
-    case didOpen
+    case didOpen([AnyHashable: Any])
   }
   
   var model: Model
@@ -65,18 +67,33 @@ class BrowserDriver {
       switch new.state {
       case .opening:
         let open = BrowserDriver.open
-        let x = open.runModal()
-        if x == NSModalResponseOK {
-          let directory = open.directoryURL
-          let filename = open.representedFilename
+        if open.runModal() == NSModalResponseOK {
+          open.url
+            >>- { try? Data(contentsOf: $0) }
+            >>- {
+              try? PropertyListSerialization.propertyList(
+                from: $0,
+                options: PropertyListSerialization.MutabilityOptions(rawValue: 0),
+                format: nil
+              )
+            }
+            >>- { $0 as? [AnyHashable: Any] }
+            >>- Action.didOpen
+            >>- Event.next
+            >>- output.on
         }
-        output.on(.next(.didOpen))
-      case .saving:
+      case .saving(let json):
         let save = NSSavePanel()
-        let x = save.runModal()
-        if x == NSModalResponseOK {
-          let directory = save.directoryURL
-          let filename = save.representedFilename
+        if save.runModal() == NSModalResponseOK {
+          save.url
+            >>- {
+              try? PropertyListSerialization.data(
+                fromPropertyList: json,
+                format: .binary,
+                options: 0
+              )
+              .write(to: $0)
+            }
         }
       case .idle:
         break
@@ -88,5 +105,23 @@ class BrowserDriver {
 extension BrowserDriver.Model: Equatable {
   static func ==(left: BrowserDriver.Model, right: BrowserDriver.Model) -> Bool {
     return left.state == right.state
+  }
+}
+
+extension BrowserDriver.Model.State: Equatable {
+  static func ==(
+    left: BrowserDriver.Model.State,
+    right: BrowserDriver.Model.State
+  ) -> Bool {
+    switch (left, right) {
+    case (.idle, .idle):
+      return true
+    case (.saving(let a), .saving(let b)):
+      return NSDictionary(dictionary: a) == NSDictionary(dictionary: b)
+    case (.opening, .opening):
+      return true
+    default:
+      return false
+    }
   }
 }

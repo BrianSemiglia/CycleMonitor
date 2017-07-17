@@ -190,7 +190,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .didOpen:
+      case .didOpen(let json):
         var new = context
         new.browser.state = .idle
         return new
@@ -209,11 +209,28 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
         var new = context
         new.browser.state = .opening
         return new
+      case .didSelectItemWith(id: let id) where id == "save":
+        var new = context
+        new.browser.state = .saving(context.json)
+        return new
       default:
         break
       }
       return context
     }
+  }
+}
+
+extension CycleMonitorApp.Model {
+  var json: [AnyHashable: Any] { return
+    [
+      "causesEffects": self.screen.causesEffects.map {
+        [
+          "cause": $0.cause,
+          "effect": $0.effect
+        ]
+      }
+    ]
   }
 }
 
