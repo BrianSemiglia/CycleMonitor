@@ -76,9 +76,14 @@ struct CycleMonitorApp: SinkSourceConverting {
     var menuBar = MenuBarDriver.Model(
       items: [
         MenuBarDriver.Model.Item(
-          title: "Import",
+          title: "Open",
           enabled: true,
-          id: "import"
+          id: "open"
+        ),
+        MenuBarDriver.Model.Item(
+          title: "Save",
+          enabled: true,
+          id: "save"
         )
       ]
     )
