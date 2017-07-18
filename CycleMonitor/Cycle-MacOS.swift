@@ -192,6 +192,14 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       switch event {
       case .didOpen(let json):
         var new = context
+        new.screen.causesEffects = json["causesEffects"]
+          .flatMap { $0 as? [[AnyHashable: Any]] }
+          .flatMap(decode)
+          ?? []
+        new.driversTimeline = json["driversTimeline"]
+          .flatMap { $0 as? [Any] }
+          .flatMap { $0.flatMap(decode) }
+          ?? [[]]
         new.browser.state = .idle
         return new
       default:
@@ -211,7 +219,7 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
         return new
       case .didSelectItemWith(id: let id) where id == "save":
         var new = context
-        new.browser.state = .saving(context.json)
+        new.browser.state = .saving(context.saveFile)
         return new
       default:
         break
@@ -222,14 +230,18 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
 }
 
 extension CycleMonitorApp.Model {
-  var json: [AnyHashable: Any] { return
+  var saveFile: [AnyHashable: Any] { return
     [
-      "causesEffects": self.screen.causesEffects.map {
-        [
-          "cause": $0.cause,
-          "effect": $0.effect
-        ]
-      }
+      "driversTimeline": driversTimeline.map {
+        $0.map {[
+          "label": $0.label,
+          "action": $0.action ?? ""
+        ]}
+      },
+      "causesEffects": self.screen.causesEffects.map {[
+        "action": $0.cause,
+        "effect": $0.effect
+      ]}
     ]
   }
 }
@@ -251,7 +263,9 @@ extension ViewController.Model.Driver {
     self.init(
       label: label,
       action: action,
-      color: action == nil ? .yellow : .red
+      color: action
+        .map { $0.characters.count == 0 ? .yellow : .red }
+        ?? .yellow
     )
   }
 }
