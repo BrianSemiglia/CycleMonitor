@@ -45,7 +45,7 @@ class ViewController:
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selected: Selection?
-    var focused: Int
+    var focused: Int?
     var connection: Connection
   }
   
@@ -166,10 +166,11 @@ class ViewController:
       )
     }
     
-    if shouldForceRender ||
-       new.focused != old.focused &&
-       new.focused > 0,
-       new.selected.map({ $0.index != new.focused }) == true {
+    if let focused = new.focused,
+      focused != old.focused,
+      focused > 0,
+      new.selected.map({ $0.index != new.focused }) == true
+    {
       if new.causesEffects.count > 0 {
         NSAnimationContext.current().allowsImplicitAnimation = true
         self.timeline?.scrollToItems(

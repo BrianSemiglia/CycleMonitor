@@ -22,15 +22,37 @@ class AppDelegateStub: NSObject, NSApplicationDelegate {
 
 struct CycleMonitorApp: SinkSourceConverting {
   struct Model: Initializable {
-    var screen = ViewController.Model(
-      drivers: [],
-      causesEffects: [],
-      presentedState: "",
-      selected: nil,
-      focused: 0,
-      connection: .disconnected
+    struct Event {
+      struct Driver {
+        var label: String
+        var action: String
+      }
+      var drivers: [Driver]
+      var cause: Driver
+      var effect: String
+      var isApproved = false
+      init(drivers: [Driver], cause: Driver, effect: String, isApproved: Bool = false) {
+        self.drivers = drivers
+        self.cause = cause
+        self.effect = effect
+        self.isApproved = isApproved
+      }
+    }
+    struct TimeLineView {
+      var selectedIndex: Int?
+      var focusedIndex: Int?
+    }
+    enum Connection {
+      case disconnected
+      case connecting
+      case connected
+    }
+    var events: [Event] = []
+    var timeLineView = TimeLineView(
+      selectedIndex: nil,
+      focusedIndex: nil
     )
-    var driversTimeline: [[ViewController.Model.Driver]] = []
+    var connection = Connection.disconnected
     var application = AppDelegateStub.Model()
     var browser = BrowserDriver.Model(state: .idle)
     var menuBar = MenuBarDriver.Model(
@@ -58,7 +80,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
       screen: ViewController.new(
-        model: initial.screen
+        model: initial.asModel
       ),
       json: MultipeerJSON(),
       application: AppDelegateStub(),
@@ -76,7 +98,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   ) -> Observable<Model> {
     let screen = drivers
       .screen
-      .rendered(events.map { $0.screen })
+      .rendered(events.map { $0.asModel })
       .tupledWithLatestFrom(events)
       .reduced()
     
@@ -112,6 +134,42 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension CycleMonitorApp.Model {
+  var asModel: ViewController.Model { return
+    ViewController.Model(
+      drivers: timeLineView.selectedIndex.map {
+        events[$0].drivers.map {
+          ViewController.Model.Driver(
+            label: $0.label,
+            action: $0.action,
+            color: $0.action.characters.count <= 0 ? .yellow : .red
+          )
+        }
+      } ?? [],
+      causesEffects: events.map {
+        ViewController.Model.CauseEffect(
+          cause: $0.cause.action,
+          effect: $0.effect
+        )
+      },
+      presentedState: timeLineView.selectedIndex.map { events[$0].effect } ?? "",
+      selected: timeLineView.selectedIndex.map {
+        ViewController.Model.Selection(
+          color: NSColor(
+            red: 232.0/255.0,
+            green: 232.0/255.0,
+            blue: 232.0/255.0,
+            alpha: 1
+          ),
+          index: $0
+        )
+      },
+      focused: timeLineView.focusedIndex,
+      connection: .disconnected // needs to come from MultipeerJSON
+    )
+  }
+}
+
 extension ObservableType {
   func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> {
     return withLatestFrom(input) { ($0.0, $0.1 ) }
@@ -124,21 +182,11 @@ extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Mode
       switch event {
       case .scrolledToIndex(let index):
         var new = context
-        new.screen.drivers = context.driversTimeline[index]
-        new.screen.presentedState = context.screen.causesEffects[index].effect
-        new.screen.selected = ViewController.Model.Selection(
-          color: NSColor(
-            red: 232.0/255.0,
-            green: 232.0/255.0,
-            blue: 232.0/255.0,
-            alpha: 1
-          ),
-          index: index
-        )
+        new.timeLineView.selectedIndex = index
         return new
       case .toggledApproval(let index, let isApproved):
         var new = context
-        new.screen.causesEffects[index].approved = isApproved
+        new.events[index].isApproved = isApproved
         return new
       default:
         return context
@@ -153,23 +201,22 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
       switch event {
       case .received(let data):
         var new = context
-        new.driversTimeline += data["drivers"].flatMap(decode).map {[$0]} ?? [[]]
-        new.screen.drivers = data["drivers"].flatMap(decode) ?? []
-        new.screen.presentedState = data["effect"].flatMap(decode) ?? ""
-        new.screen.causesEffects += decode(data).map {[$0]} ?? []
-        new.screen.focused = new.screen.causesEffects.count - 1
+        new.events += decode(data).map { [$0] } ?? []
+        new.timeLineView.focusedIndex = new.events.count > 0
+          ? new.events.count - 1
+          : nil
         return new
       case .connected:
         var new = context
-        new.screen.connection = .connected
+        new.connection = .connected
         return new
       case .connecting:
         var new = context
-        new.screen.connection = .connecting
+        new.connection = .connecting
         return new
       case .disconnected:
         var new = context
-        new.screen.connection = .disconnected
+        new.connection = .disconnected
         return new
       default:
         return context
@@ -192,14 +239,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       switch event {
       case .didOpen(let json):
         var new = context
-        new.screen.causesEffects = json["causesEffects"]
-          .flatMap { $0 as? [[AnyHashable: Any]] }
-          .flatMap(decode)
-          ?? []
-        new.driversTimeline = json["driversTimeline"]
-          .flatMap { $0 as? [Any] }
-          .flatMap { $0.flatMap(decode) }
-          ?? [[]]
+        new.events = json["events"].flatMap(decode) ?? []
         new.browser.state = .idle
         return new
       default:
@@ -232,16 +272,19 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
 extension CycleMonitorApp.Model {
   var saveFile: [AnyHashable: Any] { return
     [
-      "driversTimeline": driversTimeline.map {
-        $0.map {[
-          "label": $0.label,
-          "action": $0.action ?? ""
-        ]}
-      },
-      "causesEffects": self.screen.causesEffects.map {[
-        "action": $0.cause,
-        "effect": $0.effect
-      ]}
+      "events": events.map {
+        [
+          "drivers": $0.drivers.map {[
+            "label": $0.label,
+            "action": $0.action
+          ]},
+          "cause": [
+            "label": $0.cause.label,
+            "action": $0.cause.action
+          ],
+          "effect": $0.effect
+        ]
+      }
     ]
   }
 }
@@ -249,6 +292,24 @@ extension CycleMonitorApp.Model {
 import Argo
 import Runes
 import Curry
+
+extension CycleMonitorApp.Model.Event: Decodable {
+  static func decode(_ json: JSON) -> Decoded<CycleMonitorApp.Model.Event> {
+    return curry(CycleMonitorApp.Model.Event.init)
+      <^> json <|| "drivers"
+      <*> json <| "cause"
+      <*> json <| "effect"
+      <*> .success(false)
+  }
+}
+
+extension CycleMonitorApp.Model.Event.Driver: Decodable {
+  static func decode(_ json: JSON) -> Decoded<CycleMonitorApp.Model.Event.Driver> {
+    return curry(CycleMonitorApp.Model.Event.Driver.init)
+      <^> json <| "label"
+      <*> json <| "action"
+  }
+}
 
 extension ViewController.Model.Driver: Decodable {
   static func decode(_ json: JSON) -> Decoded<ViewController.Model.Driver> {
