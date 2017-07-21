@@ -240,6 +240,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       case .didOpen(let json):
         var new = context
         new.events = json["events"].flatMap(decode) ?? []
+        new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
         new.browser.state = .idle
         return new
       default:
@@ -272,6 +273,7 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
 extension CycleMonitorApp.Model {
   var saveFile: [AnyHashable: Any] { return
     [
+      "selectedIndex": timeLineView.selectedIndex as Any,
       "events": events.map {
         [
           "drivers": $0.drivers.map {[
