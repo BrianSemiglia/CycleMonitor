@@ -169,20 +169,22 @@ class ViewController:
     if let focused = new.focused,
       focused != old.focused,
       focused > 0,
-      new.selected.map({ $0.index != new.focused }) == true
+      new.selected.map({ $0.index != new.focused }) ?? true
     {
       if new.causesEffects.count > 0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // <-- async hack
         NSAnimationContext.current().allowsImplicitAnimation = true
         self.timeline?.scrollToItems(
           at: [
             IndexPath(
-              item: new.causesEffects.count - 1,
+              item: focused,
               section: 0
             )
           ],
           scrollPosition: .centeredHorizontally
         )
         NSAnimationContext.current().allowsImplicitAnimation = false
+        }
       }
     }
     
