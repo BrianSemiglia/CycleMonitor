@@ -299,7 +299,7 @@ import Argo
 import Runes
 import Curry
 
-extension CycleMonitorApp.Model.Event: Decodable {
+extension CycleMonitorApp.Model.Event: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<CycleMonitorApp.Model.Event> {
     return curry(CycleMonitorApp.Model.Event.init)
       <^> json <|| "drivers"
@@ -309,7 +309,7 @@ extension CycleMonitorApp.Model.Event: Decodable {
   }
 }
 
-extension CycleMonitorApp.Model.Event.Driver: Decodable {
+extension CycleMonitorApp.Model.Event.Driver: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<CycleMonitorApp.Model.Event.Driver> {
     return curry(CycleMonitorApp.Model.Event.Driver.init)
       <^> json <| "label"
@@ -317,7 +317,7 @@ extension CycleMonitorApp.Model.Event.Driver: Decodable {
   }
 }
 
-extension TimeLineViewController.Model.Driver: Decodable {
+extension TimeLineViewController.Model.Driver: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.Driver> {
     return curry(TimeLineViewController.Model.Driver.init)
       <^> json <| "label"
@@ -337,7 +337,7 @@ extension TimeLineViewController.Model.Driver {
   }
 }
 
-extension TimeLineViewController.Model.CauseEffect: Decodable {
+extension TimeLineViewController.Model.CauseEffect: Argo.Decodable {
   public static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.CauseEffect> {
     return curry(TimeLineViewController.Model.CauseEffect.init)
       <^> json <| "action"
