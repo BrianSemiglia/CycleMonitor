@@ -243,6 +243,10 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
         new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
         new.browser.state = .idle
         return new
+      case .cancelling:
+        var new = context
+        new.browser.state = .idle
+        return new
       default:
         return context
       }

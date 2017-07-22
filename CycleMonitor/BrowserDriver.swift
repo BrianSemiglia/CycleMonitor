@@ -27,6 +27,7 @@ class BrowserDriver {
     case saving
     case opening(URL)
     case didOpen([AnyHashable: Any])
+    case cancelling
   }
   
   var model: Model
@@ -81,6 +82,8 @@ class BrowserDriver {
             >>- Action.didOpen
             >>- Event.next
             >>- output.on
+        } else {
+          output.on(.next(.cancelling))
         }
       case .saving(let json):
         let save = NSSavePanel()
