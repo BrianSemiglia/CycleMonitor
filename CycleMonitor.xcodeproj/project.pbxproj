@@ -12,7 +12,7 @@
 		D31169511F0B12DA004A0135 /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694C1F0B12DA004A0135 /* DriverViewItem.xib */; };
 		D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */; };
 		D31169531F0B12DA004A0135 /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */; };
-		D31169541F0B12DA004A0135 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* ViewController.swift */; };
+		D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */; };
 		D31169571F0B13A5004A0135 /* JSONMultipeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* JSONMultipeer.swift */; };
 		D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */; };
 		D31D15921F0CBEF20009DE25 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D15911F0CBEF20009DE25 /* main.swift */; };
@@ -44,7 +44,7 @@
 		D311694C1F0B12DA004A0135 /* DriverViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverViewItem.xib; sourceTree = "<group>"; };
 		D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
 		D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
-		D311694F1F0B12DA004A0135 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
 		D31169561F0B13A5004A0135 /* JSONMultipeer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONMultipeer.swift; sourceTree = "<group>"; };
 		D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cycle-MacOS.swift"; sourceTree = "<group>"; };
 		D31D15911F0CBEF20009DE25 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -107,7 +107,7 @@
 				D311694C1F0B12DA004A0135 /* DriverViewItem.xib */,
 				D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */,
 				D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */,
-				D311694F1F0B12DA004A0135 /* ViewController.swift */,
+				D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */,
 			);
 			path = "Timeline View";
 			sourceTree = "<group>";
@@ -397,7 +397,7 @@
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
 				D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */,
-				D31169541F0B12DA004A0135 /* ViewController.swift in Sources */,
+				D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */,
 				D31169571F0B13A5004A0135 /* JSONMultipeer.swift in Sources */,
 				D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */,
 				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,

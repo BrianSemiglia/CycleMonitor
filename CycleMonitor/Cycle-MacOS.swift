@@ -71,7 +71,7 @@ struct CycleMonitorApp: SinkSourceConverting {
     )
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
-    let screen: ViewController
+    let screen: TimeLineViewController
     let json: MultipeerJSON
     let application: AppDelegateStub
     let browser: BrowserDriver
@@ -79,7 +79,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
-      screen: ViewController.new(
+      screen: TimeLineViewController.new(
         model: initial.asModel
       ),
       json: MultipeerJSON(),
@@ -135,11 +135,11 @@ struct CycleMonitorApp: SinkSourceConverting {
 }
 
 extension CycleMonitorApp.Model {
-  var asModel: ViewController.Model { return
-    ViewController.Model(
+  var asModel: TimeLineViewController.Model { return
+    TimeLineViewController.Model(
       drivers: timeLineView.selectedIndex.map {
         events[$0].drivers.map {
-          ViewController.Model.Driver(
+          TimeLineViewController.Model.Driver(
             label: $0.label,
             action: $0.action,
             color: $0.action.characters.count <= 0 ? .yellow : .red
@@ -147,14 +147,14 @@ extension CycleMonitorApp.Model {
         }
       } ?? [],
       causesEffects: events.map {
-        ViewController.Model.CauseEffect(
+        TimeLineViewController.Model.CauseEffect(
           cause: $0.cause.action,
           effect: $0.effect
         )
       },
       presentedState: timeLineView.selectedIndex.map { events[$0].effect } ?? "",
       selected: timeLineView.selectedIndex.map {
-        ViewController.Model.Selection(
+        TimeLineViewController.Model.Selection(
           color: NSColor(
             red: 232.0/255.0,
             green: 232.0/255.0,
@@ -176,7 +176,7 @@ extension ObservableType {
   }
 }
 
-extension ObservableType where E == (ViewController.Action, CycleMonitorApp.Model) {
+extension ObservableType where E == (TimeLineViewController.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
@@ -313,15 +313,15 @@ extension CycleMonitorApp.Model.Event.Driver: Decodable {
   }
 }
 
-extension ViewController.Model.Driver: Decodable {
-  static func decode(_ json: JSON) -> Decoded<ViewController.Model.Driver> {
-    return curry(ViewController.Model.Driver.init)
+extension TimeLineViewController.Model.Driver: Decodable {
+  static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.Driver> {
+    return curry(TimeLineViewController.Model.Driver.init)
       <^> json <| "label"
       <*> json <|? "action"
   }
 }
 
-extension ViewController.Model.Driver {
+extension TimeLineViewController.Model.Driver {
   init(label: String, action: String?) {
     self.init(
       label: label,
@@ -333,9 +333,9 @@ extension ViewController.Model.Driver {
   }
 }
 
-extension ViewController.Model.CauseEffect: Decodable {
-  public static func decode(_ json: JSON) -> Decoded<ViewController.Model.CauseEffect> {
-    return curry(ViewController.Model.CauseEffect.init)
+extension TimeLineViewController.Model.CauseEffect: Decodable {
+  public static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.CauseEffect> {
+    return curry(TimeLineViewController.Model.CauseEffect.init)
       <^> json <| "action"
       <*> json <| "effect"
       <*> .success(false) // need to find a way to honor default (vs. setting here)

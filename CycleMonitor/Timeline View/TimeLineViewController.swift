@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TimeLineViewController.swift
 //  CycleMonitor
 //
 //  Created by Brian Semiglia on 6/24/17.
@@ -10,7 +10,7 @@ import Cocoa
 import Foundation
 import RxSwift
 
-class ViewController:
+class TimeLineViewController:
       NSViewController,
       NSCollectionViewDataSource,
       NSCollectionViewDelegateFlowLayout,
@@ -88,7 +88,9 @@ class ViewController:
         if let `self` = self, let timeline = self.timeline {
           let point = timeline.enclosingScrollView!.documentVisibleCenter
           if let x = timeline.indexPathForItem(at:point)?.item {
-            self.output.on(.next(.scrolledToIndex(x)))
+            DispatchQueue.main.async {
+              self.output.on(.next(.scrolledToIndex(x)))
+            }
           }
         }
       }
@@ -171,21 +173,21 @@ class ViewController:
       focused > 0,
       new.selected.map({ $0.index != new.focused }) ?? true
     {
-      if new.causesEffects.count > 0 {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // <-- async hack
-        NSAnimationContext.current().allowsImplicitAnimation = true
-        self.timeline?.scrollToItems(
-          at: [
-            IndexPath(
-              item: focused,
-              section: 0
-            )
-          ],
-          scrollPosition: .centeredHorizontally
-        )
-        NSAnimationContext.current().allowsImplicitAnimation = false
-        }
-      }
+//      if new.causesEffects.count > 0 {
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // <-- async hack
+//        NSAnimationContext.current().allowsImplicitAnimation = true
+//        self.timeline?.scrollToItems(
+//          at: [
+//            IndexPath(
+//              item: focused,
+//              section: 0
+//            )
+//          ],
+//          scrollPosition: .centeredHorizontally
+//        )
+//        NSAnimationContext.current().allowsImplicitAnimation = false
+//        }
+//      }
     }
     
     if shouldForceRender || new.connection != old.connection {
@@ -293,16 +295,16 @@ class ViewController:
   }
 }
 
-extension ViewController {
-  static func new(model: ViewController.Model) -> ViewController {
-    let x = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "MainViewController") as! ViewController
+extension TimeLineViewController {
+  static func new(model: TimeLineViewController.Model) -> TimeLineViewController {
+    let x = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "TimeLineViewController") as! TimeLineViewController
     x.model = model
     return x
   }
 }
 
-extension ViewController.Model: Equatable {
-  static func ==(left: ViewController.Model, right: ViewController.Model) -> Bool {
+extension TimeLineViewController.Model: Equatable {
+  static func ==(left: TimeLineViewController.Model, right: TimeLineViewController.Model) -> Bool {
     return left.causesEffects == right.causesEffects &&
     left.drivers == right.drivers &&
     left.connection == right.connection &&
@@ -312,8 +314,8 @@ extension ViewController.Model: Equatable {
   }
 }
 
-extension ViewController.Action: Equatable {
-  static func ==(left: ViewController.Action, right: ViewController.Action) -> Bool {
+extension TimeLineViewController.Action: Equatable {
+  static func ==(left: TimeLineViewController.Action, right: TimeLineViewController.Action) -> Bool {
     switch (left, right) {
     case (.none, .none):
       return true
@@ -327,10 +329,10 @@ extension ViewController.Action: Equatable {
   }
 }
 
-extension ViewController.Model.CauseEffect: Equatable {
+extension TimeLineViewController.Model.CauseEffect: Equatable {
   static func ==(
-    left: ViewController.Model.CauseEffect,
-    right: ViewController.Model.CauseEffect
+    left: TimeLineViewController.Model.CauseEffect,
+    right: TimeLineViewController.Model.CauseEffect
   ) -> Bool { return
     left.cause == right.cause &&
     left.effect == right.effect &&
@@ -338,10 +340,10 @@ extension ViewController.Model.CauseEffect: Equatable {
   }
 }
 
-extension ViewController.Model.Driver: Equatable {
+extension TimeLineViewController.Model.Driver: Equatable {
   static func ==(
-    left: ViewController.Model.Driver,
-    right: ViewController.Model.Driver
+    left: TimeLineViewController.Model.Driver,
+    right: TimeLineViewController.Model.Driver
   ) -> Bool { return
     left.label == right.label &&
     left.action == right.action &&
@@ -349,10 +351,10 @@ extension ViewController.Model.Driver: Equatable {
   }
 }
 
-extension ViewController.Model.Connection: Equatable {
+extension TimeLineViewController.Model.Connection: Equatable {
   static func ==(
-    left: ViewController.Model.Connection,
-    right: ViewController.Model.Connection
+    left: TimeLineViewController.Model.Connection,
+    right: TimeLineViewController.Model.Connection
   ) -> Bool {
     switch (left, right) {
     case (.connecting, .connecting): return true
@@ -363,10 +365,10 @@ extension ViewController.Model.Connection: Equatable {
   }
 }
 
-extension ViewController.Model.Selection: Equatable {
+extension TimeLineViewController.Model.Selection: Equatable {
   static func ==(
-    left: ViewController.Model.Selection,
-    right: ViewController.Model.Selection
+    left: TimeLineViewController.Model.Selection,
+    right: TimeLineViewController.Model.Selection
   ) -> Bool { return
     left.color == right.color &&
     left.index == right.index
