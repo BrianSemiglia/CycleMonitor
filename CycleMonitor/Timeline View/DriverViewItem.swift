@@ -13,6 +13,11 @@ class DriverViewItem: NSView {
   @IBOutlet private var labelTop: NSTextField?
   @IBOutlet private var labelBottom: NSTextField?
   @IBOutlet private var background: BackgroundColoredView?
+  @IBOutlet private var side: BackgroundColoredView?
+  
+  func set(side new: NSColor) {
+    side?.backgroundColor = new
+  }
   
   func set(background new: NSColor) {
     background?.backgroundColor = new

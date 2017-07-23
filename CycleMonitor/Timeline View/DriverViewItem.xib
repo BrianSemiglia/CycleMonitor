@@ -11,41 +11,60 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="1vX-EV-zcZ" customClass="DriverViewItem" customModule="CycleMonitor" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="163" height="100"/>
+            <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="ZTk-8K-Zpq" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="163" height="100"/>
+                    <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
                             <color key="value" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </customView>
-                <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhS-cM-QNd">
-                    <rect key="frame" x="5" y="53" width="153" height="42"/>
+                <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ywY-7Z-xEc">
+                    <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
                     <subviews>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mcm-KL-IZc">
-                            <rect key="frame" x="-2" y="25" width="157" height="17"/>
-                            <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="1Tc-Hk-En5">
-                                <font key="font" metaFont="system"/>
-                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                            </textFieldCell>
-                        </textField>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ggp-lO-pvh">
-                            <rect key="frame" x="-2" y="0.0" width="157" height="17"/>
-                            <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="5O1-z7-brX">
-                                <font key="font" metaFont="system"/>
-                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                            </textFieldCell>
-                        </textField>
+                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="JOS-Ep-uR2" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="2" width="4" height="96"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="4" id="QWi-Ka-qK2"/>
+                            </constraints>
+                        </customView>
+                        <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhS-cM-QNd">
+                            <rect key="frame" x="12" y="29" width="192" height="42"/>
+                            <subviews>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mcm-KL-IZc">
+                                    <rect key="frame" x="-2" y="25" width="196" height="17"/>
+                                    <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="1Tc-Hk-En5">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ggp-lO-pvh">
+                                    <rect key="frame" x="-2" y="0.0" width="196" height="17"/>
+                                    <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="5O1-z7-brX">
+                                        <font key="font" metaFont="system"/>
+                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    </textFieldCell>
+                                </textField>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="Mcm-KL-IZc" firstAttribute="width" secondItem="jhS-cM-QNd" secondAttribute="width" id="aGf-wV-pso"/>
+                                <constraint firstItem="Ggp-lO-pvh" firstAttribute="width" secondItem="jhS-cM-QNd" secondAttribute="width" id="o2e-Lv-jfr"/>
+                            </constraints>
+                            <visibilityPriorities>
+                                <integer value="1000"/>
+                                <integer value="1000"/>
+                            </visibilityPriorities>
+                            <customSpacing>
+                                <real value="3.4028234663852886e+38"/>
+                                <real value="3.4028234663852886e+38"/>
+                            </customSpacing>
+                        </stackView>
                     </subviews>
-                    <constraints>
-                        <constraint firstItem="Mcm-KL-IZc" firstAttribute="width" secondItem="jhS-cM-QNd" secondAttribute="width" id="aGf-wV-pso"/>
-                        <constraint firstItem="Ggp-lO-pvh" firstAttribute="width" secondItem="jhS-cM-QNd" secondAttribute="width" id="o2e-Lv-jfr"/>
-                    </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
                         <integer value="1000"/>
@@ -58,18 +77,19 @@
             </subviews>
             <constraints>
                 <constraint firstItem="ZTk-8K-Zpq" firstAttribute="centerY" secondItem="1vX-EV-zcZ" secondAttribute="centerY" id="1R5-0b-jy9"/>
-                <constraint firstAttribute="trailing" secondItem="jhS-cM-QNd" secondAttribute="trailing" constant="5" id="7mh-D2-czp"/>
-                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jhS-cM-QNd" secondAttribute="bottom" constant="5" id="T4P-ea-GEK"/>
+                <constraint firstItem="ywY-7Z-xEc" firstAttribute="leading" secondItem="1vX-EV-zcZ" secondAttribute="leading" id="66x-OV-aq0"/>
+                <constraint firstAttribute="trailing" secondItem="ywY-7Z-xEc" secondAttribute="trailing" id="Vr8-zg-qWS"/>
                 <constraint firstItem="ZTk-8K-Zpq" firstAttribute="height" secondItem="1vX-EV-zcZ" secondAttribute="height" id="cbr-12-bi7"/>
-                <constraint firstItem="jhS-cM-QNd" firstAttribute="leading" secondItem="1vX-EV-zcZ" secondAttribute="leading" constant="5" id="gq1-MO-NsA"/>
+                <constraint firstItem="ywY-7Z-xEc" firstAttribute="top" secondItem="1vX-EV-zcZ" secondAttribute="top" id="g9r-Vj-loo"/>
+                <constraint firstAttribute="bottom" secondItem="ywY-7Z-xEc" secondAttribute="bottom" id="htK-jI-veb"/>
                 <constraint firstItem="ZTk-8K-Zpq" firstAttribute="centerX" secondItem="1vX-EV-zcZ" secondAttribute="centerX" id="kb1-nR-ozq"/>
-                <constraint firstItem="jhS-cM-QNd" firstAttribute="top" secondItem="1vX-EV-zcZ" secondAttribute="top" constant="5" id="ohL-TH-xnl"/>
                 <constraint firstItem="ZTk-8K-Zpq" firstAttribute="width" secondItem="1vX-EV-zcZ" secondAttribute="width" id="u9d-Br-0yT"/>
             </constraints>
             <connections>
                 <outlet property="background" destination="ZTk-8K-Zpq" id="n6E-5J-s21"/>
                 <outlet property="labelBottom" destination="Ggp-lO-pvh" id="r0R-mn-PA6"/>
                 <outlet property="labelTop" destination="Mcm-KL-IZc" id="J05-vv-2Hm"/>
+                <outlet property="side" destination="JOS-Ep-uR2" id="ygF-yx-aZt"/>
             </connections>
             <point key="canvasLocation" x="133.5" y="280"/>
         </customView>

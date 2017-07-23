@@ -20,16 +20,19 @@ class TimeLineViewController:
     struct Driver {
       let label: String
       let action: String?
-      let color: NSColor
+      let background: NSColor
+      let side: NSColor
     }
     struct CauseEffect {
       var cause: String
       var effect: String
       var approved: Bool
-      init(cause: String, effect: String, approved: Bool = false) {
+      var color: NSColor
+      init(cause: String, effect: String, approved: Bool = false, color: NSColor) {
         self.cause = cause
         self.effect = effect
         self.approved = approved
+        self.color = color
       }
     }
     enum Connection {
@@ -140,7 +143,8 @@ class TimeLineViewController:
           let y = newDriverViewItem()
           y?.set(labelTop: x.label)
           y?.set(labelBottom: x.action ?? "")
-          y?.set(background: x.color)
+          y?.set(background: x.background)
+          y?.set(side: x.side)
           return y
         }
         .forEach {
@@ -238,10 +242,12 @@ class TimeLineViewController:
       for: path
     ) as! TimelineViewItem
     x.model = TimelineViewItem.Model(
-      color: model.selected
+      background: model.selected
         .flatMap { $0.index == path.item ? $0 : nil }
         .map { $0.color }
         ?? .white,
+      top: model.causesEffects[path.item].color,
+      bottom: .blue,
       selected: model.causesEffects[path.item].approved,
       selection: { [weak self] isSelected in
         self?.output.on(
@@ -347,7 +353,8 @@ extension TimeLineViewController.Model.Driver: Equatable {
   ) -> Bool { return
     left.label == right.label &&
     left.action == right.action &&
-    left.color == right.color
+    left.background == right.background &&
+    left.side == right.side
   }
 }
 

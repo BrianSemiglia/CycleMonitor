@@ -15,7 +15,9 @@
         <collectionViewItem id="Vhu-tw-ZzL" customClass="TimelineViewItem" customModule="CycleMonitor" customModuleProvider="target">
             <connections>
                 <outlet property="background" destination="w5b-G8-HG9" id="xYT-uu-P6C"/>
+                <outlet property="bottom" destination="Yyt-3f-pcT" id="sGh-Fq-cgR"/>
                 <outlet property="checkbox" destination="x9V-wq-G1w" id="c6W-Xl-sSj"/>
+                <outlet property="top" destination="2ZV-ZV-2pq" id="Mnh-6g-lpM"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="Qze-4m-rxl"/>
             </connections>
         </collectionViewItem>

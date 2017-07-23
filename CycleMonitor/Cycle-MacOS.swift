@@ -26,17 +26,12 @@ struct CycleMonitorApp: SinkSourceConverting {
       struct Driver {
         var label: String
         var action: String
+        var id: String
       }
       var drivers: [Driver]
       var cause: Driver
       var effect: String
       var isApproved = false
-      init(drivers: [Driver], cause: Driver, effect: String, isApproved: Bool = false) {
-        self.drivers = drivers
-        self.cause = cause
-        self.effect = effect
-        self.isApproved = isApproved
-      }
     }
     struct TimeLineView {
       var selectedIndex: Int?
@@ -142,30 +137,40 @@ extension CycleMonitorApp.Model {
           TimeLineViewController.Model.Driver(
             label: $0.label,
             action: $0.action,
-            color: $0.action.characters.count <= 0 ? .yellow : .red
+            background: $0.id.hashValue.goldenRatioColored(),
+            side: $0.id.hashValue.goldenRatioColored(
+              brightness: $0.action.characters.count == 0 ? 0.95 : 0.5
+            )
           )
         }
       } ?? [],
       causesEffects: events.map {
         TimeLineViewController.Model.CauseEffect(
           cause: $0.cause.action,
-          effect: $0.effect
+          effect: $0.effect,
+          color: $0.cause.id.hashValue.goldenRatioColored()
         )
       },
       presentedState: timeLineView.selectedIndex.map { events[$0].effect } ?? "",
       selected: timeLineView.selectedIndex.map {
         TimeLineViewController.Model.Selection(
-          color: NSColor(
-            red: 232.0/255.0,
-            green: 232.0/255.0,
-            blue: 232.0/255.0,
-            alpha: 1
-          ),
+          color: NSColor.cy_lightGray,
           index: $0
         )
       },
       focused: timeLineView.focusedIndex,
       connection: .disconnected // needs to come from MultipeerJSON
+    )
+  }
+}
+
+extension NSColor {
+  static var cy_lightGray: NSColor { return
+    NSColor(
+      red: 232.0/255.0,
+      green: 232.0/255.0,
+      blue: 232.0/255.0,
+      alpha: 1
     )
   }
 }
@@ -295,6 +300,20 @@ extension CycleMonitorApp.Model {
   }
 }
 
+extension Int {
+  func goldenRatioColored(brightness: CGFloat = 0.95) -> NSColor {
+    let bounded = self % (256 * 256 * 256)
+    let hue = CGFloat(bounded % 256) / CGFloat(255.0)
+    let withGoldenRatio = hue + 0.618033988749895
+    return NSColor(
+      hue: withGoldenRatio.truncatingRemainder(dividingBy: 1.0),
+      saturation: 0.75,
+      brightness: brightness,
+      alpha: 1.0
+    )
+  }
+}
+
 import Argo
 import Runes
 import Curry
@@ -314,6 +333,7 @@ extension CycleMonitorApp.Model.Event.Driver: Argo.Decodable {
     return curry(CycleMonitorApp.Model.Event.Driver.init)
       <^> json <| "label"
       <*> json <| "action"
+      <*> json <| "id"
   }
 }
 
@@ -322,27 +342,20 @@ extension TimeLineViewController.Model.Driver: Argo.Decodable {
     return curry(TimeLineViewController.Model.Driver.init)
       <^> json <| "label"
       <*> json <|? "action"
+      <*> json <| "id"
   }
 }
 
 extension TimeLineViewController.Model.Driver {
-  init(label: String, action: String?) {
+  init(label: String, action: String?, id: String) {
     self.init(
       label: label,
       action: action,
-      color: action
-        .map { $0.characters.count == 0 ? .yellow : .red }
-        ?? .yellow
+      background: id.hashValue.goldenRatioColored(),
+      side: id.hashValue.goldenRatioColored(
+        brightness: action.map { $0.characters.count == 0 ? 0.95 : 0.5 } ?? 0.95
+      )
     )
-  }
-}
-
-extension TimeLineViewController.Model.CauseEffect: Argo.Decodable {
-  public static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.CauseEffect> {
-    return curry(TimeLineViewController.Model.CauseEffect.init)
-      <^> json <| "action"
-      <*> json <| "effect"
-      <*> .success(false) // need to find a way to honor default (vs. setting here)
   }
 }
 
