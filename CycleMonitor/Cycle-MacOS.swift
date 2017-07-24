@@ -287,11 +287,13 @@ extension CycleMonitorApp.Model {
         [
           "drivers": $0.drivers.map {[
             "label": $0.label,
-            "action": $0.action
+            "action": $0.action,
+            "id": $0.id
           ]},
           "cause": [
             "label": $0.cause.label,
-            "action": $0.cause.action
+            "action": $0.cause.action,
+            "id": $0.cause.id
           ],
           "effect": $0.effect
         ]
