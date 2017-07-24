@@ -20,7 +20,7 @@ class MultipeerJSON:
     case connecting
     case connected
     case disconnected
-    case received(data: [AnyHashable: Any])
+    case received(data: Data)
   }
   
   private let cleanup = DisposeBag()
@@ -96,19 +96,7 @@ class MultipeerJSON:
     didReceive data: Data,
     fromPeer peerID: MCPeerID
   ) {
-    let info = (
-        try? JSONSerialization.jsonObject(
-          with: data,
-          options: .allowFragments
-        )
-      )
-      .flatMap {
-        $0 as? [AnyHashable: Any]
-      }
-    
-    if let info = info {
-      output.on(.next(.received(data: info)))
-    }
+    output.on(.next(.received(data: data)))
   }
   
   public func session(

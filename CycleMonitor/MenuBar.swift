@@ -48,7 +48,7 @@ class MenuBarDriver {
   }
   
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.subscribe {
+    input.observeOn(MainScheduler.instance).subscribe {
       if let new = $0.element, new != self.model {
         self.model = new
         self.render(new)

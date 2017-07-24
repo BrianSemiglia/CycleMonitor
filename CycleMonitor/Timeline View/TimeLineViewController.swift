@@ -118,7 +118,7 @@ class TimeLineViewController:
   }
   
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.subscribe {
+    input.observeOn(MainScheduler.instance).subscribe {
       if let element = $0.element {
         DispatchQueue.main.async {
           let old = self.model

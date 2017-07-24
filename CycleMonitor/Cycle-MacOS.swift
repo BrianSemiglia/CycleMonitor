@@ -206,7 +206,7 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
       switch event {
       case .received(let data):
         var new = context
-        new.events += decode(data).map { [$0] } ?? []
+        new.events += data.JSON().flatMap(decode).map { [$0] } ?? []
         new.timeLineView.focusedIndex = new.events.count > 0
           ? new.events.count - 1
           : nil
@@ -226,6 +226,20 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
       default:
         return context
       }
+    }
+  }
+}
+
+extension Data {
+  func JSON() -> [AnyHashable: Any]? { return
+    (
+      try? JSONSerialization.jsonObject(
+        with: self,
+        options: .allowFragments
+      )
+    )
+    .flatMap {
+      $0 as? [AnyHashable: Any]
     }
   }
 }
@@ -428,9 +442,11 @@ public final class Cycle<E: SinkSourceConverting> {
     // Not sure how to `merge` observables to single BehaviorSubject though.
     events?
       .startWith(E.Source())
+      .observeOn(ConcurrentDispatchQueueScheduler(queue: .global()))
       .subscribe { [weak self] in
         self?.eventsProxy?.on($0)
-      }.disposed(by: cleanup)
+      }
+      .disposed(by: cleanup)
   }
 }
 

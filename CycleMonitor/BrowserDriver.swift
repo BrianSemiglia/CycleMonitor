@@ -69,7 +69,7 @@ class BrowserDriver {
       case .opening:
         let open = BrowserDriver.open
         if open.runModal() == NSModalResponseOK {
-          open.url
+          let event = open.url
             >>- { try? Data(contentsOf: $0) }
             >>- {
               try? PropertyListSerialization.propertyList(
@@ -81,7 +81,9 @@ class BrowserDriver {
             >>- { $0 as? [AnyHashable: Any] }
             >>- Action.didOpen
             >>- Event.next
-            >>- output.on
+          if let event = event {
+            output.on(event)
+          }
         } else {
           output.on(.next(.cancelling))
         }
