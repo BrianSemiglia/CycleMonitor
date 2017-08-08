@@ -18,28 +18,31 @@ class TimelineViewItem: NSCollectionViewItem {
     case deselected
   }
   struct Model {
-    let background: NSColor
-    let top: NSColor
-    let bottom: NSColor
-    let selected: Bool
-    let selection: (Bool) -> Void
+    var background: NSColor
+    var top: NSColor
+    var bottom: NSColor
+    var selected: Bool
+    var selection: (Bool) -> Void
   }
   
   var model: Model? {
     didSet {
-      render <^> model
+      if let new = model, new != oldValue {
+        print(new.background)
+        render(new)
+      }
     }
   }
   @IBOutlet private var checkbox: NSButton!
-  @IBOutlet private var background: BackgroundColoredView!
-  @IBOutlet private var top: BackgroundColoredView!
-  @IBOutlet private var bottom: BackgroundColoredView!
+  @IBOutlet private var background: NSBox!
+  @IBOutlet private var top: NSBox!
+  @IBOutlet private var bottom: NSBox!
   
   func render(_ input: Model) {
     checkbox.state = input.selected ? 1 : 0
-    background.backgroundColor = input.background
-    top.backgroundColor = input.top
-    bottom.backgroundColor = input.bottom
+    background.fillColor = input.background
+    top.fillColor = input.top
+    bottom.fillColor = input.bottom
   }
   
   override func awakeFromNib() {
@@ -70,8 +73,10 @@ extension TimelineViewItem.Model: Equatable {
   
   @IBInspectable var backgroundColor: NSColor? {
     didSet {
-      setNeedsDisplay(frame)
-      display()
+      if let new = backgroundColor, new != oldValue {
+        setNeedsDisplay(frame)
+        display()
+      }
     }
   }
   

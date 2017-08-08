@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13168.3"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -14,57 +15,54 @@
         </customObject>
         <collectionViewItem id="Vhu-tw-ZzL" customClass="TimelineViewItem" customModule="CycleMonitor" customModuleProvider="target">
             <connections>
-                <outlet property="background" destination="w5b-G8-HG9" id="xYT-uu-P6C"/>
-                <outlet property="bottom" destination="Yyt-3f-pcT" id="sGh-Fq-cgR"/>
+                <outlet property="background" destination="Vxb-V7-hQd" id="h6a-yW-2c0"/>
+                <outlet property="bottom" destination="kys-9F-NkW" id="kD6-nC-zSu"/>
                 <outlet property="checkbox" destination="x9V-wq-G1w" id="c6W-Xl-sSj"/>
-                <outlet property="top" destination="2ZV-ZV-2pq" id="Mnh-6g-lpM"/>
+                <outlet property="top" destination="3RA-pE-Sgg" id="iLP-4F-mdJ"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="Qze-4m-rxl"/>
             </connections>
         </collectionViewItem>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="496" height="402"/>
+            <rect key="frame" x="0.0" y="0.0" width="508" height="402"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="w5b-G8-HG9" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                    <rect key="frame" x="-1" y="0.0" width="497" height="402"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                            <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </customView>
+                <box boxType="custom" borderType="none" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="Vxb-V7-hQd">
+                    <rect key="frame" x="0.0" y="0.0" width="508" height="402"/>
+                    <view key="contentView" id="Ysh-m9-FzU">
+                        <rect key="frame" x="0.0" y="0.0" width="508" height="402"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </box>
                 <stackView distribution="fillEqually" orientation="vertical" alignment="centerX" spacing="10" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MkK-B7-04i">
-                    <rect key="frame" x="8" y="8" width="480" height="386"/>
+                    <rect key="frame" x="8" y="8" width="492" height="386"/>
                     <subviews>
-                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="2ZV-ZV-2pq" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="264" width="480" height="122"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                    <color key="value" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </customView>
+                        <box boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="3RA-pE-Sgg">
+                            <rect key="frame" x="0.0" y="260" width="492" height="126"/>
+                            <view key="contentView" id="lTN-mB-71d">
+                                <rect key="frame" x="0.0" y="0.0" width="492" height="126"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
+                        </box>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="x9V-wq-G1w">
-                            <rect key="frame" x="229" y="130" width="22" height="126"/>
+                            <rect key="frame" x="235" y="132" width="22" height="120"/>
                             <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="v74-JG-s3S">
                                 <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                 <font key="font" metaFont="system"/>
                             </buttonCell>
                         </button>
-                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Yyt-3f-pcT" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="122"/>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                    <color key="value" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                        </customView>
+                        <box boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="kys-9F-NkW">
+                            <rect key="frame" x="0.0" y="0.0" width="492" height="124"/>
+                            <view key="contentView" id="EvR-lP-nSg">
+                                <rect key="frame" x="0.0" y="0.0" width="492" height="124"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
+                        </box>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="Yyt-3f-pcT" firstAttribute="width" secondItem="MkK-B7-04i" secondAttribute="width" id="62S-cN-R4o"/>
-                        <constraint firstItem="2ZV-ZV-2pq" firstAttribute="width" secondItem="MkK-B7-04i" secondAttribute="width" id="hx8-ZQ-fsz"/>
+                        <constraint firstItem="kys-9F-NkW" firstAttribute="width" secondItem="MkK-B7-04i" secondAttribute="width" id="4Jp-M7-bXa"/>
+                        <constraint firstItem="3RA-pE-Sgg" firstAttribute="width" secondItem="MkK-B7-04i" secondAttribute="width" id="O7y-hE-cnw"/>
                     </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
@@ -79,14 +77,14 @@
                 </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="w5b-G8-HG9" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="7VS-l7-8Cv"/>
+                <constraint firstItem="Vxb-V7-hQd" firstAttribute="width" secondItem="Hz6-mo-xeY" secondAttribute="width" id="3j8-Mg-Amj"/>
                 <constraint firstAttribute="bottom" secondItem="MkK-B7-04i" secondAttribute="bottom" constant="8" id="Pv0-xO-cE1"/>
                 <constraint firstAttribute="trailing" secondItem="MkK-B7-04i" secondAttribute="trailing" constant="8" id="VRc-MF-OZj"/>
                 <constraint firstItem="MkK-B7-04i" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="8" id="bCB-VT-7gM"/>
-                <constraint firstItem="w5b-G8-HG9" firstAttribute="height" secondItem="Hz6-mo-xeY" secondAttribute="height" id="fIu-f2-gae"/>
-                <constraint firstItem="w5b-G8-HG9" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="hTC-J6-TTd"/>
-                <constraint firstItem="w5b-G8-HG9" firstAttribute="width" secondItem="Hz6-mo-xeY" secondAttribute="width" id="o7W-46-Upv"/>
+                <constraint firstItem="Vxb-V7-hQd" firstAttribute="height" secondItem="Hz6-mo-xeY" secondAttribute="height" id="dDK-rq-NHM"/>
+                <constraint firstItem="Vxb-V7-hQd" firstAttribute="centerX" secondItem="Hz6-mo-xeY" secondAttribute="centerX" id="hby-7T-bG5"/>
                 <constraint firstItem="MkK-B7-04i" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="8" id="qut-Ce-IXx"/>
+                <constraint firstItem="Vxb-V7-hQd" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="wyx-U8-zwd"/>
             </constraints>
         </customView>
     </objects>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13168.3"/>
+        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -11,30 +12,33 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="1vX-EV-zcZ" customClass="DriverViewItem" customModule="CycleMonitor" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
+            <rect key="frame" x="0.0" y="0.0" width="204" height="104"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="ZTk-8K-Zpq" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                            <color key="value" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </customView>
+                <box boxType="custom" borderType="none" translatesAutoresizingMaskIntoConstraints="NO" id="hnj-9E-Pva">
+                    <rect key="frame" x="-1" y="0.0" width="205" height="104"/>
+                    <view key="contentView" id="5Hm-3o-L9l">
+                        <rect key="frame" x="0.0" y="0.0" width="205" height="104"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                </box>
                 <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ywY-7Z-xEc">
-                    <rect key="frame" x="0.0" y="0.0" width="204" height="100"/>
+                    <rect key="frame" x="0.0" y="0.0" width="204" height="104"/>
                     <subviews>
-                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="JOS-Ep-uR2" customClass="BackgroundColoredView" customModule="CycleMonitor" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="2" width="4" height="96"/>
+                        <box boxType="custom" borderType="none" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="gLo-Zn-jf6">
+                            <rect key="frame" x="0.0" y="0.0" width="4" height="104"/>
+                            <view key="contentView" id="D2m-4E-hae">
+                                <rect key="frame" x="0.0" y="0.0" width="4" height="104"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
                             <constraints>
-                                <constraint firstAttribute="width" constant="4" id="QWi-Ka-qK2"/>
+                                <constraint firstAttribute="width" constant="4" id="RHM-j0-yJt"/>
                             </constraints>
-                        </customView>
+                        </box>
                         <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhS-cM-QNd">
-                            <rect key="frame" x="12" y="29" width="192" height="42"/>
+                            <rect key="frame" x="12" y="31" width="192" height="42"/>
                             <subviews>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mcm-KL-IZc">
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mcm-KL-IZc">
                                     <rect key="frame" x="-2" y="25" width="196" height="17"/>
                                     <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="1Tc-Hk-En5">
                                         <font key="font" metaFont="system"/>
@@ -42,7 +46,7 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ggp-lO-pvh">
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ggp-lO-pvh">
                                     <rect key="frame" x="-2" y="0.0" width="196" height="17"/>
                                     <textFieldCell key="cell" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Label" id="5O1-z7-brX">
                                         <font key="font" metaFont="system"/>
@@ -65,6 +69,9 @@
                             </customSpacing>
                         </stackView>
                     </subviews>
+                    <constraints>
+                        <constraint firstItem="gLo-Zn-jf6" firstAttribute="height" secondItem="ywY-7Z-xEc" secondAttribute="height" id="6xB-gD-FGH"/>
+                    </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
                         <integer value="1000"/>
@@ -76,20 +83,20 @@
                 </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="ZTk-8K-Zpq" firstAttribute="centerY" secondItem="1vX-EV-zcZ" secondAttribute="centerY" id="1R5-0b-jy9"/>
+                <constraint firstItem="hnj-9E-Pva" firstAttribute="height" secondItem="1vX-EV-zcZ" secondAttribute="height" id="3ly-km-h1n"/>
                 <constraint firstItem="ywY-7Z-xEc" firstAttribute="leading" secondItem="1vX-EV-zcZ" secondAttribute="leading" id="66x-OV-aq0"/>
                 <constraint firstAttribute="trailing" secondItem="ywY-7Z-xEc" secondAttribute="trailing" id="Vr8-zg-qWS"/>
-                <constraint firstItem="ZTk-8K-Zpq" firstAttribute="height" secondItem="1vX-EV-zcZ" secondAttribute="height" id="cbr-12-bi7"/>
+                <constraint firstItem="hnj-9E-Pva" firstAttribute="centerX" secondItem="1vX-EV-zcZ" secondAttribute="centerX" id="dXf-5g-rbS"/>
+                <constraint firstItem="hnj-9E-Pva" firstAttribute="width" secondItem="1vX-EV-zcZ" secondAttribute="width" id="eY7-xN-EST"/>
+                <constraint firstItem="hnj-9E-Pva" firstAttribute="centerY" secondItem="1vX-EV-zcZ" secondAttribute="centerY" id="ezW-5X-8TV"/>
                 <constraint firstItem="ywY-7Z-xEc" firstAttribute="top" secondItem="1vX-EV-zcZ" secondAttribute="top" id="g9r-Vj-loo"/>
                 <constraint firstAttribute="bottom" secondItem="ywY-7Z-xEc" secondAttribute="bottom" id="htK-jI-veb"/>
-                <constraint firstItem="ZTk-8K-Zpq" firstAttribute="centerX" secondItem="1vX-EV-zcZ" secondAttribute="centerX" id="kb1-nR-ozq"/>
-                <constraint firstItem="ZTk-8K-Zpq" firstAttribute="width" secondItem="1vX-EV-zcZ" secondAttribute="width" id="u9d-Br-0yT"/>
             </constraints>
             <connections>
-                <outlet property="background" destination="ZTk-8K-Zpq" id="n6E-5J-s21"/>
+                <outlet property="background" destination="hnj-9E-Pva" id="8Zs-yj-Ua6"/>
                 <outlet property="labelBottom" destination="Ggp-lO-pvh" id="r0R-mn-PA6"/>
                 <outlet property="labelTop" destination="Mcm-KL-IZc" id="J05-vv-2Hm"/>
-                <outlet property="side" destination="JOS-Ep-uR2" id="ygF-yx-aZt"/>
+                <outlet property="side" destination="gLo-Zn-jf6" id="glP-6d-HNn"/>
             </connections>
             <point key="canvasLocation" x="133.5" y="280"/>
         </customView>

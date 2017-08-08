@@ -167,9 +167,33 @@ class TimeLineViewController:
       old.selected != new,
       let timeline = timeline
     {
-      timeline.reloadItems(
-        at: timeline.indexPathsForVisibleItems()
-      )
+        let pathsCells = timeline.indexPathsForVisibleItems()
+            .flatMap { x -> (IndexPath, TimelineViewItem)? in
+                if let cell = timeline.item(at: x) as? TimelineViewItem {
+                    return (x, cell)
+                } else {
+                    return nil
+                }
+        }
+        
+      pathsCells.forEach { path, cell in
+        var x = TimeLineViewController.modelFrom(
+          model: self.model,
+          cell: cell,
+          path: path
+        )
+        x.selection = { [weak self] isSelected in
+          self?.output.on(
+            .next(
+              .toggledApproval(
+                path.item,
+                isSelected
+              )
+            )
+          )
+        }
+        cell.model = x
+      }
     }
     
     if let focused = new.focused,
@@ -209,6 +233,23 @@ class TimeLineViewController:
     }
   }
   
+  static func modelFrom(
+    model: Model,
+    cell: TimelineViewItem,
+    path: IndexPath
+  ) -> TimelineViewItem.Model { return
+    TimelineViewItem.Model(
+      background: model.selected
+        .flatMap { $0.index == path.item ? $0 : nil }
+        .map { $0.color }
+        ?? .white,
+      top: model.causesEffects[path.item].color,
+      bottom: .blue,
+      selected: model.causesEffects[path.item].approved,
+      selection: { _ in }
+    )
+  }
+  
   func collectionView(
     _ collectionView: NSCollectionView,
     didSelectItemsAt indexPaths: Set<IndexPath>
@@ -241,25 +282,7 @@ class TimeLineViewController:
       withIdentifier: "TimelineViewItem",
       for: path
     ) as! TimelineViewItem
-    x.model = TimelineViewItem.Model(
-      background: model.selected
-        .flatMap { $0.index == path.item ? $0 : nil }
-        .map { $0.color }
-        ?? .white,
-      top: model.causesEffects[path.item].color,
-      bottom: .blue,
-      selected: model.causesEffects[path.item].approved,
-      selection: { [weak self] isSelected in
-        self?.output.on(
-          .next(
-            .toggledApproval(
-              path.item,
-              isSelected
-            )
-          )
-        )
-      }
-    )
+    x.model = TimeLineViewController.modelFrom(model: model, cell: x, path: path)
     return x
   }
   

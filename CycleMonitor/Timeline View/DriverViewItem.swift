@@ -12,15 +12,15 @@ class DriverViewItem: NSView {
 
   @IBOutlet private var labelTop: NSTextField?
   @IBOutlet private var labelBottom: NSTextField?
-  @IBOutlet private var background: BackgroundColoredView?
-  @IBOutlet private var side: BackgroundColoredView?
+  @IBOutlet private var background: NSBox?
+  @IBOutlet private var side: NSBox?
   
   func set(side new: NSColor) {
-    side?.backgroundColor = new
+    side?.fillColor = new
   }
   
   func set(background new: NSColor) {
-    background?.backgroundColor = new
+    background?.fillColor = new
   }
   
   func set(labelTop new: String) {
@@ -29,12 +29,6 @@ class DriverViewItem: NSView {
   
   func set(labelBottom new: String) {
     labelBottom?.stringValue = new
-  }
-  
-  override func draw(_ dirtyRect: NSRect) {
-    super.draw(dirtyRect)
-    
-    // Drawing code here.
   }
   
 }
