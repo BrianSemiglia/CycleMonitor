@@ -22,6 +22,11 @@ class AppDelegateStub: NSObject, NSApplicationDelegate {
 
 struct CycleMonitorApp: SinkSourceConverting {
   struct Model: Initializable {
+    enum EventHandlingState {
+      case playing
+      case playingSending
+      case recording
+    }
     struct Event {
       struct Driver {
         var label: String
@@ -64,10 +69,12 @@ struct CycleMonitorApp: SinkSourceConverting {
         )
       ]
     )
+    var eventHandlingState = EventHandlingState.playing
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: TimeLineViewController
-    let json: MultipeerJSON
+    let recording: MultipeerJSONIncoming
+    let playback: MultipeerJSONOutgoing
     let application: AppDelegateStub
     let browser: BrowserDriver
     let menuBar: MenuBarDriver
@@ -77,7 +84,8 @@ struct CycleMonitorApp: SinkSourceConverting {
       screen: TimeLineViewController.new(
         model: initial.asModel
       ),
-      json: MultipeerJSON(),
+      recording: MultipeerJSONIncoming(),
+      playback: MultipeerJSONOutgoing(),
       application: AppDelegateStub(),
       browser: BrowserDriver(
         initial: initial.browser
@@ -103,9 +111,19 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
-    let json = drivers.json.output
+    let recording = drivers.recording.output
       .tupledWithLatestFrom(events)
+      .filter { $0.1.eventHandlingState == .recording }
       .reduced()
+    
+    let playback = drivers.playback
+      .rendered(
+        events
+          .filter { $0.eventHandlingState == .playingSending }
+          .map { $0.saveFile }
+      )
+      .tupledWithLatestFrom(events)
+      .map { $0.1 }
     
     let browser = drivers
       .browser
@@ -122,10 +140,21 @@ struct CycleMonitorApp: SinkSourceConverting {
     return Observable.of(
       screen,
       application,
-      json,
+      recording,
+      playback,
       browser,
       menuBar
     ).merge()
+  }
+}
+
+extension CycleMonitorApp.Model.EventHandlingState {
+  var asTimeLineEventHandlingState: TimeLineViewController.Model.EventHandlingState {
+    switch self {
+    case .playing: return .playing
+    case .playingSending: return .playingSending
+    case .recording: return .recording
+    }
   }
 }
 
@@ -159,7 +188,8 @@ extension CycleMonitorApp.Model {
         )
       },
       focused: timeLineView.focusedIndex,
-      connection: .disconnected // needs to come from MultipeerJSON
+      connection: .disconnected, // needs to come from MultipeerJSON
+      eventHandlingState: eventHandlingState.asTimeLineEventHandlingState
     )
   }
 }
@@ -193,6 +223,21 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         var new = context
         new.events[index].isApproved = isApproved
         return new
+      case .didSelectEventHandling(let new):
+        switch new {
+        case .playing:
+          var new = context
+          new.eventHandlingState = .playing
+          return new
+        case .playingSending:
+          var new = context
+          new.eventHandlingState = .playingSending
+          return new
+        case .recording:
+          var new = context
+          new.eventHandlingState = .recording
+          return new
+        }
       default:
         return context
       }
@@ -200,7 +245,7 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
   }
 }
 
-extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model) {
+extension ObservableType where E == (MultipeerJSONIncoming.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {

@@ -44,18 +44,25 @@ class TimeLineViewController:
       var color: NSColor
       let index: Int
     }
+    enum EventHandlingState: Int {
+      case playing
+      case playingSending
+      case recording
+    }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selected: Selection?
     var focused: Int?
     var connection: Connection
+    var eventHandlingState: EventHandlingState
   }
   
   enum Action {
     case none
     case scrolledToIndex(Int)
     case toggledApproval(Int, Bool)
+    case didSelectEventHandling(Model.EventHandlingState)
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -63,7 +70,8 @@ class TimeLineViewController:
   @IBOutlet var presentedState: NSTextView?
   @IBOutlet var connection: NSProgressIndicator?
   @IBOutlet var disconnected: NSTextField?
-  
+  @IBOutlet var eventHandling: NSSegmentedControl?
+
   private var cleanup = DisposeBag()
   private let output = BehaviorSubject(value: Action.none)
   private var shouldForceRender = false
@@ -74,12 +82,32 @@ class TimeLineViewController:
     presentedState: "",
     selected: nil,
     focused: 0,
-    connection: .disconnected
+    connection: .disconnected,
+    eventHandlingState: .playing
   )
   
   override func viewDidLoad() {
     super.viewDidLoad()
     shouldForceRender = true
+
+    eventHandling?.segmentCount = 3
+    eventHandling?.setLabel("Play", forSegment: 0)
+    eventHandling?.setWidth(
+      CGFloat(("Play".characters.count * 7) + 14),
+      forSegment: 0
+    )
+    eventHandling?.setLabel("Play On Device", forSegment: 1)
+    eventHandling?.setWidth(
+      CGFloat(("Play On Device".characters.count * 7) + 14),
+      forSegment: 1
+    )
+    eventHandling?.setLabel("Record", forSegment: 2)
+    eventHandling?.setWidth(
+      CGFloat(("Record".characters.count * 7) + 14),
+      forSegment: 2
+    )
+    eventHandling?.action = #selector(didReceiveEventFromEventHandling(_:))
+
     timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
     timeline?.postsBoundsChangedNotifications = true
@@ -133,6 +161,12 @@ class TimeLineViewController:
     return output
   }
   
+  @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
+    if let new = input.selectedSegment.eventHandlingState {
+      output.on(.next(.didSelectEventHandling(new)))
+    }
+  }
+
   func render(old: Model, new: Model) {
     if shouldForceRender || old.drivers != new.drivers {
       drivers?.arrangedSubviews.forEach {
@@ -152,6 +186,7 @@ class TimeLineViewController:
       }
     }
     
+    eventHandling?.selectedSegment = new.eventHandlingState.rawValue
     timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     
     if shouldForceRender || new.presentedState != old.presentedState {
@@ -412,4 +447,15 @@ extension NSScrollView {
             y: bounds.height / CGFloat(2)
         )
     }
+}
+
+extension Int {
+  var eventHandlingState: TimeLineViewController.Model.EventHandlingState? {
+    switch self {
+    case 0: return .playing
+    case 1: return .playingSending
+    case 2: return .recording
+    default: return nil
+    }
+  }
 }

@@ -671,6 +671,9 @@
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
+                        <connections>
+                            <outlet property="delegate" destination="B8D-0N-5wS" id="Fih-we-89B"/>
+                        </connections>
                     </window>
                     <connections>
                         <segue destination="XfG-lQ-9wD" kind="relationship" relationship="window.shadowedContentViewController" id="cq2-FE-JQM"/>
@@ -685,32 +688,32 @@
             <objects>
                 <viewController storyboardIdentifier="TimeLineViewController" id="XfG-lQ-9wD" customClass="TimeLineViewController" customModule="CycleMonitor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="787" height="798"/>
+                        <rect key="frame" x="0.0" y="0.0" width="787" height="833"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77e-YU-ebm">
-                                <rect key="frame" x="20" y="20" width="747" height="758"/>
+                                <rect key="frame" x="20" y="20" width="747" height="793"/>
                                 <subviews>
                                     <stackView distribution="fillProportionally" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-26-3Vw">
-                                        <rect key="frame" x="0.0" y="156" width="747" height="602"/>
+                                        <rect key="frame" x="0.0" y="186" width="747" height="607"/>
                                         <subviews>
                                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="1000" verticalStackHuggingPriority="1" horizontalHuggingPriority="1000" verticalCompressionResistancePriority="999" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzx-RN-ga6">
-                                                <rect key="frame" x="0.0" y="0.0" width="140" height="602"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="607"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="140" id="nYv-Fd-sfs"/>
                                                 </constraints>
                                             </stackView>
                                             <scrollView wantsLayer="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQa-Wm-BzR">
-                                                <rect key="frame" x="148" y="0.0" width="599" height="602"/>
+                                                <rect key="frame" x="148" y="0.0" width="599" height="607"/>
                                                 <clipView key="contentView" id="SJT-hB-Gye">
-                                                    <rect key="frame" x="1" y="1" width="597" height="600"/>
+                                                    <rect key="frame" x="1" y="1" width="597" height="605"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textView editable="NO" importsGraphics="NO" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
-                                                            <rect key="frame" x="0.0" y="0.0" width="597" height="600"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="597" height="605"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                            <size key="minSize" width="597" height="600"/>
+                                                            <size key="minSize" width="597" height="605"/>
                                                             <size key="maxSize" width="599" height="10000000"/>
                                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                         </textView>
@@ -722,7 +725,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="C8C-a1-IXc">
-                                                    <rect key="frame" x="582" y="1" width="16" height="600"/>
+                                                    <rect key="frame" x="582" y="1" width="16" height="605"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
@@ -741,6 +744,19 @@
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
                                     </stackView>
+                                    <segmentedControl verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yBd-nv-jeu">
+                                        <rect key="frame" x="338" y="155" width="71" height="23"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="capsule" trackingMode="selectOne" id="47I-tR-dRd">
+                                            <font key="font" metaFont="system"/>
+                                            <segments>
+                                                <segment width="32"/>
+                                                <segment width="32" selected="YES" tag="1"/>
+                                            </segments>
+                                        </segmentedCell>
+                                        <connections>
+                                            <action selector="didReceiveEventFromEventHandling:" target="XfG-lQ-9wD" id="Bkr-ya-4fv"/>
+                                        </connections>
+                                    </segmentedControl>
                                     <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="Ypy-sX-dyB">
                                         <rect key="frame" x="0.0" y="0.0" width="747" height="148"/>
                                         <clipView key="contentView" drawsBackground="NO" id="hAZ-dY-ETv">
@@ -783,17 +799,19 @@
                                 <visibilityPriorities>
                                     <integer value="1000"/>
                                     <integer value="1000"/>
+                                    <integer value="1000"/>
                                 </visibilityPriorities>
                                 <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="751" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="IOn-Yo-pL9">
-                                <rect key="frame" x="767" y="778" width="16" height="16"/>
+                                <rect key="frame" x="767" y="813" width="16" height="16"/>
                             </progressIndicator>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zK6-bw-F6N">
-                                <rect key="frame" x="765" y="778" width="20" height="16"/>
+                                <rect key="frame" x="765" y="813" width="20" height="16"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="!" id="I4x-dg-DQ8">
                                     <font key="font" metaFont="systemHeavy" size="12"/>
                                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -818,6 +836,7 @@
                         <outlet property="connection" destination="IOn-Yo-pL9" id="RAV-Kw-UWz"/>
                         <outlet property="disconnected" destination="zK6-bw-F6N" id="reJ-Da-OED"/>
                         <outlet property="drivers" destination="fzx-RN-ga6" id="q5p-Lj-b4M"/>
+                        <outlet property="eventHandling" destination="yBd-nv-jeu" id="FcA-nu-Ddk"/>
                         <outlet property="presentedState" destination="Guk-AA-mD0" id="IbL-8P-dQY"/>
                         <outlet property="timeline" destination="tES-g1-SUd" id="6lC-wQ-uDv"/>
                     </connections>
