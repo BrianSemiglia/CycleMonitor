@@ -10,7 +10,7 @@ import Foundation
 import MultipeerConnectivity
 import RxSwift
 
-class MultipeerJSONIncoming:
+class MultipeerJSON:
       NSObject,
       MCNearbyServiceAdvertiserDelegate,
       MCSessionDelegate {
@@ -38,11 +38,35 @@ class MultipeerJSONIncoming:
     advertiser = MCNearbyServiceAdvertiser(
       peer: mine,
       discoveryInfo: nil,
-      serviceType: "Cycle-Recording"
+      serviceType: "Cycle-Monitor"
     )
     super.init()
     advertiser.delegate = self
     advertiser.startAdvertisingPeer()
+  }
+  
+  public func rendered(
+    _ input: Observable<[AnyHashable: Any]>
+  ) -> Observable<Action> {
+    input.subscribe { [weak self] in
+      if let element = $0.element {
+        self?.render(element)
+      }
+    }.disposed(by: cleanup)
+    return output
+  }
+  
+  func render(_ input: [AnyHashable: Any]) {
+    if let connected = session?.connectedPeers {
+      try? session?.send(
+        JSONSerialization.data(
+          withJSONObject: input,
+          options: JSONSerialization.WritingOptions(rawValue: 0)
+        ),
+        toPeers: connected,
+        with: .reliable
+      )
+    }
   }
   
   public func advertiser(
@@ -113,6 +137,16 @@ class MultipeerJSONIncoming:
     didStartReceivingResourceWithName resourceName: String,
     fromPeer peerID: MCPeerID,
     with progress: Progress
+  ) {
+    
+  }
+  
+  func session(
+    _ session: MCSession,
+    didFinishReceivingResourceWithName resourceName: String,
+    fromPeer peerID: MCPeerID,
+    at localURL: URL,
+    withError error: Error?
   ) {
     
   }

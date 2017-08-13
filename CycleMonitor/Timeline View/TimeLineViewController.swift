@@ -36,6 +36,7 @@ class TimeLineViewController:
       }
     }
     enum Connection {
+      case idle
       case connecting
       case connected
       case disconnected
@@ -264,6 +265,8 @@ class TimeLineViewController:
       case .disconnected:
         connection?.stopAnimation(true)
         disconnected?.isHidden = false
+      case .idle:
+        break
       }
     }
   }

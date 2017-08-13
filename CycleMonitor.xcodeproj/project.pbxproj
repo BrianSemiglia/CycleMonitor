@@ -13,11 +13,10 @@
 		D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */; };
 		D31169531F0B12DA004A0135 /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */; };
 		D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */; };
-		D31169571F0B13A5004A0135 /* MultipeerJSONIncoming.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* MultipeerJSONIncoming.swift */; };
+		D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* MultipeerJSON.swift */; };
 		D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */; };
 		D31D15921F0CBEF20009DE25 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D15911F0CBEF20009DE25 /* main.swift */; };
 		D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36F2C831F1BCC90007D8D93 /* MenuBar.swift */; };
-		D3A373A91F3BF3590048C26E /* MultipeerJSONOutgoing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A373A81F3BF3590048C26E /* MultipeerJSONOutgoing.swift */; };
 		D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */; };
 		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
 		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
@@ -46,11 +45,10 @@
 		D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
 		D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
 		D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
-		D31169561F0B13A5004A0135 /* MultipeerJSONIncoming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSONIncoming.swift; sourceTree = "<group>"; };
+		D31169561F0B13A5004A0135 /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
 		D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cycle-MacOS.swift"; sourceTree = "<group>"; };
 		D31D15911F0CBEF20009DE25 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D36F2C831F1BCC90007D8D93 /* MenuBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
-		D3A373A81F3BF3590048C26E /* MultipeerJSONOutgoing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerJSONOutgoing.swift; sourceTree = "<group>"; };
 		D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserDriver.swift; sourceTree = "<group>"; };
 		D3F5B70B1EFF08530020290A /* CycleMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F5B7121EFF08530020290A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -114,13 +112,12 @@
 			path = "Timeline View";
 			sourceTree = "<group>";
 		};
-		D31169551F0B137F004A0135 /* JSONMultipeer */ = {
+		D31169551F0B137F004A0135 /* MultipeerJSON */ = {
 			isa = PBXGroup;
 			children = (
-				D31169561F0B13A5004A0135 /* MultipeerJSONIncoming.swift */,
-				D3A373A81F3BF3590048C26E /* MultipeerJSONOutgoing.swift */,
+				D31169561F0B13A5004A0135 /* MultipeerJSON.swift */,
 			);
-			name = JSONMultipeer;
+			name = MultipeerJSON;
 			path = Timeline;
 			sourceTree = "<group>";
 		};
@@ -178,7 +175,7 @@
 				D31D158E1F0C98080009DE25 /* Cycle */,
 				D36F2C821F1BCC7C007D8D93 /* Menu Bar */,
 				D3E8E3251F1735BC00B0E918 /* Browser */,
-				D31169551F0B137F004A0135 /* JSONMultipeer */,
+				D31169551F0B137F004A0135 /* MultipeerJSON */,
 				D311694A1F0B12DA004A0135 /* Timeline View */,
 			);
 			path = CycleMonitor;
@@ -396,13 +393,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3A373A91F3BF3590048C26E /* MultipeerJSONOutgoing.swift in Sources */,
 				D31D15921F0CBEF20009DE25 /* main.swift in Sources */,
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
 				D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */,
 				D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */,
-				D31169571F0B13A5004A0135 /* MultipeerJSONIncoming.swift in Sources */,
+				D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */,
 				D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */,
 				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,
 			);

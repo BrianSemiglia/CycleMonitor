@@ -43,6 +43,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       var focusedIndex: Int?
     }
     enum Connection {
+      case idle
       case disconnected
       case connecting
       case connected
@@ -52,7 +53,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       selectedIndex: nil,
       focusedIndex: nil
     )
-    var connection = Connection.disconnected
+    var multipeer = Connection.idle
     var application = AppDelegateStub.Model()
     var browser = BrowserDriver.Model(state: .idle)
     var menuBar = MenuBarDriver.Model(
@@ -73,8 +74,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: TimeLineViewController
-    let recording: MultipeerJSONIncoming
-    let playback: MultipeerJSONOutgoing
+    let multipeer: MultipeerJSON
     let application: AppDelegateStub
     let browser: BrowserDriver
     let menuBar: MenuBarDriver
@@ -84,8 +84,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       screen: TimeLineViewController.new(
         model: initial.asModel
       ),
-      recording: MultipeerJSONIncoming(),
-      playback: MultipeerJSONOutgoing(),
+      multipeer: MultipeerJSON(),
       application: AppDelegateStub(),
       browser: BrowserDriver(
         initial: initial.browser
@@ -111,19 +110,14 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
-    let recording = drivers.recording.output
-      .tupledWithLatestFrom(events)
-      .filter { $0.1.eventHandlingState == .recording }
-      .reduced()
-    
-    let playback = drivers.playback
+    let multipeer = drivers.multipeer
       .rendered(
         events
           .filter { $0.eventHandlingState == .playingSending }
           .map { $0.saveFile }
       )
       .tupledWithLatestFrom(events)
-      .map { $0.1 }
+      .reduced()
     
     let browser = drivers
       .browser
@@ -140,8 +134,7 @@ struct CycleMonitorApp: SinkSourceConverting {
     return Observable.of(
       screen,
       application,
-      recording,
-      playback,
+      multipeer,
       browser,
       menuBar
     ).merge()
@@ -188,9 +181,20 @@ extension CycleMonitorApp.Model {
         )
       },
       focused: timeLineView.focusedIndex,
-      connection: .disconnected, // needs to come from MultipeerJSON
+      connection: multipeer.asTimeLineViewControllerConnection,
       eventHandlingState: eventHandlingState.asTimeLineEventHandlingState
     )
+  }
+}
+
+extension CycleMonitorApp.Model.Connection {
+  var asTimeLineViewControllerConnection: TimeLineViewController.Model.Connection {
+    switch self {
+    case .idle: return .idle
+    case .connecting: return .connecting
+    case .connected: return .connected
+    case .disconnected: return .disconnected
+    }
   }
 }
 
@@ -245,11 +249,11 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
   }
 }
 
-extension ObservableType where E == (MultipeerJSONIncoming.Action, CycleMonitorApp.Model) {
+extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .received(let data):
+      case .received(let data) where context.eventHandlingState == .recording:
         var new = context
         new.events += data.JSON().flatMap(decode).map { [$0] } ?? []
         new.timeLineView.focusedIndex = new.events.count > 0
@@ -258,15 +262,15 @@ extension ObservableType where E == (MultipeerJSONIncoming.Action, CycleMonitorA
         return new
       case .connected:
         var new = context
-        new.connection = .connected
+        new.multipeer = .connected
         return new
       case .connecting:
         var new = context
-        new.connection = .connecting
+        new.multipeer = .connecting
         return new
       case .disconnected:
         var new = context
-        new.connection = .disconnected
+        new.multipeer = .disconnected
         return new
       default:
         return context
