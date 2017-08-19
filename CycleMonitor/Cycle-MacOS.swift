@@ -550,7 +550,7 @@ public final class Cycle<E: SinkSourceConverting> {
     // Not sure how to `merge` observables to single BehaviorSubject though.
     events?
       .startWith(E.Source())
-      .observeOn(ConcurrentDispatchQueueScheduler(queue: .global()))
+      .observeOn(SerialDispatchQueueScheduler(qos: .default))
       .subscribe { [weak self] in
         self?.eventsProxy?.on($0)
       }
