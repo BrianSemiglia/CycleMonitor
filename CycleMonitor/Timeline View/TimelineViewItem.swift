@@ -28,7 +28,6 @@ class TimelineViewItem: NSCollectionViewItem {
   var model: Model? {
     didSet {
       if let new = model, new != oldValue {
-        print(new.background)
         render(new)
       }
     }

@@ -709,7 +709,7 @@
                                                     <rect key="frame" x="1" y="1" width="597" height="693"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textView editable="NO" importsGraphics="NO" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
+                                                        <textView importsGraphics="NO" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
                                                             <rect key="frame" x="0.0" y="0.0" width="597" height="693"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -745,7 +745,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7wc-Xc-yJJ">
-                                        <rect key="frame" x="326" y="156" width="95" height="22"/>
+                                        <rect key="frame" x="288" y="156" width="172" height="22"/>
                                         <subviews>
                                             <segmentedControl verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yBd-nv-jeu">
                                                 <rect key="frame" x="0.0" y="-2" width="71" height="25"/>
@@ -784,12 +784,24 @@
                                                     <constraint firstAttribute="bottom" secondItem="IOn-Yo-pL9" secondAttribute="bottom" priority="999" id="xwg-XE-he7"/>
                                                 </constraints>
                                             </customView>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dp5-Mg-QbI">
+                                                <rect key="frame" x="97" y="-7" width="81" height="33"/>
+                                                <buttonCell key="cell" type="push" title="Button" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EU5-Ls-IUP">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="didReceiveEventFromStateUpdate:" target="XfG-lQ-9wD" id="hyv-w9-nCj"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
@@ -858,6 +870,7 @@
                         <outlet property="drivers" destination="fzx-RN-ga6" id="q5p-Lj-b4M"/>
                         <outlet property="eventHandling" destination="yBd-nv-jeu" id="FcA-nu-Ddk"/>
                         <outlet property="presentedState" destination="Guk-AA-mD0" id="IbL-8P-dQY"/>
+                        <outlet property="state" destination="Guk-AA-mD0" id="pt5-gV-Vwx"/>
                         <outlet property="timeline" destination="tES-g1-SUd" id="6lC-wQ-uDv"/>
                     </connections>
                 </viewController>

@@ -10,6 +10,7 @@ target 'CycleMonitor' do
   pod 'RxCocoa'
   pod 'Argo', '~> 4.0'
   pod 'Curry', '~> 3.0'
+  pod 'RxOptional'
 
   target 'CycleMonitorTests' do
     inherit! :search_paths

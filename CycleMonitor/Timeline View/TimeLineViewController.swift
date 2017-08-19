@@ -54,7 +54,6 @@ class TimeLineViewController:
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selected: Selection?
-    var focused: Int?
     var connection: Connection
     var eventHandlingState: EventHandlingState
   }
@@ -64,6 +63,7 @@ class TimeLineViewController:
     case scrolledToIndex(Int)
     case toggledApproval(Int, Bool)
     case didSelectEventHandling(Model.EventHandlingState)
+    case didChangeState(String)
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -72,6 +72,7 @@ class TimeLineViewController:
   @IBOutlet var connection: NSProgressIndicator?
   @IBOutlet var disconnected: NSTextField?
   @IBOutlet var eventHandling: NSSegmentedControl?
+  @IBOutlet var state: NSTextView?
 
   private var cleanup = DisposeBag()
   private let output = BehaviorSubject(value: Action.none)
@@ -82,7 +83,6 @@ class TimeLineViewController:
     causesEffects: [],
     presentedState: "",
     selected: nil,
-    focused: 0,
     connection: .disconnected,
     eventHandlingState: .playing
   )
@@ -109,6 +109,10 @@ class TimeLineViewController:
     )
     eventHandling?.action = #selector(didReceiveEventFromEventHandling(_:))
 
+    state?.isAutomaticQuoteSubstitutionEnabled = false
+    state?.isAutomaticDashSubstitutionEnabled = false
+    state?.isAutomaticTextReplacementEnabled = false
+    
     timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
     timeline?.postsBoundsChangedNotifications = true
@@ -120,9 +124,7 @@ class TimeLineViewController:
         if let `self` = self, let timeline = self.timeline {
           let point = timeline.enclosingScrollView!.documentVisibleCenter
           if let x = timeline.indexPathForItem(at:point)?.item {
-            DispatchQueue.main.async {
-              self.output.on(.next(.scrolledToIndex(x)))
-            }
+            self.output.on(.next(.scrolledToIndex(x)))
           }
         }
       }
@@ -160,6 +162,10 @@ class TimeLineViewController:
       }
     }.disposed(by: cleanup)
     return output
+  }
+  
+  @IBAction func didReceiveEventFromStateUpdate(_ input: NSButton) {
+    output.on(.next(.didChangeState(state!.string!)))
   }
   
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
@@ -232,26 +238,22 @@ class TimeLineViewController:
       }
     }
     
-    if let focused = new.focused,
-      focused != old.focused,
-      focused > 0,
-      new.selected.map({ $0.index != new.focused }) ?? true
-    {
-//      if new.causesEffects.count > 0 {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // <-- async hack
-//        NSAnimationContext.current().allowsImplicitAnimation = true
-//        self.timeline?.scrollToItems(
-//          at: [
-//            IndexPath(
-//              item: focused,
-//              section: 0
-//            )
-//          ],
-//          scrollPosition: .centeredHorizontally
-//        )
-//        NSAnimationContext.current().allowsImplicitAnimation = false
-//        }
-//      }
+    if new.eventHandlingState == .recording, new.causesEffects != old.causesEffects, let newIndex = new.selected?.index {
+      if new.causesEffects.count > 0 {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) { // <-- async hack
+          NSAnimationContext.current().allowsImplicitAnimation = true
+          self.timeline?.scrollToItems(
+            at: [
+              IndexPath(
+                item: newIndex,
+                section: 0
+              )
+            ],
+            scrollPosition: .centeredHorizontally
+          )
+          NSAnimationContext.current().allowsImplicitAnimation = false
+        }
+      }
     }
     
     if shouldForceRender || new.connection != old.connection {
@@ -375,7 +377,6 @@ extension TimeLineViewController.Model: Equatable {
     return left.causesEffects == right.causesEffects &&
     left.drivers == right.drivers &&
     left.connection == right.connection &&
-    left.focused == right.focused &&
     left.presentedState == right.presentedState &&
     left.selected == left.selected
   }
