@@ -37,6 +37,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       var drivers: [Driver]
       var cause: Driver
       var effect: String
+      var pendingEffectEdit: String?
       var isApproved = false
     }
     struct TimeLineView {
@@ -113,11 +114,9 @@ struct CycleMonitorApp: SinkSourceConverting {
       .rendered(
         events
           .filter { $0.eventHandlingState == .playingSending }
-          .distinctUntilChanged {
-            $0.timeLineView.selectedIndex == $1.timeLineView.selectedIndex
-            // TODO: or update state button is being selected
-          }
           .map {
+            $0.events[$0.timeLineView.selectedIndex!].pendingEffectEdit
+              .map { $0.data(using: .utf8) } ??
             $0.events[$0.timeLineView.selectedIndex!].effect.data(using: .utf8)
           }
           .filterNil()
@@ -195,7 +194,9 @@ extension CycleMonitorApp.Model {
           color: $0.cause.id.hashValue.goldenRatioColored()
         )
       },
-      presentedState: timeLineView.selectedIndex.map { events[$0].effect } ?? "",
+      presentedState: timeLineView.selectedIndex
+        .map { events[$0].pendingEffectEdit ?? events[$0].effect }
+        ?? "",
       selected: timeLineView.selectedIndex.map {
         TimeLineViewController.Model.Selection(
           color: NSColor.cy_lightGray,
@@ -203,7 +204,13 @@ extension CycleMonitorApp.Model {
         )
       },
       connection: multipeer.asTimeLineViewControllerConnection,
-      eventHandlingState: eventHandlingState.asTimeLineEventHandlingState
+      eventHandlingState: eventHandlingState.asTimeLineEventHandlingState,
+      isDisplayingSave: timeLineView.selectedIndex
+        .map { 
+          events[$0].pendingEffectEdit != nil && 
+          events[$0].pendingEffectEdit != events[$0].effect
+        }
+        ?? false
     )
   }
 }
@@ -263,9 +270,14 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
           new.eventHandlingState = .recording
           return new
         }
-      case .didChangeState(let newState):
+      case .didCommitPendingStateEdit(let newState):
         var new = context
         new.events[new.timeLineView.selectedIndex!].effect = newState
+        new.events[new.timeLineView.selectedIndex!].pendingEffectEdit = nil
+        return new
+      case .didCreatePendingStateEdit(let newState):
+        var new = context
+        new.events[new.timeLineView.selectedIndex!].pendingEffectEdit = newState
         return new
       default:
         return context
@@ -375,7 +387,8 @@ extension CycleMonitorApp.Model {
             "action": $0.cause.action,
             "id": $0.cause.id
           ],
-          "effect": $0.effect.data(using: .utf8)!.JSON!
+          "effect": $0.effect.data(using: .utf8)!.JSON!,
+          "pendingEffectEdit": $0.pendingEffectEdit.map { $0.data(using: .utf8)!.JSON! } ?? ""
         ]
       }
     ]
@@ -441,13 +454,28 @@ extension CycleMonitorApp.Model.Event {
           <*> action
           <*> id
     }
-  
-    return curry(CycleMonitorApp.Model.Event.init)
+    
+    let pendingEffectEdit = input["pendingEffectEdit"]
+      .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap {
+        try? JSONSerialization.data(
+          withJSONObject: $0,
+          options: .prettyPrinted
+        )
+      }
+      .flatMap {
+        String(data: $0, encoding: String.Encoding.utf8)
+      }
+      .flatMap { $0.characters.count > 0 ? $0 : nil }
+    
+    let x = curry(CycleMonitorApp.Model.Event.init)
       <^> drivers
       <*> cause
       <*> effect
+      <*> Optional(pendingEffectEdit)
       <*> false
   
+    return x
   }
   
 }

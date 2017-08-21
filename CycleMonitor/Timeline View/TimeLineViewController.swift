@@ -9,12 +9,15 @@
 import Cocoa
 import Foundation
 import RxSwift
+import RxCocoa
+import Curry
 
 class TimeLineViewController:
       NSViewController,
       NSCollectionViewDataSource,
       NSCollectionViewDelegateFlowLayout,
-      NSViewControllerProviding {
+      NSViewControllerProviding,
+      NSTextViewDelegate {
   
   struct Model {
     struct Driver {
@@ -56,6 +59,7 @@ class TimeLineViewController:
     var selected: Selection?
     var connection: Connection
     var eventHandlingState: EventHandlingState
+    var isDisplayingSave: Bool
   }
   
   enum Action {
@@ -63,7 +67,8 @@ class TimeLineViewController:
     case scrolledToIndex(Int)
     case toggledApproval(Int, Bool)
     case didSelectEventHandling(Model.EventHandlingState)
-    case didChangeState(String)
+    case didCommitPendingStateEdit(String)
+    case didCreatePendingStateEdit(String)
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -73,6 +78,7 @@ class TimeLineViewController:
   @IBOutlet var disconnected: NSTextField?
   @IBOutlet var eventHandling: NSSegmentedControl?
   @IBOutlet var state: NSTextView?
+  @IBOutlet var save: NSButton?
 
   private var cleanup = DisposeBag()
   private let output = BehaviorSubject(value: Action.none)
@@ -84,7 +90,8 @@ class TimeLineViewController:
     presentedState: "",
     selected: nil,
     connection: .disconnected,
-    eventHandlingState: .playing
+    eventHandlingState: .playing,
+    isDisplayingSave: false
   )
   
   override func viewDidLoad() {
@@ -112,6 +119,7 @@ class TimeLineViewController:
     state?.isAutomaticQuoteSubstitutionEnabled = false
     state?.isAutomaticDashSubstitutionEnabled = false
     state?.isAutomaticTextReplacementEnabled = false
+    state?.delegate = self
     
     timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
@@ -134,6 +142,26 @@ class TimeLineViewController:
       new: model
     )
     shouldForceRender = false
+  }
+  
+  func textView(
+    _ textView: NSTextView,
+    shouldChangeTextIn affectedCharRange: NSRange,
+    replacementString: String?
+  ) -> Bool {
+    if let from = textView.string as NSString?, let to = replacementString {
+      output.on(
+        .next(
+          .didCreatePendingStateEdit(
+            from.replacingCharacters(
+              in: affectedCharRange,
+              with: to
+            )
+          )
+        )
+      )
+    }
+    return false
   }
   
   override func viewDidLayout() {
@@ -165,7 +193,13 @@ class TimeLineViewController:
   }
   
   @IBAction func didReceiveEventFromStateUpdate(_ input: NSButton) {
-    output.on(.next(.didChangeState(state!.string!)))
+    output.on(
+      .next(
+        .didCommitPendingStateEdit(
+          state!.string!
+        )
+      )
+    )
   }
   
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
@@ -271,6 +305,11 @@ class TimeLineViewController:
         break
       }
     }
+    
+    NSAnimationContext.runAnimationGroup({ group in
+      self.save?.isHidden = new.isDisplayingSave == false
+    })
+    
   }
   
   static func modelFrom(
