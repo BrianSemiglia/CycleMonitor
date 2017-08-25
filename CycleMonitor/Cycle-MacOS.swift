@@ -37,6 +37,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       var drivers: [Driver]
       var cause: Driver
       var effect: String
+      var context: String
       var pendingEffectEdit: String?
       var isApproved = false
     }
@@ -59,14 +60,19 @@ struct CycleMonitorApp: SinkSourceConverting {
     var menuBar = MenuBarDriver.Model(
       items: [
         MenuBarDriver.Model.Item(
-          title: "Open",
+          title: "Open Timeline",
           enabled: true,
-          id: "open"
+          id: "open timeline"
         ),
         MenuBarDriver.Model.Item(
-          title: "Save",
+          title: "Save Timeline",
           enabled: true,
-          id: "save"
+          id: "save timeline"
+        ),
+        MenuBarDriver.Model.Item(
+          title: "Export Tests",
+          enabled: true,
+          id: "export tests"
         )
       ]
     )
@@ -340,7 +346,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
         new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
         new.browser.state = .idle
         return new
-      case .cancelling:
+      case .cancelling, .none:
         var new = context
         new.browser.state = .idle
         return new
@@ -355,13 +361,24 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .didSelectItemWith(id: let id) where id == "open":
+      case .didSelectItemWith(id: let id) where id == "open timeline":
         var new = context
         new.browser.state = .opening
         return new
-      case .didSelectItemWith(id: let id) where id == "save":
+      case .didSelectItemWith(id: let id) where id == "save timeline":
         var new = context
-        new.browser.state = .saving(context.saveFile)
+        new.browser.state = .saving(
+          context.saveFile
+        )
+        return new
+      case .didSelectItemWith(id: let id) where id == "export tests":
+        var new = context
+        new.browser.state = .savingMany(
+          context
+            .events
+            .filter { $0.isApproved }
+            .map { $0.testFile }
+        )
         return new
       default:
         break
@@ -391,6 +408,25 @@ extension CycleMonitorApp.Model {
           "pendingEffectEdit": $0.pendingEffectEdit.map { $0.data(using: .utf8)!.JSON! } ?? ""
         ]
       }
+    ]
+  }
+}
+
+extension CycleMonitorApp.Model.Event {
+  var testFile: [AnyHashable: Any] { return
+    [
+      "drivers": drivers.map {[
+        "label": $0.label,
+        "action": $0.action,
+        "id": $0.id
+      ]},
+      "cause": [
+        "label": cause.label,
+        "action": cause.action,
+        "id": cause.id
+      ],
+      "context": context.data(using: .utf8)!.JSON!,
+      "effect": effect.data(using: .utf8)!.JSON!
     ]
   }
 }
@@ -428,6 +464,18 @@ extension CycleMonitorApp.Model.Event {
       .flatMap {
         String(data: $0, encoding: String.Encoding.utf8)
       }
+    
+    let context = input["context"]
+      .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap {
+        try? JSONSerialization.data(
+          withJSONObject: $0,
+          options: .prettyPrinted
+        )
+      }
+      .flatMap {
+        String(data: $0, encoding: String.Encoding.utf8)
+    }
     
     let drivers: [CycleMonitorApp.Model.Event.Driver]? = input["drivers"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
@@ -472,6 +520,7 @@ extension CycleMonitorApp.Model.Event {
       <^> drivers
       <*> cause
       <*> effect
+      <*> context
       <*> Optional(pendingEffectEdit)
       <*> false
   

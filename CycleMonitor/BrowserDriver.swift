@@ -17,6 +17,7 @@ class BrowserDriver {
     enum State {
       case idle
       case saving([AnyHashable: Any])
+      case savingMany([[AnyHashable: Any]])
       case opening
     }
     var state: State
@@ -47,19 +48,29 @@ class BrowserDriver {
     return x
   }
   
+  static var selectDirectory: NSOpenPanel {
+    let x = NSOpenPanel()
+    x.allowsMultipleSelection = false
+    x.canChooseDirectories = true
+    x.canCreateDirectories = true
+    x.canChooseFiles = false
+    return x
+  }
+  
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.subscribe {
-      if let element = $0.element {
-        DispatchQueue.main.async {
+    input
+      .observeOn(MainScheduler.instance)
+      .subscribe(
+        onNext: {
           let old = self.model
-          self.model = element
+          self.model = $0
           self.render(
             old: old,
-            new: element
+            new: $0
           )
         }
-      }
-    }.disposed(by: cleanup)
+      )
+      .disposed(by: cleanup)
     return output
   }
   
@@ -89,21 +100,54 @@ class BrowserDriver {
         }
       case .saving(let json):
         let save = NSSavePanel()
-        if save.runModal() == NSModalResponseOK {
-          save.url
-            >>- {
-              try? PropertyListSerialization.data(
-                fromPropertyList: json,
-                format: .binary,
-                options: 0
+        if save.runModal() == NSModalResponseOK, let url = save.url, let data = json.binaryPList {
+          try? data.write(to: url)
+        }
+      case .savingMany(let JSONs):
+        
+        /* TODO: reconsider visual presentation of unit: (context, event, effect)
+         */
+        
+        let save = BrowserDriver.selectDirectory
+        if save.runModal() == NSModalResponseOK, let url = save.directoryURL {
+          
+          let saves = JSONs.enumerated().flatMap { x -> (String, Data)? in
+            if let data = x.element.binaryPList {
+              return (
+                Date().description + String(describing: x.offset),
+                data
               )
-              .write(to: $0)
+            } else {
+              return nil
             }
+          }
+          
+          saves.forEach {
+            try? $0.1.write(
+              to: URL(
+                fileURLWithPath: url
+                  .appendingPathComponent($0.0)
+                  .appendingPathExtension("moment")
+                  .path
+              )
+            )
+          }
+          output.on(.next(.none))
         }
       case .idle:
         break
       }
     }
+  }
+}
+
+extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
+  var binaryPList: Data? { return
+    try? PropertyListSerialization.data(
+      fromPropertyList: self,
+      format: .binary,
+      options: 0
+    )
   }
 }
 
@@ -125,6 +169,8 @@ extension BrowserDriver.Model.State: Equatable {
       return NSDictionary(dictionary: a) == NSDictionary(dictionary: b)
     case (.opening, .opening):
       return true
+    case (.savingMany(let a), .savingMany(let b)):
+      return a.map(NSDictionary.init) == b.map(NSDictionary.init)
     default:
       return false
     }
