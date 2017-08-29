@@ -25,7 +25,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   struct Model: Initializable {
     enum EventHandlingState {
       case playing
-      case playingSending
+      case playingSendingEffects
       case recording
     }
     struct Event {
@@ -119,7 +119,7 @@ struct CycleMonitorApp: SinkSourceConverting {
     let multipeer = drivers.multipeer
       .rendered(
         events
-          .filter { $0.eventHandlingState == .playingSending }
+          .filter { $0.eventHandlingState == .playingSendingEffects }
           .map {
             $0.events[$0.timeLineView.selectedIndex!].pendingEffectEdit
               .map { $0.data(using: .utf8) } ??
@@ -172,7 +172,7 @@ extension CycleMonitorApp.Model.EventHandlingState {
   var asTimeLineEventHandlingState: TimeLineViewController.Model.EventHandlingState {
     switch self {
     case .playing: return .playing
-    case .playingSending: return .playingSending
+    case .playingSendingEffects: return .playingSendingEffects
     case .recording: return .recording
     }
   }
@@ -267,9 +267,9 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
           var new = context
           new.eventHandlingState = .playing
           return new
-        case .playingSending:
+        case .playingSendingEffects:
           var new = context
-          new.eventHandlingState = .playingSending
+          new.eventHandlingState = .playingSendingEffects
           return new
         case .recording:
           var new = context

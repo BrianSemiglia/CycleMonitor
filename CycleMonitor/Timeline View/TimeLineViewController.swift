@@ -50,7 +50,7 @@ class TimeLineViewController:
     }
     enum EventHandlingState: Int {
       case playing
-      case playingSending
+      case playingSendingEffects
       case recording
     }
     var drivers: [Driver]
@@ -496,7 +496,7 @@ extension Int {
   var eventHandlingState: TimeLineViewController.Model.EventHandlingState? {
     switch self {
     case 0: return .playing
-    case 1: return .playingSending
+    case 1: return .playingSendingEffects
     case 2: return .recording
     default: return nil
     }
