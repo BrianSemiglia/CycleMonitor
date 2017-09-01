@@ -182,16 +182,15 @@ extension Observable where E == CycleMonitorApp.Model {
 }
 
 extension Data {
-  var JSON: [AnyHashable: Any]? {
-    do {
-      return try JSONSerialization.jsonObject(
+  // TODO: Convert to result type
+  var JSON: [AnyHashable: Any]? { return
+    (
+      try? JSONSerialization.jsonObject(
         with: self,
         options: JSONSerialization.ReadingOptions(rawValue: 0)
-      ) as? [AnyHashable: Any]
-    } catch let error {
-      print(error)
-      return nil
-    }
+      )
+    )
+    .flatMap { $0 as? [AnyHashable: Any] }
   }
 }
 
