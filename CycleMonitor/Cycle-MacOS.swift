@@ -178,7 +178,7 @@ extension Observable where E == CycleMonitorApp.Model {
     .filter { $0.events.count > 0 }
     .map {
       $0.selectedEffectDraft ??
-      $0.selectedEvent
+      $0.selectedEffect
     }
     .filterNil()
   }
