@@ -365,16 +365,22 @@ extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Mod
   }
 }
 
+extension CycleMonitorApp.Model.Event {
+  static func eventsFrom(_ input: [AnyHashable: Any]) -> [CycleMonitorApp.Model.Event] { return
+    input["events"]
+      .flatMap { $0 as? [[AnyHashable: Any]] }
+      .flatMap { $0.flatMap(CycleMonitorApp.Model.Event.decode) }
+      ?? []
+  }
+}
+
 extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
       case .didOpen(let json):
         var new = context
-        new.events = json["events"]
-          .flatMap { $0 as? [[AnyHashable: Any]] }
-          .flatMap { $0.flatMap(CycleMonitorApp.Model.Event.decode) }
-          ?? []
+        new.events = CycleMonitorApp.Model.Event.eventsFrom(json)
         new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
         new.browser.state = .idle
         return new
