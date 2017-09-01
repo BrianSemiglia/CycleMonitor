@@ -60,21 +60,9 @@ struct CycleMonitorApp: SinkSourceConverting {
     var browser = BrowserDriver.Model(state: .idle)
     var menuBar = MenuBarDriver.Model(
       items: [
-        MenuBarDriver.Model.Item(
-          title: "Open Timeline",
-          enabled: true,
-          id: "open timeline"
-        ),
-        MenuBarDriver.Model.Item(
-          title: "Save Timeline",
-          enabled: true,
-          id: "save timeline"
-        ),
-        MenuBarDriver.Model.Item(
-          title: "Export Tests",
-          enabled: true,
-          id: "export tests"
-        )
+        MenuBarDriver.Model.Item.openTimeline,
+        MenuBarDriver.Model.Item.saveTimeline,
+        MenuBarDriver.Model.Item.exportTests
       ]
     )
     var eventHandlingState = EventHandlingState.playing
@@ -593,6 +581,30 @@ extension TimeLineViewController.Model.Driver {
       )
     )
   }
+}
+
+extension MenuBarDriver.Model.Item {
+    static var openTimeline: MenuBarDriver.Model.Item { return
+        MenuBarDriver.Model.Item(
+            title: "Open Timeline",
+            enabled: true,
+            id: "open timeline"
+        )
+    }
+    static var saveTimeline: MenuBarDriver.Model.Item { return
+        MenuBarDriver.Model.Item(
+            title: "Save Timeline",
+            enabled: true,
+            id: "save timeline"
+        )
+    }
+    static var exportTests: MenuBarDriver.Model.Item { return
+        MenuBarDriver.Model.Item(
+            title: "Export Tests",
+            enabled: true,
+            id: "export tests"
+        )
+    }
 }
 
 // Cycle Application Delegate
