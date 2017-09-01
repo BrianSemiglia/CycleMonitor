@@ -412,12 +412,17 @@ extension TimeLineViewController {
 }
 
 extension TimeLineViewController.Model: Equatable {
-  static func ==(left: TimeLineViewController.Model, right: TimeLineViewController.Model) -> Bool {
-    return left.causesEffects == right.causesEffects &&
+  static func ==(
+    left: TimeLineViewController.Model,
+    right: TimeLineViewController.Model
+  ) -> Bool { return
     left.drivers == right.drivers &&
-    left.connection == right.connection &&
+    left.causesEffects == right.causesEffects &&
     left.presentedState == right.presentedState &&
-    left.selected == left.selected
+    left.selected == left.selected &&
+    left.connection == right.connection &&
+    left.eventHandlingState == right.eventHandlingState &&
+    left.isDisplayingSave == right.isDisplayingSave
   }
 }
 
