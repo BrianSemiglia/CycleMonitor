@@ -564,9 +564,9 @@ extension CycleMonitorApp.Model.Event {
     
     let pendingEffectEdit = input["pendingEffectEdit"]
       .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap { NSDictionary(dictionary: $0) != NSDictionary(dictionary: [:]) ? $0 : nil }
       .flatMap (JSONSerialization.prettyPrinted)
       .flatMap { $0.utf8 }
-      .flatMap { $0.characters.count > 0 ? $0 : nil }
     
     let x = curry(CycleMonitorApp.Model.Event.init)
       <^> drivers
