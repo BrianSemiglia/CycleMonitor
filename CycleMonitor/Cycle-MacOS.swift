@@ -237,7 +237,7 @@ extension CycleMonitorApp.Model {
           index: $0
         )
       },
-      connection: multipeer.asTimeLineViewControllerConnection,
+      connection: multipeer.timeLineViewControllerConnection,
       eventHandlingState: eventHandlingState.timeLineEventHandlingState,
       isDisplayingSave: timeLineView.selectedIndex
         .map { 
@@ -250,7 +250,7 @@ extension CycleMonitorApp.Model {
 }
 
 extension CycleMonitorApp.Model.Connection {
-  var asTimeLineViewControllerConnection: TimeLineViewController.Model.Connection {
+  var timeLineViewControllerConnection: TimeLineViewController.Model.Connection {
     switch self {
     case .idle: return .idle
     case .connecting: return .connecting
