@@ -107,7 +107,10 @@ struct CycleMonitorApp: SinkSourceConverting {
 
     let multipeer = drivers.multipeer
       .rendered(
-        Observable.merge([events.jsonEvents, events.jsonEffects])
+        .merge([
+          events.jsonEvents,
+          events.jsonEffects
+        ])
       )
       .tupledWithLatestFrom(events)
       .reduced()
@@ -124,13 +127,13 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
-    return Observable.of(
+    return .merge([
       screen,
       application,
       multipeer,
       browser,
       menuBar
-    ).merge()
+    ])
   }
 }
 
@@ -328,7 +331,8 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
       switch event {
       case .received(let data) where context.eventHandlingState == .recording:
         var new = context
-        new.events += data.JSON
+        new.events += data
+          .JSON
           .flatMap(CycleMonitorApp.Model.Event.decode)
           .map { [$0] }
           ?? []
