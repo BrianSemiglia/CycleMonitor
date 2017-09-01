@@ -196,7 +196,7 @@ extension Data {
 }
 
 extension CycleMonitorApp.Model.EventHandlingState {
-  var asTimeLineEventHandlingState: TimeLineViewController.Model.EventHandlingState {
+  var timeLineEventHandlingState: TimeLineViewController.Model.EventHandlingState {
     switch self {
     case .playing: return .playing
     case .playingSendingEvents: return .playingSendingEvents
@@ -238,7 +238,7 @@ extension CycleMonitorApp.Model {
         )
       },
       connection: multipeer.asTimeLineViewControllerConnection,
-      eventHandlingState: eventHandlingState.asTimeLineEventHandlingState,
+      eventHandlingState: eventHandlingState.timeLineEventHandlingState,
       isDisplayingSave: timeLineView.selectedIndex
         .map { 
           events[$0].pendingEffectEdit != nil && 
