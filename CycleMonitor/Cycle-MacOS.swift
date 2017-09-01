@@ -487,33 +487,38 @@ import Argo
 import Runes
 import Curry
 
+extension JSONSerialization {
+  static func prettyPrinted(_ input: [AnyHashable: Any]) -> Data? { return
+    try? JSONSerialization.data(
+      withJSONObject: input,
+      options: .prettyPrinted
+    )
+  }
+}
+
 extension CycleMonitorApp.Model.Event {
 
   static func decode(_ input: [AnyHashable: Any]) -> CycleMonitorApp.Model.Event? {
 
     let effect = input["effect"]
       .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap (JSONSerialization.prettyPrinted)
       .flatMap {
-        try? JSONSerialization.data(
-          withJSONObject: $0,
-          options: .prettyPrinted
+        String(
+          data: $0,
+          encoding: String.Encoding.utf8
         )
-      }
-      .flatMap {
-        String(data: $0, encoding: String.Encoding.utf8)
       }
     
     let context = input["context"]
       .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap (JSONSerialization.prettyPrinted)
       .flatMap {
-        try? JSONSerialization.data(
-          withJSONObject: $0,
-          options: .prettyPrinted
+        String(
+          data: $0,
+          encoding: String.Encoding.utf8
         )
       }
-      .flatMap {
-        String(data: $0, encoding: String.Encoding.utf8)
-    }
     
     let drivers: [CycleMonitorApp.Model.Event.Driver]? = input["drivers"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
@@ -543,14 +548,12 @@ extension CycleMonitorApp.Model.Event {
     
     let pendingEffectEdit = input["pendingEffectEdit"]
       .flatMap { $0 as? [AnyHashable: Any] }
+      .flatMap (JSONSerialization.prettyPrinted)
       .flatMap {
-        try? JSONSerialization.data(
-          withJSONObject: $0,
-          options: .prettyPrinted
+        String(
+          data: $0,
+          encoding: String.Encoding.utf8
         )
-      }
-      .flatMap {
-        String(data: $0, encoding: String.Encoding.utf8)
       }
       .flatMap { $0.characters.count > 0 ? $0 : nil }
     
