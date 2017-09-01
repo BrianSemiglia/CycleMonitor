@@ -469,8 +469,14 @@ extension CycleMonitorApp.Model.Event {
         "action": cause.action,
         "id": cause.id
       ],
-      "context": context.data(using: .utf8)!.JSON!,
-      "effect": effect.data(using: .utf8)!.JSON!
+      "context": context
+        .data(using: .utf8)
+        .flatMap { $0.JSON }
+        ?? [:],
+      "effect": effect
+        .data(using: .utf8)
+        .flatMap { $0.JSON }
+        ?? [:]
     ]
   }
 }
