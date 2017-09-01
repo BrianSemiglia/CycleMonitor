@@ -143,6 +143,18 @@ extension CycleMonitorApp.Model {
       ]
     ]
   }
+  var selectedEffectDraft: [AnyHashable: Any]? { return
+    events[timeLineView.selectedIndex!]
+      .pendingEffectEdit
+      .flatMap { $0.data(using: .utf8) }
+      .flatMap { $0.JSON }
+  }
+  var selectedEffect: [AnyHashable: Any]? { return
+    events[timeLineView.selectedIndex!]
+      .effect
+      .data(using: .utf8)
+      .flatMap { $0.JSON }
+  }
 }
 
 extension Observable where E == CycleMonitorApp.Model {
@@ -162,16 +174,9 @@ extension Observable where E == CycleMonitorApp.Model {
     }
     .filter { $0.events.count > 0 }
     .map {
-      $0.events[$0.timeLineView.selectedIndex!]
-        .pendingEffectEdit
-        .map { $0.data(using: .utf8) }
-      ??
-      $0.events[$0.timeLineView.selectedIndex!]
-        .effect
-        .data(using: .utf8)
+      $0.selectedEffectDraft ??
+      $0.selectedEvent
     }
-    .filterNil()
-    .map { $0.JSON }
     .filterNil()
   }
 }
