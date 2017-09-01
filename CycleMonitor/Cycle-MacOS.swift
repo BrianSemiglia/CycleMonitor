@@ -445,6 +445,11 @@ extension CycleMonitorApp.Model {
             .data(using: .utf8)
             .flatMap { $0.JSON }
             ?? [:],
+          "context": $0
+            .context
+            .data(using: .utf8)
+            .flatMap { $0.JSON }
+            ?? [:],
           "pendingEffectEdit": $0
             .pendingEffectEdit
             .flatMap { $0.data(using: .utf8) }
