@@ -134,6 +134,17 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension CycleMonitorApp.Model {
+  var selectedEvent: [AnyHashable: Any] { return
+    [
+      "cause": [
+        "id": events[timeLineView.selectedIndex!].cause.id,
+        "action": events[timeLineView.selectedIndex!].cause.action
+      ]
+    ]
+  }
+}
+
 extension Observable where E == CycleMonitorApp.Model {
   var jsonEvents: Observable<[AnyHashable: Any]> { return
     distinctUntilChanged { x, y in
@@ -141,14 +152,7 @@ extension Observable where E == CycleMonitorApp.Model {
       y.eventHandlingState != .playingSendingEvents
     }
     .filter { $0.events.count > 0 }
-    .map {
-      [
-        "cause": [
-          "id": $0.events[$0.timeLineView.selectedIndex!].cause.id,
-          "action": $0.events[$0.timeLineView.selectedIndex!].cause.action
-        ]
-      ]
-    }
+    .map { $0.selectedEvent }
   }
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
