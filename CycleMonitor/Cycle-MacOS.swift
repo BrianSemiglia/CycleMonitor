@@ -440,8 +440,16 @@ extension CycleMonitorApp.Model {
             "action": $0.cause.action,
             "id": $0.cause.id
           ],
-          "effect": $0.effect.data(using: .utf8)!.JSON!,
-          "pendingEffectEdit": $0.pendingEffectEdit.map { $0.data(using: .utf8)!.JSON! } ?? ""
+          "effect": $0
+            .effect
+            .data(using: .utf8)
+            .flatMap { $0.JSON }
+            ?? [:],
+          "pendingEffectEdit": $0
+            .pendingEffectEdit
+            .flatMap { $0.data(using: .utf8) }
+            .flatMap { $0.JSON }
+            ?? [:]
         ]
       }
     ]
