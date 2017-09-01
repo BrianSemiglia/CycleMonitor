@@ -50,6 +50,7 @@ class TimeLineViewController:
     }
     enum EventHandlingState: Int {
       case playing
+      case playingSendingEvents
       case playingSendingEffects
       case recording
     }
@@ -98,23 +99,42 @@ class TimeLineViewController:
     super.viewDidLoad()
     shouldForceRender = true
 
-    eventHandling?.segmentCount = 3
-    eventHandling?.setLabel("Play", forSegment: 0)
-    eventHandling?.setWidth(
-      CGFloat(("Play".characters.count * 7) + 14),
+    eventHandling?.segmentCount = 4
+    eventHandling?.setLabel(
+      "Review",
       forSegment: 0
     )
-    eventHandling?.setLabel("Play On Device", forSegment: 1)
     eventHandling?.setWidth(
-      CGFloat(("Play On Device".characters.count * 7) + 14),
+      CGFloat(("Review".characters.count * 7) + 14),
+      forSegment: 0
+    )
+    eventHandling?.setLabel(
+      "Events On Device",
       forSegment: 1
     )
-    eventHandling?.setLabel("Record", forSegment: 2)
     eventHandling?.setWidth(
-      CGFloat(("Record".characters.count * 7) + 14),
+      CGFloat(("Events On Device".characters.count * 7) + 14),
+      forSegment: 1
+    )
+    eventHandling?.setLabel(
+      "Effects On Device",
       forSegment: 2
     )
-    eventHandling?.action = #selector(didReceiveEventFromEventHandling(_:))
+    eventHandling?.setWidth(
+      CGFloat(("Effects On Device".characters.count * 7) + 14),
+      forSegment: 2
+    )
+    eventHandling?.setLabel(
+      "Record",
+      forSegment: 3
+    )
+    eventHandling?.setWidth(
+      CGFloat(("Record".characters.count * 7) + 14),
+      forSegment: 3
+    )
+    eventHandling?.action = #selector(
+      didReceiveEventFromEventHandling(_:)
+    )
 
     state?.isAutomaticQuoteSubstitutionEnabled = false
     state?.isAutomaticDashSubstitutionEnabled = false
@@ -490,7 +510,7 @@ extension TimeLineViewController.Model.Selection: Equatable {
 
 extension NSScrollView {
     var documentVisibleCenter: NSPoint { return
-        CGPoint(
+        NSPoint(
             x: documentVisibleRect.origin.x + (bounds.size.width / 2.0),
             y: bounds.height / CGFloat(2)
         )
@@ -501,8 +521,9 @@ extension Int {
   var eventHandlingState: TimeLineViewController.Model.EventHandlingState? {
     switch self {
     case 0: return .playing
-    case 1: return .playingSendingEffects
-    case 2: return .recording
+    case 1: return .playingSendingEvents
+    case 2: return .playingSendingEffects
+    case 3: return .recording
     default: return nil
     }
   }

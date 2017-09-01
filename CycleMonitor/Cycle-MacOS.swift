@@ -25,6 +25,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   struct Model: Initializable {
     enum EventHandlingState {
       case playing
+      case playingSendingEvents
       case playingSendingEffects
       case recording
     }
@@ -118,16 +119,7 @@ struct CycleMonitorApp: SinkSourceConverting {
 
     let multipeer = drivers.multipeer
       .rendered(
-        events
-          .filter { $0.eventHandlingState == .playingSendingEffects }
-          .map {
-            $0.events[$0.timeLineView.selectedIndex!].pendingEffectEdit
-              .map { $0.data(using: .utf8) } ??
-            $0.events[$0.timeLineView.selectedIndex!].effect.data(using: .utf8)
-          }
-          .filterNil()
-          .map { $0.JSON }
-          .filterNil()
+        Observable.merge([events.jsonEvents, events.jsonEffects])
       )
       .tupledWithLatestFrom(events)
       .reduced()
@@ -154,6 +146,44 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension Observable where E == CycleMonitorApp.Model {
+  var jsonEvents: Observable<[AnyHashable: Any]> { return
+    distinctUntilChanged { x, y in
+      x.timeLineView.selectedIndex == y.timeLineView.selectedIndex ||
+      y.eventHandlingState != .playingSendingEvents
+    }
+    .filter { $0.events.count > 0 }
+    .map {
+      [
+        "cause": [
+          "id": $0.events[$0.timeLineView.selectedIndex!].cause.id,
+          "action": $0.events[$0.timeLineView.selectedIndex!].cause.action
+        ]
+      ]
+    }
+  }
+  
+  var jsonEffects: Observable<[AnyHashable: Any]> { return
+    distinctUntilChanged { x, y in
+      !(y.eventHandlingState == .playingSendingEffects &&
+        x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
+    }
+    .filter { $0.events.count > 0 }
+    .map {
+      $0.events[$0.timeLineView.selectedIndex!]
+        .pendingEffectEdit
+        .map { $0.data(using: .utf8) }
+      ??
+      $0.events[$0.timeLineView.selectedIndex!]
+        .effect
+        .data(using: .utf8)
+    }
+    .filterNil()
+    .map { $0.JSON }
+    .filterNil()
+  }
+}
+
 extension Data {
   var JSON: [AnyHashable: Any]? {
     do {
@@ -172,6 +202,7 @@ extension CycleMonitorApp.Model.EventHandlingState {
   var asTimeLineEventHandlingState: TimeLineViewController.Model.EventHandlingState {
     switch self {
     case .playing: return .playing
+    case .playingSendingEvents: return .playingSendingEvents
     case .playingSendingEffects: return .playingSendingEffects
     case .recording: return .recording
     }
@@ -266,6 +297,10 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         case .playing:
           var new = context
           new.eventHandlingState = .playing
+          return new
+        case .playingSendingEvents:
+          var new = context
+          new.eventHandlingState = .playingSendingEvents
           return new
         case .playingSendingEffects:
           var new = context
