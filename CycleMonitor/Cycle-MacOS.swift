@@ -163,8 +163,8 @@ extension CycleMonitorApp.Model {
 extension Observable where E == CycleMonitorApp.Model {
   var jsonEvents: Observable<[AnyHashable: Any]> { return
     distinctUntilChanged { x, y in
-      x.timeLineView.selectedIndex == y.timeLineView.selectedIndex ||
-      y.eventHandlingState != .playingSendingEvents
+      !(y.eventHandlingState == .playingSendingEvents &&
+        x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
     }
     .filter { $0.events.count > 0 }
     .map { $0.selectedEvent }
