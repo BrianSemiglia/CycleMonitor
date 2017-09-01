@@ -238,12 +238,11 @@ extension CycleMonitorApp.Model {
       },
       connection: multipeer.timeLineViewControllerConnection,
       eventHandlingState: eventHandlingState.timeLineEventHandlingState,
-      isDisplayingSave: timeLineView.selectedIndex
-        .map { 
-          events[$0].pendingEffectEdit != nil && 
-          events[$0].pendingEffectEdit != events[$0].effect
-        }
-        ?? false
+      isDisplayingSave: timeLineView.selectedIndex.map {
+        events[$0].pendingEffectEdit != nil &&
+        events[$0].pendingEffectEdit != events[$0].effect
+      }
+      ?? false
     )
   }
 }
@@ -542,7 +541,7 @@ extension CycleMonitorApp.Model.Event {
           <^> label
           <*> action
           <*> id
-    }
+      }
     
     let pendingEffectEdit = input["pendingEffectEdit"]
       .flatMap { $0 as? [AnyHashable: Any] }
