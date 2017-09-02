@@ -208,31 +208,53 @@ extension CycleMonitorApp.Model.EventHandlingState {
   }
 }
 
+extension TimeLineViewController.Model.Driver {
+  static func coerced(_ x: CycleMonitorApp.Model.Event.Driver) -> TimeLineViewController.Model.Driver {
+    return x.coerced()
+  }
+}
+
+extension CycleMonitorApp.Model.Event.Driver {
+    func coerced() -> TimeLineViewController.Model.Driver { return
+        TimeLineViewController.Model.Driver(
+            label: label,
+            action: action,
+            background: id.hashValue.goldenRatioColored(),
+            side: id.hashValue.goldenRatioColored(
+                brightness: action.characters.count == 0 ? 0.95 : 0.5
+            )
+        )
+    }
+}
+
+extension TimeLineViewController.Model.CauseEffect {
+  static func coerced(_ x: CycleMonitorApp.Model.Event) -> TimeLineViewController.Model.CauseEffect {
+    return x.coerced()
+  }
+}
+
+extension CycleMonitorApp.Model.Event {
+  func coerced() -> TimeLineViewController.Model.CauseEffect { return
+    TimeLineViewController.Model.CauseEffect(
+      cause: cause.action,
+      effect: effect,
+      color: cause.id.hashValue.goldenRatioColored()
+    )
+  }
+}
+
 extension CycleMonitorApp.Model {
   var asModel: TimeLineViewController.Model { return
     TimeLineViewController.Model(
-      drivers: timeLineView.selectedIndex.map {
-        events[$0].drivers.map {
-          TimeLineViewController.Model.Driver(
-            label: $0.label,
-            action: $0.action,
-            background: $0.id.hashValue.goldenRatioColored(),
-            side: $0.id.hashValue.goldenRatioColored(
-              brightness: $0.action.characters.count == 0 ? 0.95 : 0.5
-            )
-          )
-        }
-      } ?? [],
-      causesEffects: events.map {
-        TimeLineViewController.Model.CauseEffect(
-          cause: $0.cause.action,
-          effect: $0.effect,
-          color: $0.cause.id.hashValue.goldenRatioColored()
-        )
-      },
+      drivers: timeLineView.selectedIndex
+        .map { events[$0].drivers.map (TimeLineViewController.Model.Driver.coerced) }
+        ?? []
+      ,
+      causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
       presentedState: timeLineView.selectedIndex
         .map { events[$0].pendingEffectEdit ?? events[$0].effect }
-        ?? "",
+        ?? ""
+      ,
       selected: timeLineView.selectedIndex.map {
         TimeLineViewController.Model.Selection(
           color: NSColor.cy_lightGray,
