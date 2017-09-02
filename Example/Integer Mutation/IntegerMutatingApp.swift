@@ -85,7 +85,8 @@ struct IntegerMutatingApp: SinkSourceConverting {
             togglerAction: $0.0.0 == .incrementing ? "incrementing" : "decrementing",
             context: $0.1
           )
-        },
+        }
+      ,
       applicationActions
         .tupledWithLatestFrom(applicationEffects)
         .tupledWithLatestFrom(events)
@@ -94,7 +95,8 @@ struct IntegerMutatingApp: SinkSourceConverting {
             sessionAction: $0.0.0.session.state.string(),
             context: $0.1
           )
-        },
+        }
+      ,
       shakeActions
         .tupledWithLatestFrom(shakeEffects)
         .tupledWithLatestFrom(events)
