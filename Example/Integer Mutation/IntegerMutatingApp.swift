@@ -146,15 +146,13 @@ struct IntegerMutatingApp: SinkSourceConverting {
     .reduced()
     .share()
 
-    return Observable
-      .of(
-        valueEffects,
-        applicationEffects,
-        json,
-        reporter,
-        shakeEffects
-      )
-      .merge()
+    return .merge([
+      valueEffects,
+      applicationEffects,
+      json,
+      reporter,
+      shakeEffects
+    ])
   }
 }
 
