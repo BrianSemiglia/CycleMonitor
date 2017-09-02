@@ -77,7 +77,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
       screen: TimeLineViewController.new(
-        model: initial.asModel
+        model: initial.coerced()
       ),
       multipeer: MultipeerJSON(),
       application: AppDelegateStub(),
@@ -95,7 +95,7 @@ struct CycleMonitorApp: SinkSourceConverting {
   ) -> Observable<Model> {
     let screen = drivers
       .screen
-      .rendered(events.map { $0.asModel })
+      .rendered(events.map (TimeLineViewController.Model.coerced))
       .tupledWithLatestFrom(events)
       .reduced()
     
@@ -243,8 +243,14 @@ extension CycleMonitorApp.Model.Event {
   }
 }
 
+extension TimeLineViewController.Model {
+  static func coerced(_ x: CycleMonitorApp.Model) -> TimeLineViewController.Model {
+    return x.coerced()
+  }
+}
+
 extension CycleMonitorApp.Model {
-  var asModel: TimeLineViewController.Model { return
+  func coerced() -> TimeLineViewController.Model { return
     TimeLineViewController.Model(
       drivers: timeLineView.selectedIndex
         .map { events[$0].drivers.map (TimeLineViewController.Model.Driver.coerced) }
