@@ -253,7 +253,7 @@ extension IntegerMutatingApp.Model {
         ["label": "session", "action": "",          "id": "session"]
       ],
       "cause": [
-        "label": "shake",
+        "label": "shakes",
         "action": shakeAction,
         "id": "shakes"
       ],
