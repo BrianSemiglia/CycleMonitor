@@ -76,7 +76,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       .reduced()
       .share()
     
-    let dictionaryStateStream: Observable<[AnyHashable: Any]> = Observable.of(
+    let dictionaryStateStream: Observable<[AnyHashable: Any]> = Observable.merge([
       valueActions
         .tupledWithLatestFrom(valueEffects)
         .tupledWithLatestFrom(events)
@@ -106,8 +106,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: $0.1
           )
         }
-      )
-      .merge()
+      ])
       .share()
 
     let json = drivers.multipeer
