@@ -67,7 +67,8 @@ struct IntegerMutatingApp: SinkSourceConverting {
       .reduced()
       .share()
 
-    let shakeActions = drivers.motionReporter
+    let shakeActions = drivers
+      .motionReporter
       .rendered(events.map { $0.motionReporter })
       .share()
     
@@ -109,13 +110,15 @@ struct IntegerMutatingApp: SinkSourceConverting {
       ])
       .share()
 
-    let json = drivers.multipeer
+    let json = drivers
+      .multipeer
       .rendered(moments)
       .tupledWithLatestFrom(events)
       .reduced()
       .share()
 
-    let reporter = drivers.bugReporter
+    let reporter = drivers
+      .bugReporter
       .rendered(
         events
           .map { $0.bugReporter }
