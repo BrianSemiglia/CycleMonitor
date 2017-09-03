@@ -83,7 +83,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
         .tupledWithLatestFrom(events)
         .map {
           $0.0.1.JSONTimelineFrameWith(
-            togglerAction: $0.0.0 == .incrementing ? "incrementing" : "decrementing",
+            togglerAction: wrap($0.0.0) ?? "",
             context: $0.1
           )
         }
@@ -93,7 +93,11 @@ struct IntegerMutatingApp: SinkSourceConverting {
         .tupledWithLatestFrom(events)
         .map {
           $0.0.1.JSONTimelineFrameWith(
-            sessionAction: $0.0.0.session.state.string(),
+            sessionAction: (try? wrap($0.0.0.session.state))
+              .flatMap { $0 as [String: Any] }
+              .flatMap { $0.description }
+              ?? ""
+            ,
             context: $0.1
           )
         }
@@ -103,7 +107,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
         .tupledWithLatestFrom(events)
         .map {
           $0.0.1.JSONTimelineFrameWith(
-            shakeAction: $0.0.0.string(),
+            shakeAction: wrap($0.0.0) ?? "",
             context: $0.1
           )
         }
@@ -158,51 +162,10 @@ struct IntegerMutatingApp: SinkSourceConverting {
   }
 }
 
-extension ShakeDetection.Action {
-  func string() -> String {
-    switch self {
-    case .detecting: return "detecting"
-    case .none: return ""
-    }
-  }
-}
-
-extension Change where T == RxUIApplication.Model.Session.State {
-  func string() -> String {
-    switch self {
-    case .currently(let x): return "currently(" + x.string() + ")"
-    case .pre(let x): return "pre(" + x.string() + ")"
-    }
-  }
-}
-
-extension RxUIApplication.Model.Session.State {
-  func string() -> String {
-    switch self {
-    case .awaitingLaunch: return "awaitingLaunch"
-    case .active(let count): return "active(" + count.string() + ")"
-    case .resigned: return "resigned"
-    case .terminated: return "terminated"
-    }
-  }
-}
-
-extension RxUIApplication.Model.Session.State.Count {
-  func string() -> String {
-    switch self {
-    case .first(_): return "first"
-    case .some: return "some"
-    }
-  }
-}
-
-extension ValueToggler.Model.Button.State {
-  func string() -> String {
-    switch self {
-    case .highlighted: return "highlighted"
-    case .enabled: return "enabled"
-    }
-  }
+func wrap(_ input: Any) -> String? { return
+  (try? wrap(("filler tuple", input)))
+    .flatMap { $0 as [String: Any] }
+    .flatMap { $0[".1"] as? String }
 }
 
 extension IntegerMutatingApp.Model {
