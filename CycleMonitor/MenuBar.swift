@@ -29,6 +29,7 @@ class MenuBarDriver {
   enum Action {
     case none
     case didSelectItemWith(id: String)
+    case didSelectQuit
   }
   
   let cleanup = DisposeBag()
@@ -80,10 +81,25 @@ class MenuBarDriver {
     new.forEach(file.addItem)
     
     let main = NSMenu(title: "Top")
-    main.addItem(NSMenuItem.dud)
+    main.addItem(
+      NSMenuItem.mainWith(
+        items: [
+          quit()
+        ]
+      )
+    )
     main.addItem(item)
     NSApplication.shared().mainMenu = main
-    
+  }
+  
+  func quit() -> NSMenuItem { return
+    NSMenuItem(
+      title: "Quit Cycle Monitor",
+      action: #selector(didReceiveEventFromQuit(_:)),
+      target: self,
+      keyEquivalent: "",
+      tag: 999
+    )
   }
   
   @objc func didReceiveEventFrom(_ menu: NSMenuItem) {
@@ -93,14 +109,18 @@ class MenuBarDriver {
         >>- output.on
   }
 
+  @objc func didReceiveEventFromQuit(_ menu: NSMenuItem) {
+    output.on(.next(.didSelectQuit))
+  }
 }
 
 extension NSMenuItem {
-  static var dud: NSMenuItem {
-    let dudMenu = NSMenu(title: "")
-    let dud = NSMenuItem()
-    dud.submenu = dudMenu
-    return dud
+  static func mainWith(items: [NSMenuItem]) -> NSMenuItem {
+    let appMenu = NSMenu(title: "")
+    let parent = NSMenuItem()
+    parent.submenu = appMenu
+    items.forEach(appMenu.addItem)
+    return parent
   }
 }
 

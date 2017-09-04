@@ -66,6 +66,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       ]
     )
     var eventHandlingState = EventHandlingState.playing
+    var isTerminating = false
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: TimeLineViewController
@@ -73,6 +74,7 @@ struct CycleMonitorApp: SinkSourceConverting {
     let application: AppDelegateStub
     let browser: BrowserDriver
     let menuBar: MenuBarDriver
+    let termination: TerminationDriver
   }
   func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
@@ -86,6 +88,11 @@ struct CycleMonitorApp: SinkSourceConverting {
       ),
       menuBar: MenuBarDriver(
         model: initial.menuBar
+      ),
+      termination: TerminationDriver(
+        model: TerminationDriver.Model(
+          shouldTerminate: initial.isTerminating
+        )
       )
     )
   }
@@ -127,12 +134,25 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
     
+    let termination = drivers
+      .termination
+      .rendered(
+        events.map {
+          TerminationDriver.Model(
+            shouldTerminate: $0.isTerminating
+          )
+        }
+      )
+      .tupledWithLatestFrom(events)
+      .map { $0.1 }
+    
     return .merge([
       screen,
       application,
       multipeer,
       browser,
-      menuBar
+      menuBar,
+      termination
     ])
   }
 }
@@ -448,11 +468,96 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
             .map { $0.testFile }
         )
         return new
+      case .didSelectQuit:
+        var new = context
+        new.isTerminating = true
+        return new
       default:
         break
       }
       return context
     }
+  }
+}
+
+class TerminationDriver {
+  struct Model: Equatable {
+    var shouldTerminate: Bool
+    static func ==(left: Model, right: Model) -> Bool {
+      return left.shouldTerminate == right.shouldTerminate
+    }
+  }
+  
+  enum Action {
+    case none
+  }
+  
+  let cleanup = DisposeBag()
+  let output = BehaviorSubject(value: Action.none)
+
+  var model: Model {
+    didSet {
+      if model != oldValue {
+        render(model)
+      }
+    }
+  }
+  
+  init(model: Model) {
+    self.model = model
+    render(model)
+  }
+  
+  func rendered(_ input: Observable<Model>) -> Observable<Action> {
+    input
+      .observeOn(MainScheduler.instance)
+      .distinctUntilChanged()
+      .subscribe(onNext: render)
+      .disposed(by: cleanup)
+    return output
+  }
+  
+  func render(_ input: Model) {
+    if input.shouldTerminate {
+      NSApplication
+        .shared()
+        .terminate(nil)
+    }
+  }
+}
+
+/*
+ Monitor, Driver, Caller
+ Model,   JSON,   Model
+ [Caller], [Monitor, Driver], [Cycle-MacOS]
+ */
+
+extension CycleMonitorApp.Model.Event {
+  func coerced() -> [AnyHashable: Any] { return
+    [
+      "drivers": drivers.map {[
+        "label": $0.label,
+        "action": $0.action,
+        "id": $0.id
+      ]},
+      "cause": [
+        "label": cause.label,
+        "action": cause.action,
+        "id": cause.id
+      ],
+      "effect": effect
+        .data(using: .utf8)
+        .flatMap { $0.JSON }
+        ?? [:],
+      "context": context
+        .data(using: .utf8)
+        .flatMap { $0.JSON }
+        ?? [:],
+      "pendingEffectEdit": pendingEffectEdit
+        .flatMap { $0.data(using: .utf8) }
+        .flatMap { $0.JSON }
+        ?? [:]
+    ]
   }
 }
 
