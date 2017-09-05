@@ -87,7 +87,11 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: $0.1
           )
         }
-        .map { $0.JSON }
+        .flatMap {
+          $0.flatMap { $0.JSON }
+            .map(Observable.just)
+            ?? .never() // replace never with error
+        }
       ,
       applicationActions
         .tupledWithLatestFrom(applicationEffects)
@@ -102,7 +106,11 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: $0.1
           )
         }
-        .map { $0.JSON }
+        .flatMap {
+          $0.flatMap { $0.JSON }
+            .map(Observable.just)
+            ?? .never() // replace never with error
+        }
       ,
       shakeActions
         .tupledWithLatestFrom(shakeEffects)
@@ -113,7 +121,11 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: $0.1
           )
         }
-        .map { $0.JSON }
+        .flatMap {
+          $0.flatMap { $0.JSON }
+            .map(Observable.just)
+            ?? .never() // replace never with error
+        }
       ])
       .share()
 
@@ -249,79 +261,70 @@ extension IntegerMutatingApp.Model {
   func coerced(
     sessionAction: String,
     context: IntegerMutatingApp.Model
-  ) -> CycleMonitorAppEvent { return
-    IntegerMutatingAppEvent(
-      drivers: [
+  ) -> CycleMonitorAppEvent? { return
+    curry(IntegerMutatingAppEvent.init)
+      <^> [
         IntegerMutatingAppEventDriver.shakesWith(),
         IntegerMutatingAppEventDriver.valueTogglerWith(),
         IntegerMutatingAppEventDriver.sessionWith(action: sessionAction)
-      ],
-      cause: IntegerMutatingAppEventDriver.sessionWith(action: sessionAction),
-      effect: (try? wrap(context) as [AnyHashable: Any])
+      ]
+      <*> IntegerMutatingAppEventDriver.sessionWith(
+        action: sessionAction
+      )
+      <*> (try? wrap(context) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      context: (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(self) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      pendingEffectEdit: nil,
-      isApproved: false
-    )
+      <*> .some(nil)
+      <*> false
   }
 
   func coerced(
     togglerAction: String,
     context: IntegerMutatingApp.Model
-    ) -> CycleMonitorAppEvent { return
-    IntegerMutatingAppEvent(
-      drivers: [
+  ) -> CycleMonitorAppEvent? { return
+    curry(IntegerMutatingAppEvent.init)
+      <^> [
         IntegerMutatingAppEventDriver.shakesWith(),
         IntegerMutatingAppEventDriver.valueTogglerWith(action: togglerAction),
         IntegerMutatingAppEventDriver.sessionWith()
-      ],
-      cause: IntegerMutatingAppEventDriver.valueTogglerWith(action: togglerAction),
-      effect: (try? wrap(context) as [AnyHashable: Any])
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      context: (try? wrap(self) as [AnyHashable: Any])
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      pendingEffectEdit: nil,
-      isApproved: false
-    )
+      ]
+      <*> IntegerMutatingAppEventDriver.valueTogglerWith(
+        action: togglerAction
+      )
+      <*> (try? wrap(context) as [AnyHashable: Any])
+          .flatMap (JSONSerialization.prettyPrinted)
+          .flatMap { $0.utf8 }
+      <*> (try? wrap(self) as [AnyHashable: Any])
+          .flatMap (JSONSerialization.prettyPrinted)
+          .flatMap { $0.utf8 }
+      <*> .some(nil)
+      <*> false
   }
 
   func coerced(
     shakeAction: String,
     context: IntegerMutatingApp.Model
-  ) -> CycleMonitorAppEvent { return
-    IntegerMutatingAppEvent(
-      drivers: [
+  ) -> CycleMonitorAppEvent? { return
+    curry(IntegerMutatingAppEvent.init)
+      <^> [
         IntegerMutatingAppEventDriver.shakesWith(action: shakeAction),
         IntegerMutatingAppEventDriver.valueTogglerWith(),
         IntegerMutatingAppEventDriver.sessionWith()
-      ],
-      cause: IntegerMutatingAppEventDriver.shakesWith(action: shakeAction),
-      effect: (try? wrap(context) as [AnyHashable: Any])
+      ]
+      <*> IntegerMutatingAppEventDriver.shakesWith(
+        action: shakeAction
+      )
+      <*> (try? wrap(context) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      context: (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(self) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-        ?? ""
-      ,
-      pendingEffectEdit: nil,
-      isApproved: false
-    )
+      <*> .some(nil)
+      <*> false
   }
 }
 
