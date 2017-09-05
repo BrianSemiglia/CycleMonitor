@@ -82,17 +82,18 @@ struct IntegerMutatingApp: SinkSourceConverting {
         .tupledWithLatestFrom(valueEffects)
         .tupledWithLatestFrom(events)
         .map {
-          $0.0.1.JSONTimelineFrameWith(
+          $0.0.1.coerced(
             togglerAction: wrap($0.0.0) ?? "",
             context: $0.1
           )
         }
+        .map { $0.JSON }
       ,
       applicationActions
         .tupledWithLatestFrom(applicationEffects)
         .tupledWithLatestFrom(events)
         .map {
-          $0.0.1.JSONTimelineFrameWith(
+          $0.0.1.coerced(
             sessionAction: (try? wrap($0.0.0.session.state))
               .flatMap { $0 as [String: Any] }
               .flatMap { $0.description }
@@ -101,16 +102,18 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: $0.1
           )
         }
+        .map { $0.JSON }
       ,
       shakeActions
         .tupledWithLatestFrom(shakeEffects)
         .tupledWithLatestFrom(events)
         .map {
-          $0.0.1.JSONTimelineFrameWith(
+          $0.0.1.coerced(
             shakeAction: wrap($0.0.0) ?? "",
             context: $0.1
           )
         }
+        .map { $0.JSON }
       ])
       .share()
 
@@ -168,63 +171,157 @@ func wrap(_ input: Any) -> String? { return
     .flatMap { $0[".1"] as? String }
 }
 
+struct IntegerMutatingAppEvent: CycleMonitorAppEvent {
+  var drivers: [CycleMonitorAppEventDriver]
+  var cause: CycleMonitorAppEventDriver
+  var effect: String
+  var context: String
+  var pendingEffectEdit: String?
+  var isApproved: Bool
+}
+
+struct IntegerMutatingAppEventDriver: CycleMonitorAppEventDriver {
+  var label: String
+  var action: String
+  var id: String
+}
+
+extension IntegerMutatingAppEventDriver {
+  static func shakesWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
+    IntegerMutatingAppEventDriver(
+      label: "shakes",
+      action: action ?? "",
+      id: "shakes"
+    )
+  }
+  static func valueTogglerWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
+    IntegerMutatingAppEventDriver(
+      label: "toggler",
+      action: action ?? "",
+      id: "toggler"
+    )
+  }
+  static func sessionWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
+    IntegerMutatingAppEventDriver(
+      label: "session",
+      action: action ?? "",
+      id: "session"
+    )
+  }
+}
+
+extension CycleMonitorAppEventDriver {
+  var JSON: [AnyHashable: Any] { return [
+    "label": label,
+    "action": action,
+    "id": id
+  ]}
+}
+
+extension CycleMonitorAppEvent {
+  var JSON: [AnyHashable: Any] { return [
+    "drivers": drivers.map { $0.JSON },
+    "cause": cause.JSON,
+    "context": context,
+    "effect": effect
+  ]}
+}
+
+extension JSONSerialization {
+  static func prettyPrinted(_ input: [AnyHashable: Any]) -> Data? { return
+    try? JSONSerialization.data(
+      withJSONObject: input,
+      options: .prettyPrinted
+    )
+  }
+}
+
+extension Data {
+  var utf8: String? { return
+    String(
+      data: self,
+      encoding: String.Encoding.utf8
+    )
+  }
+}
+
 extension IntegerMutatingApp.Model {
-  func JSONTimelineFrameWith(
+  func coerced(
     sessionAction: String,
     context: IntegerMutatingApp.Model
-  ) -> [AnyHashable: Any] { return
-    [
-      "drivers": [
-        ["label": "shakes",  "action": "",            "id": "shakes"],
-        ["label": "toggler", "action": "",            "id": "toggler"],
-        ["label": "session", "action": sessionAction, "id": "session"]
+  ) -> CycleMonitorAppEvent { return
+    IntegerMutatingAppEvent(
+      drivers: [
+        IntegerMutatingAppEventDriver.shakesWith(),
+        IntegerMutatingAppEventDriver.valueTogglerWith(),
+        IntegerMutatingAppEventDriver.sessionWith(action: sessionAction)
       ],
-      "cause": [
-        "label": "session",
-        "action": sessionAction,
-        "id": "session"
-      ],
-      "context": try! wrap(context) as [String: Any],
-      "effect": try! wrap(self) as [String: Any]
-    ]
+      cause: IntegerMutatingAppEventDriver.sessionWith(action: sessionAction),
+      effect: (try? wrap(context) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      context: (try? wrap(self) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      pendingEffectEdit: nil,
+      isApproved: false
+    )
   }
-  func JSONTimelineFrameWith(
+
+  func coerced(
     togglerAction: String,
     context: IntegerMutatingApp.Model
-  ) -> [AnyHashable: Any] { return
-    [
-      "drivers": [
-        ["label": "shakes",  "action": "",            "id": "shakes"],
-        ["label": "toggler", "action": togglerAction, "id": "toggler"],
-        ["label": "session", "action": "",            "id": "session"]
+    ) -> CycleMonitorAppEvent { return
+    IntegerMutatingAppEvent(
+      drivers: [
+        IntegerMutatingAppEventDriver.shakesWith(),
+        IntegerMutatingAppEventDriver.valueTogglerWith(action: togglerAction),
+        IntegerMutatingAppEventDriver.sessionWith()
       ],
-      "cause": [
-        "label": "toggler",
-        "action": togglerAction,
-        "id": "toggler"
-      ],
-      "context": try! wrap(context) as [String: Any],
-      "effect": try! wrap(self) as [String: Any]
-    ]
+      cause: IntegerMutatingAppEventDriver.valueTogglerWith(action: togglerAction),
+      effect: (try? wrap(context) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      context: (try? wrap(self) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      pendingEffectEdit: nil,
+      isApproved: false
+    )
   }
-  func JSONTimelineFrameWith(
+
+  func coerced(
     shakeAction: String,
     context: IntegerMutatingApp.Model
-  ) -> [AnyHashable: Any] { return
-    [
-      "drivers": [
-        ["label": "shakes",  "action": shakeAction, "id": "shakes"],
-        ["label": "toggler", "action": "",          "id": "toggler"],
-        ["label": "session", "action": "",          "id": "session"]
+  ) -> CycleMonitorAppEvent { return
+    IntegerMutatingAppEvent(
+      drivers: [
+        IntegerMutatingAppEventDriver.shakesWith(action: shakeAction),
+        IntegerMutatingAppEventDriver.valueTogglerWith(),
+        IntegerMutatingAppEventDriver.sessionWith()
       ],
-      "cause": [
-        "label": "shakes",
-        "action": shakeAction,
-        "id": "shakes"
-      ],
-      "context": try! wrap(context) as [String: Any],
-      "effect": try! wrap(self) as [String: Any]
-    ]
+      cause: IntegerMutatingAppEventDriver.shakesWith(action: shakeAction),
+      effect: (try? wrap(context) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      context: (try? wrap(self) as [AnyHashable: Any])
+        .flatMap (JSONSerialization.prettyPrinted)
+        .flatMap { $0.utf8 }
+        ?? ""
+      ,
+      pendingEffectEdit: nil,
+      isApproved: false
+    )
   }
 }
 
@@ -354,15 +451,16 @@ extension ObservableType where E == (MultipeerJSON.Action, IntegerMutatingApp.Mo
       switch event {
       case.received(data: let new):
         return new.JSON.flatMap { x in
-          let a = curry(IntegerMutatingApp.Model.reduced)
+          let action = curry(IntegerMutatingApp.Model.reduced)
             <^> IntegerMutatingApp.Model.cause(x)
             <*> .some(context)
-          let y: Observable<IntegerMutatingApp.Model>? = Observable.just <^> Argo.decode(x)
-          return a ?? y
+          let effect: Observable<IntegerMutatingApp.Model>? = Observable.just
+            <^> Argo.decode(x)
+          return action ?? effect
         }
-        ?? Observable.just(context)
+        ?? .never()
       default:
-        return Observable.just(context)
+        return .never()
       }
     }
   }
