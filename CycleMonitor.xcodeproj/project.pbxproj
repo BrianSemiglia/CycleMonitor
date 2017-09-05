@@ -24,6 +24,8 @@
 		D33F8D621F5B3874002C122D /* ValueToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D431F5B37B4002C122D /* ValueToggler.swift */; };
 		D33F8D641F5B436E002C122D /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D631F5B436E002C122D /* MultipeerJSON.swift */; };
 		D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36F2C831F1BCC90007D8D93 /* MenuBar.swift */; };
+		D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
+		D3CA844B1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
 		D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */; };
 		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
 		D3F5B7211EFF08530020290A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F5B7201EFF08530020290A /* CycleMonitorTests.swift */; };
@@ -65,6 +67,7 @@
 		D33F8D4D1F5B383F002C122D /* Integer Mutation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Integer Mutation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33F8D631F5B436E002C122D /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
 		D36F2C831F1BCC90007D8D93 /* MenuBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
+		D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleMonitorEvent.swift; sourceTree = "<group>"; };
 		D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserDriver.swift; sourceTree = "<group>"; };
 		D3F5B70B1EFF08530020290A /* CycleMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F5B7121EFF08530020290A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */,
+				D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */,
 				D31D15911F0CBEF20009DE25 /* main.swift */,
 			);
 			name = Cycle;
@@ -565,6 +569,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3CA844B1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
 				D33F8D611F5B3874002C122D /* ShakeDetectionDriver.swift in Sources */,
 				D33F8D641F5B436E002C122D /* MultipeerJSON.swift in Sources */,
 				D33F8D5F1F5B3874002C122D /* BugReporter.swift in Sources */,
@@ -580,6 +585,7 @@
 				D31D15921F0CBEF20009DE25 /* main.swift in Sources */,
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
+				D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
 				D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */,
 				D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */,
 				D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */,
