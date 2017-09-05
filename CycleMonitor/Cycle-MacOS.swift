@@ -29,14 +29,14 @@ struct CycleMonitorApp: SinkSourceConverting {
       case playingSendingEffects
       case recording
     }
-    struct Event {
-      struct Driver {
+    struct Event: CycleMonitorAppEvent {
+      struct Driver: CycleMonitorAppEventDriver {
         var label: String
         var action: String
         var id: String
       }
-      var drivers: [Driver]
-      var cause: Driver
+      var drivers: [CycleMonitorAppEventDriver]
+      var cause: CycleMonitorAppEventDriver
       var effect: String
       var context: String
       var pendingEffectEdit: String?
@@ -228,13 +228,13 @@ extension CycleMonitorApp.Model.EventHandlingState {
   }
 }
 
-extension TimeLineViewController.Model.Driver {
-  static func coerced(_ x: CycleMonitorApp.Model.Event.Driver) -> TimeLineViewController.Model.Driver {
+extension CycleMonitorAppEventDriver {
+  static func coerced(_ x: CycleMonitorAppEventDriver) -> TimeLineViewController.Model.Driver {
     return x.coerced()
   }
 }
 
-extension CycleMonitorApp.Model.Event.Driver {
+extension CycleMonitorAppEventDriver {
     func coerced() -> TimeLineViewController.Model.Driver { return
         TimeLineViewController.Model.Driver(
             label: label,
@@ -273,7 +273,9 @@ extension CycleMonitorApp.Model {
   func coerced() -> TimeLineViewController.Model { return
     TimeLineViewController.Model(
       drivers: timeLineView.selectedIndex
-        .map { events[$0].drivers.map (TimeLineViewController.Model.Driver.coerced) }
+        .map {
+          events[$0].drivers.map { $0.coerced() }
+        }
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
@@ -565,35 +567,7 @@ extension CycleMonitorApp.Model {
   var saveFile: [AnyHashable: Any] { return
     [
       "selectedIndex": timeLineView.selectedIndex as Any,
-      "events": events.map {
-        [
-          "drivers": $0.drivers.map {[
-            "label": $0.label,
-            "action": $0.action,
-            "id": $0.id
-          ]},
-          "cause": [
-            "label": $0.cause.label,
-            "action": $0.cause.action,
-            "id": $0.cause.id
-          ],
-          "effect": $0
-            .effect
-            .data(using: .utf8)
-            .flatMap { $0.JSON }
-            ?? [:],
-          "context": $0
-            .context
-            .data(using: .utf8)
-            .flatMap { $0.JSON }
-            ?? [:],
-          "pendingEffectEdit": $0
-            .pendingEffectEdit
-            .flatMap { $0.data(using: .utf8) }
-            .flatMap { $0.JSON }
-            ?? [:]
-        ]
-      }
+      "events": events.map { $0.coerced() as [AnyHashable: Any] }
     ]
   }
 }
@@ -664,16 +638,12 @@ extension CycleMonitorApp.Model.Event {
   static func decode(_ input: [AnyHashable: Any]) -> CycleMonitorApp.Model.Event? {
 
     let effect = input["effect"]
-      .flatMap { $0 as? [AnyHashable: Any] }
-      .flatMap (JSONSerialization.prettyPrinted)
-      .flatMap { $0.utf8 }
+      .flatMap { $0 as? String }
     
     let context = input["context"]
-      .flatMap { $0 as? [AnyHashable: Any] }
-      .flatMap (JSONSerialization.prettyPrinted)
-      .flatMap { $0.utf8 }
+      .flatMap { $0 as? String }
     
-    let drivers: [CycleMonitorApp.Model.Event.Driver]? = input["drivers"]
+    let drivers: [CycleMonitorAppEventDriver]? = input["drivers"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
       .flatMap {
         $0.flatMap {
@@ -687,7 +657,7 @@ extension CycleMonitorApp.Model.Event {
         }
       }
     
-    let cause: CycleMonitorApp.Model.Event.Driver? = input["cause"]
+    let cause: CycleMonitorAppEventDriver? = input["cause"]
       .flatMap { $0 as? [AnyHashable: Any] }
       .flatMap {
         let label = $0["label"].flatMap { $0 as? String }
