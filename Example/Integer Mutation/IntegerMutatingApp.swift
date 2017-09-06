@@ -183,38 +183,23 @@ func wrap(_ input: Any) -> String? { return
     .flatMap { $0[".1"] as? String }
 }
 
-struct IntegerMutatingAppEvent: CycleMonitorAppEvent {
-  var drivers: [CycleMonitorAppEventDriver]
-  var cause: CycleMonitorAppEventDriver
-  var effect: String
-  var context: String
-  var pendingEffectEdit: String?
-  var isApproved: Bool
-}
-
-struct IntegerMutatingAppEventDriver: CycleMonitorAppEventDriver {
-  var label: String
-  var action: String
-  var id: String
-}
-
-extension IntegerMutatingAppEventDriver {
-  static func shakesWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
-    IntegerMutatingAppEventDriver(
+extension Event.Driver {
+  static func shakesWith(action: String? = nil) -> Event.Driver { return
+    Event.Driver(
       label: "shakes",
       action: action ?? "",
       id: "shakes"
     )
   }
-  static func valueTogglerWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
-    IntegerMutatingAppEventDriver(
+  static func valueTogglerWith(action: String? = nil) -> Event.Driver { return
+    Event.Driver(
       label: "toggler",
       action: action ?? "",
       id: "toggler"
     )
   }
-  static func sessionWith(action: String? = nil) -> IntegerMutatingAppEventDriver { return
-    IntegerMutatingAppEventDriver(
+  static func sessionWith(action: String? = nil) -> Event.Driver { return
+    Event.Driver(
       label: "session",
       action: action ?? "",
       id: "session"
@@ -222,7 +207,7 @@ extension IntegerMutatingAppEventDriver {
   }
 }
 
-extension CycleMonitorAppEventDriver {
+extension Event.Driver {
   var JSON: [AnyHashable: Any] { return [
     "label": label,
     "action": action,
@@ -230,7 +215,7 @@ extension CycleMonitorAppEventDriver {
   ]}
 }
 
-extension CycleMonitorAppEvent {
+extension Event {
   var JSON: [AnyHashable: Any] { return [
     "drivers": drivers.map { $0.JSON },
     "cause": cause.JSON,
@@ -261,14 +246,14 @@ extension IntegerMutatingApp.Model {
   func coerced(
     sessionAction: String,
     context: IntegerMutatingApp.Model
-  ) -> CycleMonitorAppEvent? { return
-    curry(IntegerMutatingAppEvent.init)
+  ) -> Event? { return
+    curry(Event.init)
       <^> [
-        IntegerMutatingAppEventDriver.shakesWith(),
-        IntegerMutatingAppEventDriver.valueTogglerWith(),
-        IntegerMutatingAppEventDriver.sessionWith(action: sessionAction)
+        Event.Driver.shakesWith(),
+        Event.Driver.valueTogglerWith(),
+        Event.Driver.sessionWith(action: sessionAction)
       ]
-      <*> IntegerMutatingAppEventDriver.sessionWith(
+      <*> Event.Driver.sessionWith(
         action: sessionAction
       )
       <*> (try? wrap(context) as [AnyHashable: Any])
@@ -284,14 +269,14 @@ extension IntegerMutatingApp.Model {
   func coerced(
     togglerAction: String,
     context: IntegerMutatingApp.Model
-  ) -> CycleMonitorAppEvent? { return
-    curry(IntegerMutatingAppEvent.init)
+  ) -> Event? { return
+    curry(Event.init)
       <^> [
-        IntegerMutatingAppEventDriver.shakesWith(),
-        IntegerMutatingAppEventDriver.valueTogglerWith(action: togglerAction),
-        IntegerMutatingAppEventDriver.sessionWith()
+        Event.Driver.shakesWith(),
+        Event.Driver.valueTogglerWith(action: togglerAction),
+        Event.Driver.sessionWith()
       ]
-      <*> IntegerMutatingAppEventDriver.valueTogglerWith(
+      <*> Event.Driver.valueTogglerWith(
         action: togglerAction
       )
       <*> (try? wrap(context) as [AnyHashable: Any])
@@ -307,14 +292,14 @@ extension IntegerMutatingApp.Model {
   func coerced(
     shakeAction: String,
     context: IntegerMutatingApp.Model
-  ) -> CycleMonitorAppEvent? { return
-    curry(IntegerMutatingAppEvent.init)
+  ) -> Event? { return
+    curry(Event.init)
       <^> [
-        IntegerMutatingAppEventDriver.shakesWith(action: shakeAction),
-        IntegerMutatingAppEventDriver.valueTogglerWith(),
-        IntegerMutatingAppEventDriver.sessionWith()
+        Event.Driver.shakesWith(action: shakeAction),
+        Event.Driver.valueTogglerWith(),
+        Event.Driver.sessionWith()
       ]
-      <*> IntegerMutatingAppEventDriver.shakesWith(
+      <*> Event.Driver.shakesWith(
         action: shakeAction
       )
       <*> (try? wrap(context) as [AnyHashable: Any])

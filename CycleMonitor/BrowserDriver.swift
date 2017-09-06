@@ -91,7 +91,7 @@ class BrowserDriver {
             }
             >>- { $0 as? [AnyHashable: Any] }
             >>- Action.didOpen
-            >>- Event.next
+            >>- RxSwift.Event.next
           if let event = event {
             output.on(event)
           }

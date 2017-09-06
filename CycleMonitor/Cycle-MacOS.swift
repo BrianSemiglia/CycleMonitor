@@ -29,19 +29,6 @@ struct CycleMonitorApp: SinkSourceConverting {
       case playingSendingEffects
       case recording
     }
-    struct Event: CycleMonitorAppEvent {
-      struct Driver: CycleMonitorAppEventDriver {
-        var label: String
-        var action: String
-        var id: String
-      }
-      var drivers: [CycleMonitorAppEventDriver]
-      var cause: CycleMonitorAppEventDriver
-      var effect: String
-      var context: String
-      var pendingEffectEdit: String?
-      var isApproved = false
-    }
     struct TimeLineView {
       var selectedIndex: Int?
     }
@@ -228,13 +215,13 @@ extension CycleMonitorApp.Model.EventHandlingState {
   }
 }
 
-extension CycleMonitorAppEventDriver {
-  static func coerced(_ x: CycleMonitorAppEventDriver) -> TimeLineViewController.Model.Driver {
+extension Event.Driver {
+  static func coerced(_ x: Event.Driver) -> TimeLineViewController.Model.Driver {
     return x.coerced()
   }
 }
 
-extension CycleMonitorAppEventDriver {
+extension Event.Driver {
     func coerced() -> TimeLineViewController.Model.Driver { return
         TimeLineViewController.Model.Driver(
             label: label,
@@ -248,12 +235,12 @@ extension CycleMonitorAppEventDriver {
 }
 
 extension TimeLineViewController.Model.CauseEffect {
-  static func coerced(_ x: CycleMonitorApp.Model.Event) -> TimeLineViewController.Model.CauseEffect {
+  static func coerced(_ x: Event) -> TimeLineViewController.Model.CauseEffect {
     return x.coerced()
   }
 }
 
-extension CycleMonitorApp.Model.Event {
+extension Event {
   func coerced() -> TimeLineViewController.Model.CauseEffect { return
     TimeLineViewController.Model.CauseEffect(
       cause: cause.action,
@@ -383,7 +370,7 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
         var new = context
         new.events += data
           .JSON
-          .flatMap(CycleMonitorApp.Model.Event.decode)
+          .flatMap(Argo.decode)
           .map { [$0] }
           ?? []
         new.timeLineView.selectedIndex = new.events.count > 0
@@ -417,11 +404,11 @@ extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Mod
   }
 }
 
-extension CycleMonitorApp.Model.Event {
-  static func eventsFrom(_ input: [AnyHashable: Any]) -> [CycleMonitorApp.Model.Event] { return
+extension Event {
+  static func eventsFrom(_ input: [AnyHashable: Any]) -> [Event] { return
     input["events"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
-      .flatMap { $0.flatMap(CycleMonitorApp.Model.Event.decode) }
+      .flatMap { $0.flatMap(Argo.decode) }
       ?? []
   }
 }
@@ -432,7 +419,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       switch event {
       case .didOpen(let json):
         var new = context
-        new.events = CycleMonitorApp.Model.Event.eventsFrom(json)
+        new.events = Event.eventsFrom(json)
         new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
         new.browser.state = .idle
         return new
@@ -534,7 +521,7 @@ class TerminationDriver {
  [Caller], [Monitor, Driver], [Cycle-MacOS]
  */
 
-extension CycleMonitorApp.Model.Event {
+extension Event {
   func coerced() -> [AnyHashable: Any] { return
     [
       "drivers": drivers.map {[
@@ -547,18 +534,9 @@ extension CycleMonitorApp.Model.Event {
         "action": cause.action,
         "id": cause.id
       ],
-      "effect": effect
-        .data(using: .utf8)
-        .flatMap { $0.JSON }
-        ?? [:],
-      "context": context
-        .data(using: .utf8)
-        .flatMap { $0.JSON }
-        ?? [:],
-      "pendingEffectEdit": pendingEffectEdit
-        .flatMap { $0.data(using: .utf8) }
-        .flatMap { $0.JSON }
-        ?? [:]
+      "effect": effect,
+      "context": context,
+      "pendingEffectEdit": pendingEffectEdit ?? ""
     ]
   }
 }
@@ -572,7 +550,7 @@ extension CycleMonitorApp.Model {
   }
 }
 
-extension CycleMonitorApp.Model.Event {
+extension Event {
   var testFile: [AnyHashable: Any] { return
     [
       "drivers": drivers.map {[
@@ -615,82 +593,21 @@ import Argo
 import Runes
 import Curry
 
-extension JSONSerialization {
-  static func prettyPrinted(_ input: [AnyHashable: Any]) -> Data? { return
-    try? JSONSerialization.data(
-      withJSONObject: input,
-      options: .prettyPrinted
-    )
+extension Event: Argo.Decodable {
+  static func decode(_ json: JSON) -> Decoded<Event> { return
+    curry(Event.init)
+      <^> json <|| "drivers"
+      <*> json <| "cause"
+      <*> json <| "effect"
+      <*> json <| "context"
+      <*> json <|? "pendingEffectEdit"
+      <*> (json <| "isApproved" <|> .success(false))
   }
 }
 
-extension Data {
-  var utf8: String? { return
-    String(
-      data: self,
-      encoding: String.Encoding.utf8
-    )
-  }
-}
-
-extension CycleMonitorApp.Model.Event {
-
-  static func decode(_ input: [AnyHashable: Any]) -> CycleMonitorApp.Model.Event? {
-
-    let effect = input["effect"]
-      .flatMap { $0 as? String }
-    
-    let context = input["context"]
-      .flatMap { $0 as? String }
-    
-    let drivers: [CycleMonitorAppEventDriver]? = input["drivers"]
-      .flatMap { $0 as? [[AnyHashable: Any]] }
-      .flatMap {
-        $0.flatMap {
-          let label = $0["label"].flatMap { $0 as? String }
-          let action = $0["action"].flatMap { $0 as? String }
-          let id = $0["id"].flatMap { $0 as? String }
-          return curry(CycleMonitorApp.Model.Event.Driver.init)
-            <^> label
-            <*> action
-            <*> id
-        }
-      }
-    
-    let cause: CycleMonitorAppEventDriver? = input["cause"]
-      .flatMap { $0 as? [AnyHashable: Any] }
-      .flatMap {
-        let label = $0["label"].flatMap { $0 as? String }
-        let action = $0["action"].flatMap { $0 as? String }
-        let id = $0["id"].flatMap { $0 as? String }
-        return curry(CycleMonitorApp.Model.Event.Driver.init)
-          <^> label
-          <*> action
-          <*> id
-      }
-    
-    let pendingEffectEdit = input["pendingEffectEdit"]
-      .flatMap { $0 as? [AnyHashable: Any] }
-      .flatMap { NSDictionary(dictionary: $0) != NSDictionary(dictionary: [:]) ? $0 : nil }
-      .flatMap (JSONSerialization.prettyPrinted)
-      .flatMap { $0.utf8 }
-    
-    let x = curry(CycleMonitorApp.Model.Event.init)
-      <^> drivers
-      <*> cause
-      <*> effect
-      <*> context
-      <*> Optional(pendingEffectEdit)
-      <*> false
-  
-    return x
-  }
-  
-}
-
-extension CycleMonitorApp.Model.Event.Driver: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<CycleMonitorApp.Model.Event.Driver> {
-    return curry(CycleMonitorApp.Model.Event.Driver.init)
+extension Event.Driver: Argo.Decodable {
+  static func decode(_ json: JSON) -> Decoded<Event.Driver> {
+    return curry(Event.Driver.init)
       <^> json <| "label"
       <*> json <| "action"
       <*> json <| "id"

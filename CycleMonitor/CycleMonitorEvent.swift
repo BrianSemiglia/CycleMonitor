@@ -6,19 +6,35 @@
 //  Copyright © 2017 Brian Semiglia. All rights reserved.
 //
 
-import Foundation
-
-protocol CycleMonitorAppEvent {
-  var drivers: [CycleMonitorAppEventDriver] { get }
-  var cause: CycleMonitorAppEventDriver { get }
-  var effect: String { get }
-  var context: String { get }
-  var pendingEffectEdit: String? { get }
-  var isApproved: Bool { get }
+struct Event {
+  struct Driver {
+    var label: String
+    var action: String
+    var id: String
+  }
+  var drivers: [Driver]
+  var cause: Driver
+  var effect: String
+  var context: String
+  var pendingEffectEdit: String?
+  var isApproved = false
 }
 
-protocol CycleMonitorAppEventDriver {
-  var label: String { get }
-  var action: String { get }
-  var id: String { get }
+extension Event: Equatable {
+  static func ==(left: Event, right: Event) -> Bool { return
+    left.drivers == right.drivers &&
+    left.cause == right.cause &&
+    left.effect == right.effect &&
+    left.context == right.context &&
+    left.pendingEffectEdit == right.pendingEffectEdit &&
+    left.isApproved == right.isApproved
+  }
+}
+
+extension Event.Driver: Equatable {
+  static func ==(left: Event.Driver, right: Event.Driver) -> Bool { return
+    left.action == right.action &&
+    left.id == right.id &&
+    left.label == right.label
+  }
 }

@@ -105,7 +105,7 @@ class MenuBarDriver {
   @objc func didReceiveEventFrom(_ menu: NSMenuItem) {
       ids[menu.tag]
         >>- Action.didSelectItemWith
-        >>- Event.next
+        >>- RxSwift.Event.next
         >>- output.on
   }
 
