@@ -153,18 +153,12 @@ extension CycleMonitorApp.Model {
       ]
     ]
   }
-  var selectedEffectDraft: [AnyHashable: Any]? { return
-    events[timeLineView.selectedIndex!]
-      .pendingEffectEdit
-      .flatMap { $0.data(using: .utf8) }
-      .flatMap { $0.JSON }
-  }
-  var selectedEffect: [AnyHashable: Any]? { return
-    events[timeLineView.selectedIndex!]
-      .effect
-      .data(using: .utf8)
-      .flatMap { $0.JSON }
-  }
+  var selectedEffectDraft: [AnyHashable: Any]? { return [
+    "effect": events[timeLineView.selectedIndex!].pendingEffectEdit
+  ]}
+  var selectedEffect: [AnyHashable: Any] { return [
+    "effect": events[timeLineView.selectedIndex!].effect
+  ]}
 }
 
 extension Observable where E == CycleMonitorApp.Model {
@@ -187,7 +181,6 @@ extension Observable where E == CycleMonitorApp.Model {
       $0.selectedEffectDraft ??
       $0.selectedEffect
     }
-    .filterNil()
   }
 }
 
@@ -563,14 +556,8 @@ extension Event {
         "action": cause.action,
         "id": cause.id
       ],
-      "context": context
-        .data(using: .utf8)
-        .flatMap { $0.JSON }
-        ?? [:],
+      "context": context,
       "effect": effect
-        .data(using: .utf8)
-        .flatMap { $0.JSON }
-        ?? [:]
     ]
   }
 }
