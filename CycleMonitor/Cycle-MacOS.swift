@@ -438,17 +438,17 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .didSelectItemWith(id: let id) where id == "open timeline":
+      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.openTimelineID:
         var new = context
         new.browser.state = .opening
         return new
-      case .didSelectItemWith(id: let id) where id == "save timeline":
+      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.saveTimelineID:
         var new = context
         new.browser.state = .saving(
           context.saveFile
         )
         return new
-      case .didSelectItemWith(id: let id) where id == "export tests":
+      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.exportTestsID:
         var new = context
         new.browser.state = .savingMany(
           context
@@ -637,27 +637,32 @@ extension TimeLineViewController.Model.Driver {
 }
 
 extension MenuBarDriver.Model.Item {
-    static var openTimeline: MenuBarDriver.Model.Item { return
-        MenuBarDriver.Model.Item(
-            title: "Open Timeline",
-            enabled: true,
-            id: "open timeline"
-        )
-    }
-    static var saveTimeline: MenuBarDriver.Model.Item { return
-        MenuBarDriver.Model.Item(
-            title: "Save Timeline",
-            enabled: true,
-            id: "save timeline"
-        )
-    }
-    static var exportTests: MenuBarDriver.Model.Item { return
-        MenuBarDriver.Model.Item(
-            title: "Export Tests",
-            enabled: true,
-            id: "export tests"
-        )
-    }
+  
+  static var openTimelineID = "open timeline"
+  static var saveTimelineID = "save timeline"
+  static var exportTestsID = "export tests"
+  
+  static var openTimeline: MenuBarDriver.Model.Item { return
+    MenuBarDriver.Model.Item(
+      title: "Open Timeline",
+      enabled: true,
+      id: openTimelineID
+    )
+  }
+  static var saveTimeline: MenuBarDriver.Model.Item { return
+    MenuBarDriver.Model.Item(
+      title: "Save Timeline",
+      enabled: true,
+      id: saveTimelineID
+    )
+  }
+  static var exportTests: MenuBarDriver.Model.Item { return
+    MenuBarDriver.Model.Item(
+      title: "Export Tests",
+      enabled: true,
+      id: exportTestsID
+    )
+  }
 }
 
 // Cycle Application Delegate
