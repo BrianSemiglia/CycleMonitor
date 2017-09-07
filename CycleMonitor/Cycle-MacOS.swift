@@ -254,7 +254,7 @@ extension CycleMonitorApp.Model {
     TimeLineViewController.Model(
       drivers: timeLineView.selectedIndex
         .map {
-          events[$0].drivers.map { $0.coerced() }
+          events[$0].drivers.map (Event.Driver.coerced)
         }
         ?? []
       ,
@@ -303,8 +303,8 @@ extension NSColor {
 }
 
 extension ObservableType {
-  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> {
-    return withLatestFrom(input) { ($0.0, $0.1 ) }
+  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> { return
+    withLatestFrom(input) { ($0.0, $0.1 ) }
   }
 }
 
