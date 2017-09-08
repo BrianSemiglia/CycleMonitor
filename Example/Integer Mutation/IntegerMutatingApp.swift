@@ -156,9 +156,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
           .map { $0.bugReporter }
           .tupledWithLatestFrom(
             moments
-              .scan([[AnyHashable: Any]]()) { $0 + [$1] }
-              .map { $0.suffix(25) }
-              .map (Array.init)
+              .last(25)
               .map { ["events": $0] as [AnyHashable: Any] }
           )
           .map {
