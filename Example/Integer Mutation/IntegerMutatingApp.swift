@@ -480,8 +480,8 @@ extension ObservableType where E == (MultipeerJSON.Action, IntegerMutatingApp.Mo
           let action = curry(IntegerMutatingApp.Model.reduced)
             <^> IntegerMutatingApp.Model.cause(x)
             <*> .some(context)
-          let effect: Observable<IntegerMutatingApp.Model>? = Observable.just
-            <^> Argo.decode(x)
+          let effect = Observable.just
+            <^> IntegerMutatingApp.Model.effect(x)
           return action ?? effect
         }
         ?? .never()
