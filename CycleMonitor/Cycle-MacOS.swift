@@ -153,9 +153,9 @@ extension CycleMonitorApp.Model {
       ]
     ]
   }
-  var selectedEffectDraft: [AnyHashable: Any]? { return [
-    "effect": events[timeLineView.selectedIndex!].pendingEffectEdit
-  ]}
+  var selectedEffectDraft: [AnyHashable: Any]? { return
+    events[timeLineView.selectedIndex!].pendingEffectEdit.map { ["effect": $0] }
+  }
   var selectedEffect: [AnyHashable: Any] { return [
     "effect": events[timeLineView.selectedIndex!].effect
   ]}
@@ -511,7 +511,21 @@ class TerminationDriver {
 /*
  Monitor, Driver, Caller
  Model,   JSON,   Model
- [Caller], [Monitor, Driver], [Cycle-MacOS]
+ 
+           [Cocoa, Cycle-Mac]  [Cocoa]
+ [Caller], [Monitor, Driver],  [Cycle-MacOS]
+ 
+ Dependencies:
+ 
+ 1.
+ [Cocoa]
+ [Cycle-Mac, Driver]
+ [Monitor]
+ 
+ 2.
+ [Driver]
+ [Caller]
+ 
  */
 
 extension Event {
