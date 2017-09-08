@@ -88,7 +88,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
         )
         .map { action, effect, context in
           effect.coerced(
-            togglerAction: wrap(action) ?? "",
+            action: action,
             context: context
           )
         }
@@ -130,7 +130,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
         )
         .map { action, effect, context in
           effect.coerced(
-            shakeAction: wrap(action) ?? "",
+            action: action,
             context: context
           )
         }
@@ -289,18 +289,19 @@ extension IntegerMutatingApp.Model {
   }
 
   func coerced(
-    togglerAction: String,
+    action: ValueToggler.Action,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
     curry(Event.init)
-      <^> [
-        Event.Driver.shakesWith(),
-        Event.Driver.valueTogglerWith(action: togglerAction),
-        Event.Driver.sessionWith()
-      ]
-      <*> Event.Driver.valueTogglerWith(
-        action: togglerAction
-      )
+      <^> wrap(action)
+        .map(Event.Driver.valueTogglerWith)
+        .map {[
+            Event.Driver.shakesWith(),
+            $0,
+            Event.Driver.sessionWith()
+        ]}
+      <*> wrap(action)
+        .map(Event.Driver.valueTogglerWith)
       <*> (try? wrap(self) as [AnyHashable: Any])
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
@@ -312,18 +313,19 @@ extension IntegerMutatingApp.Model {
   }
 
   func coerced(
-    shakeAction: String,
+    action: ShakeDetection.Action,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
     curry(Event.init)
-      <^> [
-        Event.Driver.shakesWith(action: shakeAction),
-        Event.Driver.valueTogglerWith(),
-        Event.Driver.sessionWith()
-      ]
-      <*> Event.Driver.shakesWith(
-        action: shakeAction
-      )
+      <^> wrap(action)
+        .map(Event.Driver.shakesWith)
+        .map{ [
+          $0,
+          Event.Driver.valueTogglerWith(),
+          Event.Driver.sessionWith()
+        ]}
+      <*> wrap(action)
+        .map(Event.Driver.shakesWith)
       <*> (try? wrap(self) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
