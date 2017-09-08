@@ -35,19 +35,19 @@ class TimelineViewItem: NSCollectionViewItem {
   @IBOutlet private var checkbox: NSButton!
   @IBOutlet private var background: NSBox!
   @IBOutlet private var top: NSBox!
-  @IBOutlet private var bottom: NSBox!
   
   func render(_ input: Model) {
     checkbox.state = input.selected ? 1 : 0
     background.fillColor = input.background
     top.fillColor = input.top
-    bottom.fillColor = input.bottom
   }
   
   override func awakeFromNib() {
     super.awakeFromNib()
     checkbox.target = self
-    checkbox.action = #selector(didReceiveEventFromCheckbox(button:))
+    checkbox.action = #selector(
+      didReceiveEventFromCheckbox(button:)
+    )
   }
   
   func didReceiveEventFromCheckbox(button: NSButton) {

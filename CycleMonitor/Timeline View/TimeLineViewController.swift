@@ -417,8 +417,8 @@ class TimeLineViewController:
   
   var cell: NSSize { return
     NSSize(
-      width: 44.0,
-      height: 118.0
+      width: 42.0,
+      height: 74.0
     )
   }
 }
