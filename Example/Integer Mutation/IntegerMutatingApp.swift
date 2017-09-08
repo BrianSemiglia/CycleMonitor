@@ -86,12 +86,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .secondToLast()
             .filterNil()
         )
-        .map { action, effect, context in
-          effect.coerced(
-            action: action,
-            context: context
-          )
-        }
+        .map (Event.coerced)
         .flatMap {
           $0.flatMap { $0.JSON }
             .map(Observable.just)
@@ -128,12 +123,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .secondToLast()
             .filterNil()
         )
-        .map { action, effect, context in
-          effect.coerced(
-            action: action,
-            context: context
-          )
-        }
+        .map (Event.coerced)
         .flatMap {
           $0.flatMap { $0.JSON }
             .map(Observable.just)
@@ -287,9 +277,12 @@ extension IntegerMutatingApp.Model {
       <*> .some(nil)
       <*> false
   }
+}
 
-  func coerced(
+extension Event {
+  static func coerced(
     action: ValueToggler.Action,
+    effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
     curry(Event.init)
@@ -302,7 +295,7 @@ extension IntegerMutatingApp.Model {
         ]}
       <*> wrap(action)
         .map(Event.Driver.valueTogglerWith)
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(effect) as [AnyHashable: Any])
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
       <*> (try? wrap(context) as [AnyHashable: Any])
@@ -312,8 +305,9 @@ extension IntegerMutatingApp.Model {
       <*> false
   }
 
-  func coerced(
+  static func coerced(
     action: ShakeDetection.Action,
+    effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
     curry(Event.init)
@@ -326,7 +320,7 @@ extension IntegerMutatingApp.Model {
         ]}
       <*> wrap(action)
         .map(Event.Driver.shakesWith)
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(effect) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> (try? wrap(context) as [AnyHashable: Any])
