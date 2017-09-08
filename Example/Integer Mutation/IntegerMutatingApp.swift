@@ -13,6 +13,7 @@ import Curry
 import Wrap
 import Argo
 import Runes
+import RxOptional
 
 @UIApplicationMain
 class Example: CycledApplicationDelegate<IntegerMutatingApp> {
@@ -79,12 +80,16 @@ struct IntegerMutatingApp: SinkSourceConverting {
     
     let moments: Observable<[AnyHashable: Any]> = Observable.merge([
       valueActions
-        .tupledWithLatestFrom(valueEffects)
-        .tupledWithLatestFrom(events)
-        .map {
-          $0.0.1.coerced(
-            togglerAction: wrap($0.0.0) ?? "",
-            context: $0.1
+        .tupledWithLatestFrom(
+          valueEffects,
+          events
+            .secondToLast()
+            .filterNil()
+        )
+        .map { action, effect, context in
+          effect.coerced(
+            togglerAction: wrap(action) ?? "",
+            context: context
           )
         }
         .flatMap {
@@ -94,16 +99,20 @@ struct IntegerMutatingApp: SinkSourceConverting {
         }
       ,
       applicationActions
-        .tupledWithLatestFrom(applicationEffects)
-        .tupledWithLatestFrom(events)
-        .map {
-          $0.0.1.coerced(
-            sessionAction: (try? wrap($0.0.0.session.state))
+        .tupledWithLatestFrom(
+          applicationEffects,
+          events
+            .secondToLast()
+            .filterNil()
+        )
+        .map { action, effect, context in
+          effect.coerced(
+            sessionAction: (try? wrap(action.session.state))
               .flatMap { $0 as [String: Any] }
               .flatMap { $0.description }
               ?? ""
             ,
-            context: $0.1
+            context: context
           )
         }
         .flatMap {
@@ -113,12 +122,16 @@ struct IntegerMutatingApp: SinkSourceConverting {
         }
       ,
       shakeActions
-        .tupledWithLatestFrom(shakeEffects)
-        .tupledWithLatestFrom(events)
-        .map {
-          $0.0.1.coerced(
-            shakeAction: wrap($0.0.0) ?? "",
-            context: $0.1
+        .tupledWithLatestFrom(
+          shakeEffects,
+          events
+            .secondToLast()
+            .filterNil()
+        )
+        .map { action, effect, context in
+          effect.coerced(
+            shakeAction: wrap(action) ?? "",
+            context: context
           )
         }
         .flatMap {
@@ -174,6 +187,17 @@ struct IntegerMutatingApp: SinkSourceConverting {
       reporter,
       shakeEffects
     ])
+  }
+}
+
+extension Observable {
+  func secondToLast() -> Observable<E?> { return
+    last(2).map { $0.first }
+  }
+  func last(_ count: Int) -> Observable<[E]> { return
+    scan (Array<E>()) { $0 + [$1] }
+    .map { $0.suffix(count) }
+    .map (Array.init)
   }
 }
 
@@ -256,10 +280,10 @@ extension IntegerMutatingApp.Model {
       <*> Event.Driver.sessionWith(
         action: sessionAction
       )
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> (try? wrap(self) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(context) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
@@ -279,10 +303,10 @@ extension IntegerMutatingApp.Model {
       <*> Event.Driver.valueTogglerWith(
         action: togglerAction
       )
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> (try? wrap(self) as [AnyHashable: Any])
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(context) as [AnyHashable: Any])
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
       <*> .some(nil)
@@ -302,10 +326,10 @@ extension IntegerMutatingApp.Model {
       <*> Event.Driver.shakesWith(
         action: shakeAction
       )
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> (try? wrap(self) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> (try? wrap(context) as [AnyHashable: Any])
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
@@ -315,16 +339,25 @@ extension IntegerMutatingApp.Model {
 
 extension IntegerMutatingApp.Model {
   
-  static func cause(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Drivers.Either? {
-    return input["cause"].flatMap(Argo.decode)
+  static func cause(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Drivers.Either? { return
+    input["cause"]
+      .flatMap(Argo.decode)
   }
   
-  static func context(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? {
-    return input["context"].flatMap(Argo.decode)
+  static func context(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? { return
+    input["context"]
+      .flatMap { $0 as? String }
+      .flatMap { $0.data(using: .utf8) }
+      .flatMap { $0.JSON }
+      .flatMap(Argo.decode)
   }
   
-  static func effect(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? {
-    return input["effect"].flatMap(Argo.decode)
+  static func effect(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? { return
+    input["effect"]
+      .flatMap { $0 as? String }
+      .flatMap { $0.data(using: .utf8) }
+      .flatMap { $0.JSON }
+      .flatMap(Argo.decode)
   }
   
   static func reduced(
@@ -428,8 +461,19 @@ extension ObservableType {
 }
 
 extension ObservableType {
-  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> {
-    return withLatestFrom(input) { ($0.0, $0.1 ) }
+  func tupledWithLatestFrom<X, Y>(
+    _ x: Observable<X>,
+    _ y: Observable<Y>
+  ) -> Observable<(E, X, Y)> { return
+    tupledWithLatestFrom(x)
+      .tupledWithLatestFrom(y)
+      .map { ($0.0, $0.1, $1) }
+  }
+  
+  func tupledWithLatestFrom<T>(
+    _ input: Observable<T>
+  ) -> Observable<(E, T)> { return
+    withLatestFrom(input) { ($0.0, $0.1 ) }
   }
 }
 

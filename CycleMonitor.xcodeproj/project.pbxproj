@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		34AADC2FFC0E3F5BE973ED3D /* Pods_CycleMonitorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 546CF0C2F0D817B9865B70F0 /* Pods_CycleMonitorTests.framework */; };
 		7E61A18033C17DE2284C1112 /* Pods_Integer_Mutation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8092B97B4F9E1A4EB6E41BC5 /* Pods_Integer_Mutation.framework */; };
+		AB6A104DCB13137D4B9DE24C /* Pods_Integer_Mutation_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 758A2998BEEC301C9C36DF1A /* Pods_Integer_Mutation_Tests.framework */; };
 		D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694B1F0B12DA004A0135 /* DriverViewItem.swift */; };
 		D31169511F0B12DA004A0135 /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694C1F0B12DA004A0135 /* DriverViewItem.xib */; };
 		D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */; };
@@ -17,6 +18,9 @@
 		D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* MultipeerJSON.swift */; };
 		D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */; };
 		D31D15921F0CBEF20009DE25 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D15911F0CBEF20009DE25 /* main.swift */; };
+		D33F06E11F60F58A0099AD39 /* Integer_Mutation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */; };
+		D33F07021F611AA80099AD39 /* 2017-09-07 06:11:17 +00000.moment in Resources */ = {isa = PBXBuildFile; fileRef = D33F07001F611AA80099AD39 /* 2017-09-07 06:11:17 +00000.moment */; };
+		D33F07031F611AA80099AD39 /* 2017-09-07 06:11:17 +00001.moment in Resources */ = {isa = PBXBuildFile; fileRef = D33F07011F611AA80099AD39 /* 2017-09-07 06:11:17 +00001.moment */; };
 		D33F8D451F5B37B4002C122D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33F8D401F5B37B4002C122D /* Info.plist */; };
 		D33F8D5F1F5B3874002C122D /* BugReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D3F1F5B37B4002C122D /* BugReporter.swift */; };
 		D33F8D601F5B3874002C122D /* IntegerMutatingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D411F5B37B4002C122D /* IntegerMutatingApp.swift */; };
@@ -34,6 +38,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D33F06E31F60F58A0099AD39 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3F5B7031EFF08530020290A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D33F8D4C1F5B383F002C122D;
+			remoteInfo = "Integer Mutation";
+		};
 		D3F5B71D1EFF08530020290A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D3F5B7031EFF08530020290A /* Project object */;
@@ -46,7 +57,10 @@
 /* Begin PBXFileReference section */
 		0420EDBEBA8FC811E84ACFBC /* Pods_CycleMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CycleMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16B500AA9A00FF72596D0BFA /* Pods-Integer Mutation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation.debug.xcconfig"; sourceTree = "<group>"; };
+		4F5595D835047056C37D7DF5 /* Pods-Integer Mutation Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		546CF0C2F0D817B9865B70F0 /* Pods_CycleMonitorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CycleMonitorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		612C86019170B9BB1771FDC8 /* Pods-Integer Mutation Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests.release.xcconfig"; sourceTree = "<group>"; };
+		758A2998BEEC301C9C36DF1A /* Pods_Integer_Mutation_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Integer_Mutation_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8092B97B4F9E1A4EB6E41BC5 /* Pods_Integer_Mutation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Integer_Mutation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		949A759C37FE7BBF53128AD8 /* Pods-CycleMonitorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitorTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A2B071AD0F0235E4E40D28B3 /* Pods-CycleMonitorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitorTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -59,6 +73,11 @@
 		D31169561F0B13A5004A0135 /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
 		D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cycle-MacOS.swift"; sourceTree = "<group>"; };
 		D31D15911F0CBEF20009DE25 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		D33F06DE1F60F5890099AD39 /* Integer Mutation Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Integer Mutation Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer_Mutation_Tests.swift; sourceTree = "<group>"; };
+		D33F06E21F60F58A0099AD39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D33F07001F611AA80099AD39 /* 2017-09-07 06:11:17 +00000.moment */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "2017-09-07 06:11:17 +00000.moment"; sourceTree = "<group>"; };
+		D33F07011F611AA80099AD39 /* 2017-09-07 06:11:17 +00001.moment */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "2017-09-07 06:11:17 +00001.moment"; sourceTree = "<group>"; };
 		D33F8D3F1F5B37B4002C122D /* BugReporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BugReporter.swift; sourceTree = "<group>"; };
 		D33F8D401F5B37B4002C122D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D33F8D411F5B37B4002C122D /* IntegerMutatingApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerMutatingApp.swift; sourceTree = "<group>"; };
@@ -81,6 +100,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D33F06DB1F60F5890099AD39 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB6A104DCB13137D4B9DE24C /* Pods_Integer_Mutation_Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D33F8D4A1F5B383F002C122D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,6 +144,8 @@
 				A2B071AD0F0235E4E40D28B3 /* Pods-CycleMonitorTests.release.xcconfig */,
 				16B500AA9A00FF72596D0BFA /* Pods-Integer Mutation.debug.xcconfig */,
 				E457307CF15E4916117C6153 /* Pods-Integer Mutation.release.xcconfig */,
+				4F5595D835047056C37D7DF5 /* Pods-Integer Mutation Tests.debug.xcconfig */,
+				612C86019170B9BB1771FDC8 /* Pods-Integer Mutation Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -127,6 +156,7 @@
 				0420EDBEBA8FC811E84ACFBC /* Pods_CycleMonitor.framework */,
 				546CF0C2F0D817B9865B70F0 /* Pods_CycleMonitorTests.framework */,
 				8092B97B4F9E1A4EB6E41BC5 /* Pods_Integer_Mutation.framework */,
+				758A2998BEEC301C9C36DF1A /* Pods_Integer_Mutation_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -163,6 +193,18 @@
 			name = Cycle;
 			sourceTree = "<group>";
 		};
+		D33F06DF1F60F58A0099AD39 /* Integer Mutation Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */,
+				D33F07001F611AA80099AD39 /* 2017-09-07 06:11:17 +00000.moment */,
+				D33F07011F611AA80099AD39 /* 2017-09-07 06:11:17 +00001.moment */,
+				D33F06E21F60F58A0099AD39 /* Info.plist */,
+			);
+			name = "Integer Mutation Tests";
+			path = "../../Integer Mutation Tests";
+			sourceTree = "<group>";
+		};
 		D33F8D3D1F5B37B4002C122D /* Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,11 +217,12 @@
 		D33F8D3E1F5B37B4002C122D /* Integer Mutation */ = {
 			isa = PBXGroup;
 			children = (
+				D33F06DF1F60F58A0099AD39 /* Integer Mutation Tests */,
 				D33F8D3F1F5B37B4002C122D /* BugReporter.swift */,
-				D33F8D401F5B37B4002C122D /* Info.plist */,
 				D33F8D411F5B37B4002C122D /* IntegerMutatingApp.swift */,
 				D33F8D421F5B37B4002C122D /* ShakeDetectionDriver.swift */,
 				D33F8D431F5B37B4002C122D /* ValueToggler.swift */,
+				D33F8D401F5B37B4002C122D /* Info.plist */,
 			);
 			path = "Integer Mutation";
 			sourceTree = "<group>";
@@ -218,6 +261,7 @@
 				D3F5B70B1EFF08530020290A /* CycleMonitor.app */,
 				D3F5B71C1EFF08530020290A /* CycleMonitorTests.xctest */,
 				D33F8D4D1F5B383F002C122D /* Integer Mutation.app */,
+				D33F06DE1F60F5890099AD39 /* Integer Mutation Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -248,6 +292,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D33F06DD1F60F5890099AD39 /* Integer Mutation Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D33F06E51F60F58A0099AD39 /* Build configuration list for PBXNativeTarget "Integer Mutation Tests" */;
+			buildPhases = (
+				B648E7D73EE231DB89AF7FA1 /* [CP] Check Pods Manifest.lock */,
+				D33F06DA1F60F5890099AD39 /* Sources */,
+				D33F06DB1F60F5890099AD39 /* Frameworks */,
+				D33F06DC1F60F5890099AD39 /* Resources */,
+				4F5CE17DB762E4974965A0FE /* [CP] Embed Pods Frameworks */,
+				075A0471500D4B983950EAF2 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D33F06E41F60F58A0099AD39 /* PBXTargetDependency */,
+			);
+			name = "Integer Mutation Tests";
+			productName = "Integer Mutation Tests";
+			productReference = D33F06DE1F60F5890099AD39 /* Integer Mutation Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D33F8D4C1F5B383F002C122D /* Integer Mutation */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D33F8D5C1F5B3840002C122D /* Build configuration list for PBXNativeTarget "Integer Mutation" */;
@@ -319,6 +384,11 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Brian Semiglia";
 				TargetAttributes = {
+					D33F06DD1F60F5890099AD39 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = D33F8D4C1F5B383F002C122D;
+					};
 					D33F8D4C1F5B383F002C122D = {
 						CreatedOnToolsVersion = 8.3.3;
 						ProvisioningStyle = Automatic;
@@ -350,11 +420,21 @@
 				D3F5B70A1EFF08530020290A /* CycleMonitor */,
 				D3F5B71B1EFF08530020290A /* CycleMonitorTests */,
 				D33F8D4C1F5B383F002C122D /* Integer Mutation */,
+				D33F06DD1F60F5890099AD39 /* Integer Mutation Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D33F06DC1F60F5890099AD39 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33F07021F611AA80099AD39 /* 2017-09-07 06:11:17 +00000.moment in Resources */,
+				D33F07031F611AA80099AD39 /* 2017-09-07 06:11:17 +00001.moment in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D33F8D4B1F5B383F002C122D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,6 +464,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		075A0471500D4B983950EAF2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		0E2569C4E0E4E50FFD867892 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -433,6 +528,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4F5CE17DB762E4974965A0FE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		63F8FF7F096881E1B131B08A /* [CP] Check Pods Manifest.lock */ = {
@@ -494,6 +604,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B648E7D73EE231DB89AF7FA1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Integer Mutation Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BB3201983D26A30EB8360EA7 /* [CP] Copy Pods Resources */ = {
@@ -565,6 +693,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D33F06DA1F60F5890099AD39 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D33F06E11F60F58A0099AD39 /* Integer_Mutation_Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D33F8D491F5B383F002C122D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -605,6 +741,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D33F06E41F60F58A0099AD39 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D33F8D4C1F5B383F002C122D /* Integer Mutation */;
+			targetProxy = D33F06E31F60F58A0099AD39 /* PBXContainerItemProxy */;
+		};
 		D3F5B71E1EFF08530020290A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D3F5B70A1EFF08530020290A /* CycleMonitor */;
@@ -624,6 +765,43 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D33F06E61F60F58A0099AD39 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4F5595D835047056C37D7DF5 /* Pods-Integer Mutation Tests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Integer Mutation Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
+			};
+			name = Debug;
+		};
+		D33F06E71F60F58A0099AD39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 612C86019170B9BB1771FDC8 /* Pods-Integer Mutation Tests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Integer Mutation Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		D33F8D5D1F5B3840002C122D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 16B500AA9A00FF72596D0BFA /* Pods-Integer Mutation.debug.xcconfig */;
@@ -814,6 +992,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D33F06E51F60F58A0099AD39 /* Build configuration list for PBXNativeTarget "Integer Mutation Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D33F06E61F60F58A0099AD39 /* Debug */,
+				D33F06E71F60F58A0099AD39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D33F8D5C1F5B3840002C122D /* Build configuration list for PBXNativeTarget "Integer Mutation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -25,4 +25,7 @@ target 'Integer Mutation' do
   pod 'Argo',         '~> 4.0'
   pod 'Wrap',         '~> 2.1.1'
   pod 'RxOptional'
+  target 'Integer Mutation Tests' do
+    inherit! :search_paths
+  end
 end
