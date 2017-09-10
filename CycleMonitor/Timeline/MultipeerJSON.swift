@@ -48,11 +48,9 @@ class MultipeerJSON:
   public func rendered(
     _ input: Observable<[AnyHashable: Any]>
   ) -> Observable<Action> {
-    input.subscribe { [weak self] in
-      if let element = $0.element {
-        self?.render(element)
-      }
-    }.disposed(by: cleanup)
+    input
+      .subscribe(onNext: render)
+      .disposed(by: cleanup)
     return output
   }
   
