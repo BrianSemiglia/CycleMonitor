@@ -9,6 +9,7 @@
 import Foundation
 import MultipeerConnectivity
 import RxSwift
+import RxSwiftExt
 
 public class MultipeerJSON:
              NSObject,
@@ -24,8 +25,8 @@ public class MultipeerJSON:
   }
   
   private let cleanup = DisposeBag()
-  public let output = BehaviorSubject<Action>(value: .idle)
-  private var input = ReplaySubject<[AnyHashable: Any]>.create(bufferSize: 1000)
+  public let output = BehaviorSubject(value: Action.idle)
+  private let input = BehaviorSubject<[AnyHashable: Any]>(value: [:])
   
   var session: MCSession?
   let mine: MCPeerID
@@ -49,7 +50,14 @@ public class MultipeerJSON:
       if let element = $0.element {
         self?.input.on(.next(element))
       }
-    }.disposed(by: cleanup)
+    }
+    .disposed(by: cleanup)
+    self.input.pausableBuffered(output.isConnected, limit: nil).subscribe(
+      onNext: { [weak self] new in
+        self?.render(new)
+      }
+    )
+    .disposed(by: cleanup)
     return output
   }
   
@@ -103,16 +111,11 @@ public class MultipeerJSON:
   ) {
     switch state {
     case .connected:
-      DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-        self.input.subscribe { [weak self] in
-          if let element = $0.element {
-            self?.render(element)
-          }
-        }.disposed(by: self.cleanup)
-      }
+      output.on(.next(.connected))
     case .connecting:
-      break
+      output.on(.next(.connecting))
     case .notConnected:
+      output.on(.next(.disconnected))
       self.session = nil
       browser.startBrowsingForPeers()
     }
@@ -154,4 +157,15 @@ public class MultipeerJSON:
 
   }
   
+}
+
+extension Observable where E == MultipeerJSON.Action {
+  var isConnected: Observable<Bool> { return
+    map {
+      switch $0 {
+      case .connected, .received: return true
+      case .idle, .connecting, .disconnected: return false
+      }
+    }
+  }
 }

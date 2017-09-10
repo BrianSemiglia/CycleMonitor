@@ -670,6 +670,7 @@
 				"${BUILT_PRODUCTS_DIR}/Changeset/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Cycle/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/RxMotionKit/RxMotionKit.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwiftExt/RxSwiftExt.framework",
 				"${BUILT_PRODUCTS_DIR}/Wrap/Wrap.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -683,6 +684,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxMotionKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Wrap.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
