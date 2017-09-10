@@ -253,32 +253,31 @@ extension TimeLineViewController.Model {
 extension CycleMonitorApp.Model {
   func coerced() -> TimeLineViewController.Model { return
     TimeLineViewController.Model(
-      drivers: timeLineView.selectedIndex
-        .map {
-          events[$0].drivers.map (Event.Driver.coerced)
-        }
+      drivers: events[safe: timeLineView.selectedIndex ?? 0]
+        .map { $0.drivers.map (Event.Driver.coerced) }
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
-      presentedState: timeLineView.selectedIndex
-        .map {
-          events[$0].pendingEffectEdit ?? events[$0].effect
-        } ?? ""
+      presentedState: events[safe: timeLineView.selectedIndex ?? 0]
+        .map { $0.pendingEffectEdit ?? $0.effect }
+        ?? ""
       ,
-      selected: timeLineView.selectedIndex.map {
-        TimeLineViewController.Model.Selection(
-          color: NSColor.cy_lightGray,
-          index: $0
-        )
-      },
+      selected: TimeLineViewController.Model.Selection(
+        color: .cy_lightGray,
+        index: timeLineView.selectedIndex ?? 0
+      ),
       connection: multipeer.timeLineViewControllerConnection,
       eventHandlingState: eventHandlingState.timeLineEventHandlingState,
-      isDisplayingSave: timeLineView.selectedIndex.map {
-        events[$0].pendingEffectEdit != nil &&
-        events[$0].pendingEffectEdit != events[$0].effect
-      }
-      ?? false
+      isDisplayingSave: events[safe: timeLineView.selectedIndex ?? 0]
+        .flatMap { curry(!=) <^> $0.pendingEffectEdit <*> $0.effect }
+        ?? false
     )
+  }
+}
+
+extension Array {
+  subscript (safe index: Int) -> Element? {
+    return index < count ? self[index] : nil
   }
 }
 
