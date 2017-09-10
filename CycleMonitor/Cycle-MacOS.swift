@@ -238,6 +238,7 @@ extension Event {
     TimeLineViewController.Model.CauseEffect(
       cause: cause.action,
       effect: effect,
+      approved: isApproved,
       color: cause.id.hashValue.goldenRatioColored()
     )
   }

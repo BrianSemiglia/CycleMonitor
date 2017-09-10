@@ -254,31 +254,23 @@ class TimeLineViewController:
       presentedState?.string = new.presentedState
     }
     
-    if shouldForceRender || new.causesEffects != old.causesEffects {
+    if shouldForceRender || new.causesEffects.count != old.causesEffects.count {
       timeline?.reloadData()
     }
     
-    if
-      let new = new.selected,
-      old.selected != new,
-      let timeline = timeline
-    {
-        let pathsCells = timeline.indexPathsForVisibleItems()
-            .flatMap { x -> (IndexPath, TimelineViewItem)? in
-                if let cell = timeline.item(at: x) as? TimelineViewItem {
-                    return (x, cell)
-                } else {
-                    return nil
-                }
-        }
-        
-      pathsCells.forEach { path, cell in
-        var x = TimeLineViewController.modelFrom(
-          model: self.model,
-          cell: cell,
-          path: path
-        )
-        x.selection = { [weak self] isSelected in
+    let pathsCells = timeline?.indexPathsForVisibleItems().flatMap { x -> (IndexPath, TimelineViewItem)? in
+      timeline
+        .flatMap { $0.item(at: x) }
+        .flatMap { $0 as? TimelineViewItem }
+        .map { (x, $0) }
+    }
+    
+    pathsCells?.forEach { path, cell in
+      let x = TimeLineViewController.modelFrom(
+        model: self.model,
+        cell: cell,
+        path: path,
+        selection: { [weak self] isSelected in
           self?.output.on(
             .next(
               .toggledApproval(
@@ -288,12 +280,14 @@ class TimeLineViewController:
             )
           )
         }
-        cell.model = x
-      }
+      )
+      cell.model = x
     }
     
-    if new.eventHandlingState == .recording, new.causesEffects != old.causesEffects, let newIndex = new.selected?.index {
-      if new.causesEffects.count > 0 {
+    if new.eventHandlingState == .recording,
+      new.causesEffects != old.causesEffects,
+      new.causesEffects.count > 0,
+      let newIndex = new.selected?.index {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) { // <-- async hack
           NSAnimationContext.current().allowsImplicitAnimation = true
           self.timeline?.scrollToItems(
@@ -307,7 +301,6 @@ class TimeLineViewController:
           )
           NSAnimationContext.current().allowsImplicitAnimation = false
         }
-      }
     }
     
     if shouldForceRender || new.connection != old.connection {
@@ -335,7 +328,8 @@ class TimeLineViewController:
   static func modelFrom(
     model: Model,
     cell: TimelineViewItem,
-    path: IndexPath
+    path: IndexPath,
+    selection: @escaping (Bool) -> Void
   ) -> TimelineViewItem.Model { return
     TimelineViewItem.Model(
       background: model.selected
@@ -345,7 +339,7 @@ class TimeLineViewController:
       top: model.causesEffects[path.item].color,
       bottom: .blue,
       selected: model.causesEffects[path.item].approved,
-      selection: { _ in }
+      selection: selection
     )
   }
   
@@ -374,14 +368,31 @@ class TimeLineViewController:
     itemForRepresentedObjectAt path: IndexPath
   ) -> NSCollectionViewItem {
     caller.register(
-      NSNib(nibNamed: "TimelineViewItem", bundle: nil),
+      NSNib(
+        nibNamed: "TimelineViewItem",
+        bundle: nil
+      ),
       forItemWithIdentifier: "TimelineViewItem"
     )
     let x = caller.makeItem(
       withIdentifier: "TimelineViewItem",
       for: path
     ) as! TimelineViewItem
-    x.model = TimeLineViewController.modelFrom(model: model, cell: x, path: path)
+    x.model = TimeLineViewController.modelFrom(
+      model: model,
+      cell: x,
+      path: path,
+      selection: { [weak self] isSelected in
+        self?.output.on(
+          .next(
+            .toggledApproval(
+              path.item,
+              isSelected
+            )
+          )
+        )
+      }
+    )
     return x
   }
   
