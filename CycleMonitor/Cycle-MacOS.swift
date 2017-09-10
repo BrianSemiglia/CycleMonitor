@@ -466,8 +466,8 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
 class TerminationDriver {
   struct Model: Equatable {
     var shouldTerminate: Bool
-    static func ==(left: Model, right: Model) -> Bool {
-      return left.shouldTerminate == right.shouldTerminate
+    static func ==(left: Model, right: Model) -> Bool { return
+      left.shouldTerminate == right.shouldTerminate
     }
   }
   
