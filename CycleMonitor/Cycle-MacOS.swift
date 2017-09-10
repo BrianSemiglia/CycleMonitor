@@ -261,8 +261,9 @@ extension CycleMonitorApp.Model {
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
       presentedState: timeLineView.selectedIndex
-        .map { events[$0].pendingEffectEdit ?? events[$0].effect }
-        ?? ""
+        .map {
+          events[$0].pendingEffectEdit ?? events[$0].effect
+        } ?? ""
       ,
       selected: timeLineView.selectedIndex.map {
         TimeLineViewController.Model.Selection(

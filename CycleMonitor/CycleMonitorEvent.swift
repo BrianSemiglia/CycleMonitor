@@ -16,8 +16,35 @@ struct Event {
   var cause: Driver
   var effect: String
   var context: String
-  var pendingEffectEdit: String?
+  var pendingEffectEdit: String? {
+    didSet {
+      pendingEffectEdit = pendingEffectEdit?.valid
+    }
+  }
   var isApproved = false
+  init(
+    drivers: [Driver],
+    cause: Driver,
+    effect: String,
+    context: String,
+    pendingEffectEdit: String?,
+    isApproved: Bool
+  ) {
+    self.drivers = drivers
+    self.cause = cause
+    self.effect = effect
+    self.context = context
+    self.pendingEffectEdit = pendingEffectEdit?.valid
+    self.isApproved = isApproved
+  }
+}
+
+extension String {
+  var valid: String? { return
+    characters.count == 0
+      ? nil
+      : self
+  }
 }
 
 extension Event: Equatable {
