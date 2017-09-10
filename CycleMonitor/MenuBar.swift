@@ -35,26 +35,17 @@ class MenuBarDriver {
   let cleanup = DisposeBag()
   let output = BehaviorSubject(value: Action.none)
   var ids: [Int: String] = [:]
-  var model: Model {
-    didSet {
-      if model != oldValue {
-        render(model)
-      }
-    }
-  }
   
   init(model: Model) {
-    self.model = model
     render(model)
   }
   
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.observeOn(MainScheduler.instance).subscribe {
-      if let new = $0.element, new != self.model {
-        self.model = new
-        self.render(new)
-      }
-    }.disposed(by: cleanup)
+    input
+      .observeOn(MainScheduler.instance)
+      .distinctUntilChanged()
+      .subscribe(onNext: render)
+      .disposed(by: cleanup)
     return output
   }
   
