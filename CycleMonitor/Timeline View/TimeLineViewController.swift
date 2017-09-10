@@ -197,18 +197,19 @@ class TimeLineViewController:
   }
   
   func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.observeOn(MainScheduler.instance).subscribe {
-      if let element = $0.element {
-        DispatchQueue.main.async {
+    input
+      .observeOn(MainScheduler.instance)
+      .subscribe(
+        onNext: {
           let old = self.model
-          self.model = element
+          self.model = $0
           self.render(
             old: old,
-            new: element
+            new: $0
           )
         }
-      }
-    }.disposed(by: cleanup)
+      )
+      .disposed(by: cleanup)
     return output
   }
   
