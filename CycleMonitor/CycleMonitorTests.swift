@@ -88,6 +88,14 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
+  static var eventDriverValid: [AnyHashable: Any] { return
+    [
+      "label": "a-label",
+      "action": "a-action",
+      "id": "a-id"
+    ]
+  }
+  
   static var testFileSuccess: [AnyHashable: Any] { return
     [
       "drivers": [
@@ -138,9 +146,15 @@ class CycleMonitorTests: XCTestCase {
   
   func testSaveFile() {
     
-    // should decode
+    // should decode event
     XCTAssertNotEqual(
       decode(CycleMonitorTests.testFileSuccess) as Event?,
+      nil
+    )
+    
+    // should decode event driver
+    XCTAssertNotEqual(
+      decode(CycleMonitorTests.eventDriverValid) as Event.Driver?,
       nil
     )
     
