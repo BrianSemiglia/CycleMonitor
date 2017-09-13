@@ -144,6 +144,35 @@ class CycleMonitorTests: XCTestCase {
       <*> ""
   }
   
+  static var eventSuccess: Event? { return
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+      <^> NonEmptyArray(possible: [
+        Event.Driver(
+          label: "a-label",
+          action: "a-action",
+          id: "a-id"
+        ),
+        Event.Driver(
+          label: "b-label",
+          action: "",
+          id: "b-id"
+        ),
+        Event.Driver(
+          label: "c-label",
+          action: "",
+          id: "c-id"
+        )
+      ])
+      <*> Event.Driver(
+        label: "a-label",
+        action: "a-action",
+        id: "a-id"
+      )
+      <*> "effect"
+      <*> "context"
+      <*> "pendingEffectEdit"
+  }
+  
   func testSaveFile() {
     
     // should decode event
@@ -168,6 +197,19 @@ class CycleMonitorTests: XCTestCase {
     XCTAssertEqual(
       CycleMonitorTests.eventEmptyPendingEffect?.pendingEffectEdit,
       nil
+    )
+    
+    // should encode event
+    XCTAssertEqual(
+      CycleMonitorTests.eventSuccess
+        .map { $0.coerced() as [AnyHashable: Any] }
+        .map (NSDictionary.init)
+      ,
+      .some(
+        NSDictionary(
+          dictionary: CycleMonitorTests.saveFileSuccess
+        )
+      )
     )
   }
   
