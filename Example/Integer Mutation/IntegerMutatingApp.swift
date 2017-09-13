@@ -259,12 +259,12 @@ extension IntegerMutatingApp.Model {
     sessionAction: String,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init)
-      <^> [
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+      <^> NonEmptyArray(possible: [
         Event.Driver.shakesWith(),
         Event.Driver.valueTogglerWith(),
         Event.Driver.sessionWith(action: sessionAction)
-      ]
+      ])
       <*> Event.Driver.sessionWith(
         action: sessionAction
       )
@@ -275,7 +275,6 @@ extension IntegerMutatingApp.Model {
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
-      <*> false
   }
 }
 
@@ -285,7 +284,7 @@ extension Event {
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init)
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
       <^> wrap(action)
         .map(Event.Driver.valueTogglerWith)
         .map {[
@@ -293,6 +292,7 @@ extension Event {
             $0,
             Event.Driver.sessionWith()
         ]}
+        .flatMap (NonEmptyArray.init)
       <*> wrap(action)
         .map(Event.Driver.valueTogglerWith)
       <*> (try? wrap(effect) as [AnyHashable: Any])
@@ -302,7 +302,6 @@ extension Event {
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
       <*> .some(nil)
-      <*> false
   }
 
   static func coerced(
@@ -310,7 +309,7 @@ extension Event {
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init)
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
       <^> wrap(action)
         .map(Event.Driver.shakesWith)
         .map{ [
@@ -318,6 +317,7 @@ extension Event {
           Event.Driver.valueTogglerWith(),
           Event.Driver.sessionWith()
         ]}
+        .flatMap (NonEmptyArray.init)
       <*> wrap(action)
         .map(Event.Driver.shakesWith)
       <*> (try? wrap(effect) as [AnyHashable: Any])
@@ -327,7 +327,6 @@ extension Event {
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
-      <*> false
   }
 }
 

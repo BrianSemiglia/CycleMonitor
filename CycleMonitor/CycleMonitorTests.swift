@@ -9,6 +9,8 @@
 import XCTest
 @testable import CycleMonitor
 @testable import Argo
+@testable import Curry
+@testable import Runes
 
 class CycleMonitorTests: XCTestCase {
   
@@ -115,9 +117,30 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
+  static var eventEmptyPendingEffect: Event? { return
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+      <^> NonEmptyArray(possible: [
+        Event.Driver(
+          label: "label",
+          action: "action",
+          id: "id"
+        )
+      ])
+      <*> Event.Driver(
+        label: "label",
+        action: "action",
+        id: "id"
+      )
+      <*> ""
+      <*> "context"
+      <*> ""
+  }
+  
   func testSaveFile() {
+    
+    // should decode
     XCTAssertNotEqual(
-      decode(CycleMonitorTests.saveFileDriversEmpty) as Event?,
+      decode(CycleMonitorTests.testFileSuccess) as Event?,
       nil
     )
     
@@ -127,9 +150,11 @@ class CycleMonitorTests: XCTestCase {
       nil
     )
     
-    // 1. should match cause and one driver
-    // 2. move cause to `drivers` and add action flag?
-    // 3. move monitor specific info to another scope of JSON payload?
+    // Should resolve empty-string pending-effect-edit to nil
+    XCTAssertEqual(
+      CycleMonitorTests.eventEmptyPendingEffect?.pendingEffectEdit,
+      nil
+    )
   }
   
 }

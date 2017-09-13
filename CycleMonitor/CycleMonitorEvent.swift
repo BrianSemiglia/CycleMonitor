@@ -16,26 +16,56 @@ struct Event {
   var cause: Driver
   var effect: String
   var context: String
-  var pendingEffectEdit: String? {
+  var pendingEffectEdit: String? { // TODO: Make private to CycleMonitor
     didSet {
       pendingEffectEdit = pendingEffectEdit?.valid
     }
   }
   var isApproved = false
   init(
-    drivers: [Driver],
+    drivers: NonEmptyArray<Driver>,
     cause: Driver,
     effect: String,
     context: String,
     pendingEffectEdit: String?,
     isApproved: Bool
   ) {
-    self.drivers = drivers
+    self.drivers = drivers.value
     self.cause = cause
     self.effect = effect
     self.context = context
     self.pendingEffectEdit = pendingEffectEdit?.valid
     self.isApproved = isApproved
+  }
+}
+
+struct NonEmptyArray<T> {
+  let value: [T]
+  init?(possible: [T]) {
+    if possible.count > 0 {
+      value = possible
+    } else {
+      return nil
+    }
+  }
+}
+
+extension Event {
+  init(
+    drivers: NonEmptyArray<Event.Driver>,
+    cause: Event.Driver,
+    effect: String,
+    context: String,
+    pendingEffectEdit: String?
+  ) {
+    self = Event(
+      drivers: drivers,
+      cause: cause,
+      effect: effect,
+      context: context,
+      pendingEffectEdit: pendingEffectEdit,
+      isApproved: false
+    )
   }
 }
 

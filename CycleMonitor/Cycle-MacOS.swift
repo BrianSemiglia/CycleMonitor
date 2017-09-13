@@ -596,9 +596,11 @@ import Runes
 import Curry
 
 extension Event: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<Event> { return
-    curry(Event.init)
-      <^> json <|| "drivers"
+  static func decode(_ json: JSON) -> Decoded<Event> {
+    return curry(Event.init)
+      <^> (json <|| "drivers")
+        .map(NonEmptyArray.init)
+        .flatMap(Decoded<NonEmptyArray<Event>>.fromOptional)
       <*> json <| "cause"
       <*> json <| "effect"
       <*> json <| "context"
