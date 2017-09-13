@@ -151,7 +151,7 @@ public class MultipeerJSON:
     _ session: MCSession,
     didFinishReceivingResourceWithName resourceName: String,
     fromPeer peerID: MCPeerID,
-    at localURL: URL,
+    at localURL: URL?,
     withError error: Error?
   ) {
 
