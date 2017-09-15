@@ -120,7 +120,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
 
     let json = drivers
       .multipeer
-      .rendered(moments.map { $0.coerced() })
+      .rendered(moments.map { $0.playback() })
       .tupledWithLatestFrom(events)
       .reduced()
       .share()
@@ -164,7 +164,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
 
 extension Collection where Iterator.Element == Event {
   func coerced() -> [AnyHashable: Any] { return
-    ["events": map { $0.coerced() }]
+    ["events": map { $0.playback() }]
   }
 }
 
