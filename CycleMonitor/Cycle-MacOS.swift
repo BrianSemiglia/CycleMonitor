@@ -144,6 +144,15 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension CycleMonitorApp.Model.TimeLineView: Equatable {
+  static func ==(
+    left: CycleMonitorApp.Model.TimeLineView,
+    right: CycleMonitorApp.Model.TimeLineView
+  ) -> Bool { return
+    left.selectedIndex == right.selectedIndex
+  }
+}
+
 extension CycleMonitorApp.Model {
   var selectedEvent: [AnyHashable: Any] { return
     [
@@ -407,6 +416,16 @@ extension Event {
   }
 }
 
+extension CycleMonitorApp.Model.TimeLineView {
+  static func timelineViewFrom(
+    _ input: [AnyHashable: Any]
+  ) -> CycleMonitorApp.Model.TimeLineView { return
+    CycleMonitorApp.Model.TimeLineView(
+      selectedIndex: input["selectedIndex"].flatMap(decode)
+    )
+  }
+}
+
 extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
@@ -414,7 +433,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       case .didOpen(let json):
         var new = context
         new.events = Event.eventsFrom(json)
-        new.timeLineView.selectedIndex = json["selectedIndex"].flatMap(decode)
+        new.timeLineView = CycleMonitorApp.Model.TimeLineView.timelineViewFrom(json)
         new.browser.state = .idle
         return new
       case .cancelling, .none:
@@ -544,7 +563,7 @@ extension Event {
 extension CycleMonitorApp.Model {
   var timelineFile: [AnyHashable: Any] { return
     [
-      "selectedIndex": timeLineView.selectedIndex as Any,
+      "selectedIndex": timeLineView.selectedIndex ?? "",
       "events": events.map { $0.withPendingEffect() }
     ]
   }

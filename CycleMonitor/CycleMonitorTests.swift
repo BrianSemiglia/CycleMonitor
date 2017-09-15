@@ -134,6 +134,61 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
+  static func model() -> CycleMonitorApp.Model { return
+    CycleMonitorApp.Model(
+      events: eventSuccess()
+        .map { [$0] as [Event] }
+        ?? [],
+      timeLineView: CycleMonitorApp.Model.TimeLineView(
+        selectedIndex: 0
+      ),
+      multipeer: CycleMonitorApp.Model.Connection.disconnected,
+      application: AppDelegateStub.Model(),
+      browser: BrowserDriver.Model(
+        state: .idle
+      ),
+      menuBar: MenuBarDriver.Model(
+        items: []
+      ),
+      eventHandlingState: CycleMonitorApp.Model.EventHandlingState.playing,
+      isTerminating: false
+    )
+  }
+  
+  static func timelineFile() -> [AnyHashable: Any] { return
+    [
+      "selectedIndex": 0,
+      "events": [eventSuccessWithPendingEffect()]
+    ]
+  }
+
+  static func timelineFileNoSelectedIndex() -> [AnyHashable: Any] { return
+    [
+      "selectedIndex": "",
+      "events": [eventSuccessWithPendingEffect()]
+    ]
+  }
+  
+  static func timelineViewNoSelectedIndex() -> CycleMonitorApp.Model.TimeLineView { return
+    CycleMonitorApp.Model.TimeLineView(
+      selectedIndex: nil
+    )
+  }
+  
+  static func eventSuccessWithPendingEffect() -> [AnyHashable: Any] { return
+    [
+      "drivers": [
+        driverWith(id: "a", action: true) as [AnyHashable: Any],
+        driverWith(id: "b", action: false) as [AnyHashable: Any],
+        driverWith(id: "c", action: false) as [AnyHashable: Any]
+      ],
+      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
+      "effect": "effect",
+      "context": "context",
+      "pendingEffectEdit": "pendingEffectEdit"
+    ]
+  }
+  
   func testSaveFile() {
     
     // should decode event
@@ -181,6 +236,24 @@ class CycleMonitorTests: XCTestCase {
         dictionary: CycleMonitorTests
           .driverWith(id: "a", action: false)
       )
+    )
+    
+    // should encode timeline
+    XCTAssertEqual(
+      NSDictionary(
+        dictionary:CycleMonitorTests.model().timelineFile
+      ),
+      NSDictionary(
+        dictionary: CycleMonitorTests.timelineFile()
+      )
+    )
+    
+    // Should resolve empty-string selected-index to nil
+    XCTAssertEqual(
+      CycleMonitorApp.Model.TimeLineView.timelineViewFrom(
+        CycleMonitorTests.timelineFileNoSelectedIndex()
+      ),
+      CycleMonitorTests.timelineViewNoSelectedIndex()
     )
   }
   
