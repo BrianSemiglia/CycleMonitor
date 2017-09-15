@@ -17,27 +17,11 @@ class CycleMonitorTests: XCTestCase {
   static var saveFileSuccess: [AnyHashable: Any] { return
     [
       "drivers": [
-        [
-          "label": "a-label",
-          "action": "a-action",
-          "id": "a-id"
-        ],
-        [
-          "label": "b-label",
-          "action": "",
-          "id": "b-id"
-        ],
-        [
-          "label": "c-label",
-          "action": "",
-          "id": "c-id"
-        ]
+        driverWith(id: "a", action: true) as [AnyHashable: Any],
+        driverWith(id: "b", action: false) as [AnyHashable: Any],
+        driverWith(id: "c", action: false) as [AnyHashable: Any]
       ],
-      "cause": [
-        "label": "a-label",
-        "action": "a-action",
-        "id": "a-id"
-      ],
+      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
       "effect": "effect",
       "context": "context",
       "pendingEffectEdit": "pendingEffectEdit"
@@ -47,11 +31,7 @@ class CycleMonitorTests: XCTestCase {
   static var saveFileDriversEmpty: [AnyHashable: Any] { return
     [
       "drivers": [],
-      "cause": [
-        "label": "a-label",
-        "action": "a-action",
-        "id": "a-id"
-      ],
+      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
       "effect": "effect",
       "context": "context",
       "pendingEffectEdit": "pendingEffectEdit"
@@ -61,27 +41,11 @@ class CycleMonitorTests: XCTestCase {
   static var saveFileEmptyPendingEffectEdit: [AnyHashable: Any] { return
     [
       "drivers": [
-        [
-          "label": "a-label",
-          "action": "a-action",
-          "id": "a-id"
-        ],
-        [
-          "label": "b-label",
-          "action": "",
-          "id": "b-id"
-        ],
-        [
-          "label": "c-label",
-          "action": "",
-          "id": "c-id"
-        ]
+        driverWith(id: "a", action: true) as [AnyHashable: Any],
+        driverWith(id: "b", action: false) as [AnyHashable: Any],
+        driverWith(id: "c", action: false) as [AnyHashable: Any]
       ],
-      "cause": [
-        "label": "a-label",
-        "action": "a-action",
-        "id": "a-id"
-      ],
+      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
       "effect": "effect",
       "context": "context",
       "pendingEffectEdit": ""
@@ -89,37 +53,13 @@ class CycleMonitorTests: XCTestCase {
   }
   
   static var eventDriverValid: [AnyHashable: Any] { return
-    [
-      "label": "a-label",
-      "action": "a-action",
-      "id": "a-id"
-    ]
+    driverWith(id: "a", action: true)
   }
   
   static var testFileSuccess: [AnyHashable: Any] { return
     [
-      "drivers": [
-        [
-          "label": "a-label",
-          "action": "a-action",
-          "id": "a-id"
-        ],
-        [
-          "label": "b-label",
-          "action": "",
-          "id": "b-id"
-        ],
-        [
-          "label": "c-label",
-          "action": "",
-          "id": "c-id"
-        ]
-      ],
-      "cause": [
-        "label": "a-label",
-        "action": "a-action",
-        "id": "a-id"
-      ],
+      "drivers": driversJSON,
+      "cause": driversJSON.first!,
       "effect": "effect",
       "context": "context"
     ]
@@ -128,41 +68,49 @@ class CycleMonitorTests: XCTestCase {
   static var eventEmptyPendingEffect: Event? { return
     curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
       <^> NonEmptyArray(possible: [
-        Event.Driver(
-          label: "label",
-          action: "action",
-          id: "id"
-        )
+        driverWith(id: "a", action: true)
       ])
-      <*> Event.Driver(
-        label: "label",
-        action: "action",
-        id: "id"
-      )
+      <*> driverWith(id: "a", action: true)
       <*> ""
       <*> "context"
       <*> ""
   }
   
+  static var driversJSON: [[AnyHashable: Any]] { return
+    [
+      driverWith(id: "a", action: true),
+      driverWith(id: "b", action: false),
+      driverWith(id: "c", action: false)
+    ]
+  }
+  
+  static var drivers: [Event.Driver] { return
+    [
+      driverWith(id: "a", action: true),
+      driverWith(id: "b", action: false),
+      driverWith(id: "c", action: false)
+    ]
+  }
+  
+  static func driverWith(id: String, action: Bool) -> Event.Driver { return
+    Event.Driver(
+      label: id + "-label",
+      action: action ? id + "-action" : "",
+      id: id + "-id"
+    )
+  }
+
+  static func driverWith(id: String, action: Bool) -> [AnyHashable: Any] { return
+    [
+      "label": id + "-label",
+      "action": action ? id + "-action" : "",
+      "id": id + "-id"
+    ]
+  }
+
   static var eventSuccess: Event? { return
     curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
-      <^> NonEmptyArray(possible: [
-        Event.Driver(
-          label: "a-label",
-          action: "a-action",
-          id: "a-id"
-        ),
-        Event.Driver(
-          label: "b-label",
-          action: "",
-          id: "b-id"
-        ),
-        Event.Driver(
-          label: "c-label",
-          action: "",
-          id: "c-id"
-        )
-      ])
+      <^> NonEmptyArray(possible: drivers)
       <*> Event.Driver(
         label: "a-label",
         action: "a-action",
@@ -209,6 +157,19 @@ class CycleMonitorTests: XCTestCase {
         NSDictionary(
           dictionary: CycleMonitorTests.saveFileSuccess
         )
+      )
+    )
+    
+    // should encode driver
+    XCTAssertEqual(
+      NSDictionary(
+        dictionary: CycleMonitorTests
+          .driverWith(id: "a", action: false)
+          .JSON
+      ),
+      NSDictionary(
+        dictionary: CycleMonitorTests
+          .driverWith(id: "a", action: false)
       )
     )
   }

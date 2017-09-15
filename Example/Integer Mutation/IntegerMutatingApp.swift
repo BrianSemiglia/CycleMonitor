@@ -78,7 +78,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       .reduced()
       .share()
     
-    let moments: Observable<[AnyHashable: Any]> = Observable.merge([
+    let moments: Observable<Event> = Observable.merge([
       valueActions
         .tupledWithLatestFrom(
           valueEffects,
@@ -87,11 +87,6 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .filterNil()
         )
         .map (Event.coerced)
-        .flatMap {
-          $0.flatMap { $0.JSON }
-            .map(Observable.just)
-            ?? .never() // replace never with error
-        }
       ,
       applicationActions
         .tupledWithLatestFrom(
@@ -110,11 +105,6 @@ struct IntegerMutatingApp: SinkSourceConverting {
             context: context
           )
         }
-        .flatMap {
-          $0.flatMap { $0.JSON }
-            .map(Observable.just)
-            ?? .never() // replace never with error
-        }
       ,
       shakeActions
         .tupledWithLatestFrom(
@@ -124,17 +114,13 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .filterNil()
         )
         .map (Event.coerced)
-        .flatMap {
-          $0.flatMap { $0.JSON }
-            .map(Observable.just)
-            ?? .never() // replace never with error
-        }
       ])
+      .unwrap()
       .share()
 
     let json = drivers
       .multipeer
-      .rendered(moments)
+      .rendered(moments.map { $0.JSON })
       .tupledWithLatestFrom(events)
       .reduced()
       .share()
@@ -147,22 +133,20 @@ struct IntegerMutatingApp: SinkSourceConverting {
           .tupledWithLatestFrom(
             moments
               .last(25)
-              .map { ["events": $0] as [AnyHashable: Any] }
+              .map { $0.coerced() as [AnyHashable: Any] }
           )
-          .map {
-            switch $0.0.state {
-            case .shouldSend:
-              var new = $0.0
-              if let data = $0.1.binaryPropertyList() {
-                new.state = .sending(data)
-              } else {
-                new.state = .idle
-              }
+          .filter { bug, _ in bug.state == .shouldSend }
+          .map { bug, moments in
+            if let data = moments.binaryPropertyList() {
+              var new = bug
+              new.state = .sending(data)
               return new
-            default:
-              return $0.0
+            } else {
+              var new = bug
+              new.state = .idle
+              return new
             }
-        }
+          }
     )
     .tupledWithLatestFrom(events)
     .reduced()
@@ -175,6 +159,12 @@ struct IntegerMutatingApp: SinkSourceConverting {
       reporter,
       shakeEffects
     ])
+  }
+}
+
+extension Collection where Iterator.Element == Event {
+  func coerced() -> [AnyHashable: Any] { return
+    ["events": map { $0.JSON }]
   }
 }
 
@@ -217,23 +207,6 @@ extension Event.Driver {
       id: "session"
     )
   }
-}
-
-extension Event.Driver {
-  var JSON: [AnyHashable: Any] { return [
-    "label": label,
-    "action": action,
-    "id": id
-  ]}
-}
-
-extension Event {
-  var JSON: [AnyHashable: Any] { return [
-    "drivers": drivers.map { $0.JSON },
-    "cause": cause.JSON,
-    "context": context,
-    "effect": effect
-  ]}
 }
 
 extension JSONSerialization {

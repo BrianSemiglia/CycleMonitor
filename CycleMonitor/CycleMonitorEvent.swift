@@ -95,3 +95,20 @@ extension Event.Driver: Equatable {
     left.label == right.label
   }
 }
+
+extension Event.Driver {
+  var JSON: [AnyHashable: Any] { return [
+    "label": label,
+    "action": action,
+    "id": id
+    ]}
+}
+
+extension Event {
+  var JSON: [AnyHashable: Any] { return [
+    "drivers": drivers.map { $0.JSON },
+    "cause": cause.JSON,
+    "context": context,
+    "effect": effect
+    ]}
+}
