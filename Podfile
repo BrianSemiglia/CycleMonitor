@@ -28,5 +28,6 @@ target 'Integer Mutation' do
   pod 'RxSwiftExt'
   target 'Integer Mutation Tests' do
     inherit! :search_paths
+    pod 'RxTest'
   end
 end
