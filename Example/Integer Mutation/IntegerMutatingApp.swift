@@ -135,14 +135,18 @@ struct IntegerMutatingApp: SinkSourceConverting {
               .last(25)
               .map { $0.coerced() as [AnyHashable: Any] }
           )
-          .filter { bug, _ in bug.state == .shouldSend }
-          .map { bug, moments in
-            if let data = moments.binaryPropertyList() {
-              var new = bug
-              new.state = .sending(data)
-              return new
-            } else {
-              var new = bug
+          .map { reporter, moments in
+            switch reporter.state {
+            case .shouldSend:
+              if let data = moments.binaryPropertyList() {
+                var new = reporter
+                new.state = .sending(data)
+                return new
+              } else {
+                return reporter
+              }
+            default:
+              var new = reporter
               new.state = .idle
               return new
             }
