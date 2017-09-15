@@ -439,7 +439,7 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
       case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.saveTimelineID:
         var new = context
         new.browser.state = .saving(
-          context.saveFile
+          context.timelineFile
         )
         return new
       case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.exportTestsID:
@@ -530,18 +530,10 @@ class TerminationDriver {
  */
 
 extension Event {
-  func coerced() -> [AnyHashable: Any] { return
+  func withPendingEffect() -> [AnyHashable: Any] { return
     [
-      "drivers": drivers.map {[
-        "label": $0.label,
-        "action": $0.action,
-        "id": $0.id
-      ]},
-      "cause": [
-        "label": cause.label,
-        "action": cause.action,
-        "id": cause.id
-      ],
+      "drivers": drivers.map { $0.coerced() as [AnyHashable: Any] },
+      "cause": cause.coerced() as [AnyHashable: Any],
       "effect": effect,
       "context": context,
       "pendingEffectEdit": pendingEffectEdit ?? ""
@@ -550,10 +542,10 @@ extension Event {
 }
 
 extension CycleMonitorApp.Model {
-  var saveFile: [AnyHashable: Any] { return
+  var timelineFile: [AnyHashable: Any] { return
     [
       "selectedIndex": timeLineView.selectedIndex as Any,
-      "events": events.map { $0.coerced() as [AnyHashable: Any] }
+      "events": events.map { $0.withPendingEffect() }
     ]
   }
 }

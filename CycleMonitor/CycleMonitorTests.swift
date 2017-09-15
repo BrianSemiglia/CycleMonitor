@@ -14,6 +14,32 @@ import XCTest
 
 class CycleMonitorTests: XCTestCase {
   
+  static func eventSuccess() -> Event? { return
+    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+      <^> NonEmptyArray(possible: [
+        driverWith(id: "a", action: true),
+        driverWith(id: "b", action: false),
+        driverWith(id: "c", action: false)
+      ])
+      <*> driverWith(id: "a", action: true)
+      <*> "effect"
+      <*> "context"
+      <*> "pendingEffectEdit"
+  }
+  
+  static func eventSuccess() -> [AnyHashable: Any] { return
+    [
+      "drivers": [
+        driverWith(id: "a", action: true) as [AnyHashable: Any],
+        driverWith(id: "b", action: false) as [AnyHashable: Any],
+        driverWith(id: "c", action: false) as [AnyHashable: Any]
+      ],
+      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
+      "effect": "effect",
+      "context": "context",
+    ]
+  }
+  
   static var saveFileSuccess: [AnyHashable: Any] { return
     [
       "drivers": [
@@ -107,19 +133,6 @@ class CycleMonitorTests: XCTestCase {
       "id": id + "-id"
     ]
   }
-
-  static var eventSuccess: Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
-      <^> NonEmptyArray(possible: drivers)
-      <*> Event.Driver(
-        label: "a-label",
-        action: "a-action",
-        id: "a-id"
-      )
-      <*> "effect"
-      <*> "context"
-      <*> "pendingEffectEdit"
-  }
   
   func testSaveFile() {
     
@@ -149,14 +162,11 @@ class CycleMonitorTests: XCTestCase {
     
     // should encode event
     XCTAssertEqual(
-      CycleMonitorTests.eventSuccess
-        .map { $0.coerced() as [AnyHashable: Any] }
-        .map (NSDictionary.init)
-      ,
-      .some(
-        NSDictionary(
-          dictionary: CycleMonitorTests.saveFileSuccess
-        )
+      CycleMonitorTests.eventSuccess()
+        .map { $0.playback() as [AnyHashable: Any] }
+        .map (NSDictionary.init),
+      NSDictionary(
+        dictionary: CycleMonitorTests.eventSuccess()
       )
     )
     
@@ -165,7 +175,7 @@ class CycleMonitorTests: XCTestCase {
       NSDictionary(
         dictionary: CycleMonitorTests
           .driverWith(id: "a", action: false)
-          .JSON
+          .coerced()
       ),
       NSDictionary(
         dictionary: CycleMonitorTests

@@ -97,18 +97,18 @@ extension Event.Driver: Equatable {
 }
 
 extension Event.Driver {
-  var JSON: [AnyHashable: Any] { return [
+  func coerced() -> [AnyHashable: Any] { return [
     "label": label,
     "action": action,
     "id": id
-    ]}
+  ]}
 }
 
 extension Event {
-  var JSON: [AnyHashable: Any] { return [
-    "drivers": drivers.map { $0.JSON },
-    "cause": cause.JSON,
+  func playback() -> [AnyHashable: Any] { return [
+    "drivers": drivers.map { $0.coerced() as [AnyHashable: Any] },
+    "cause": cause.coerced() as [AnyHashable: Any],
     "context": context,
     "effect": effect
-    ]}
+  ]}
 }
