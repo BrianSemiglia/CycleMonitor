@@ -133,7 +133,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
           .tupledWithLatestFrom(
             moments
               .last(25)
-              .map { $0.coerced() as [AnyHashable: Any] }
+              .map { $0.eventsPlayable }
           )
           .map { reporter, moments in
             switch reporter.state {
@@ -167,7 +167,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
 }
 
 extension Collection where Iterator.Element == Event {
-  func coerced() -> [AnyHashable: Any] { return
+  var eventsPlayable: [AnyHashable: Any] { return
     ["events": map { $0.playback() }]
   }
 }
