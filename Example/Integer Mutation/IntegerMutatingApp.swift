@@ -177,7 +177,7 @@ extension Observable {
     last(2).map { $0.first }
   }
   func last(_ count: Int) -> Observable<[E]> { return
-    scan (Array<E>()) { $0 + [$1] }
+    scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }
     .map (Array.init)
   }
