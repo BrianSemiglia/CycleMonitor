@@ -404,12 +404,6 @@ extension Data {
 }
 
 extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
-  var JSON: Data? { return
-    try? JSONSerialization.data(
-      withJSONObject: self,
-      options: JSONSerialization.WritingOptions(rawValue: 0)
-    )
-  }
   func binaryPropertyList() -> Data? { return
     try? PropertyListSerialization.data(
       fromPropertyList: self,
