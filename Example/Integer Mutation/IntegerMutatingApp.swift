@@ -138,13 +138,9 @@ struct IntegerMutatingApp: SinkSourceConverting {
           .map { reporter, moments in
             switch reporter.state {
             case .shouldSend:
-              if let data = moments.binaryPropertyList() {
-                var new = reporter
-                new.state = .sending(data)
-                return new
-              } else {
-                return reporter
-              }
+              var new = reporter
+              new.state = moments.binaryPropertyList().map(BugReporter.Model.State.sending) ?? .idle
+              return new
             default:
               var new = reporter
               new.state = .idle
