@@ -154,20 +154,26 @@ extension CycleMonitorApp.Model.TimeLineView: Equatable {
 }
 
 extension CycleMonitorApp.Model {
-  var selectedEvent: [AnyHashable: Any] { return
-    [
-      "cause": [
-        "id": events[timeLineView.selectedIndex!].cause.id,
-        "action": events[timeLineView.selectedIndex!].cause.action
-      ]
-    ]
+  var selectedEvent: [AnyHashable: Any]? { return
+    timeLineView
+      .selectedIndex
+      .flatMap { events[safe: $0] }
+      .map { $0.cause.coerced() as [AnyHashable: Any] }
+      .map { ["cause": $0] }
   }
   var selectedEffectDraft: [AnyHashable: Any]? { return
-    events[timeLineView.selectedIndex!].pendingEffectEdit.map { ["effect": $0] }
+    timeLineView
+      .selectedIndex
+      .flatMap { events[safe: $0] }
+      .flatMap { $0.pendingEffectEdit }
+      .map { ["effect": $0] }
   }
-  var selectedEffect: [AnyHashable: Any] { return [
-    "effect": events[timeLineView.selectedIndex!].effect
-  ]}
+  var selectedEffect: [AnyHashable: Any]? { return
+    timeLineView
+      .selectedIndex
+      .flatMap { events[safe: $0] }
+      .map { ["effect": $0.effect] }
+    }
 }
 
 extension Observable where E == CycleMonitorApp.Model {
@@ -176,8 +182,8 @@ extension Observable where E == CycleMonitorApp.Model {
       !(y.eventHandlingState == .playingSendingEvents &&
         x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
     }
-    .filter { $0.events.count > 0 }
     .map { $0.selectedEvent }
+    .filterNil()
   }
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
@@ -185,11 +191,11 @@ extension Observable where E == CycleMonitorApp.Model {
       !(y.eventHandlingState == .playingSendingEffects &&
         x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
     }
-    .filter { $0.events.count > 0 }
     .map {
       $0.selectedEffectDraft ??
       $0.selectedEffect
     }
+    .filterNil()
   }
 }
 
@@ -577,11 +583,7 @@ extension Event {
         "action": $0.action,
         "id": $0.id
       ]},
-      "cause": [
-        "label": cause.label,
-        "action": cause.action,
-        "id": cause.id
-      ],
+      "cause": cause.coerced() as [AnyHashable: Any],
       "context": context,
       "effect": effect
     ]
