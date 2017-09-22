@@ -97,8 +97,8 @@ struct IntegerMutatingApp: SinkSourceConverting {
         )
         .map { action, effect, context in
           effect.coerced(
-            sessionAction: (try? wrap(action.session.state))
-              .flatMap { $0 as [String: Any] }
+            sessionAction: wrap(action.session.state)
+              .flatMap { $0 as [AnyHashable: Any] }
               .flatMap { $0.description }
               ?? ""
             ,
@@ -184,8 +184,8 @@ extension Observable {
 }
 
 func wrap(_ input: Any) -> String? { return
-  (try? wrap(("filler tuple", input)))
-    .flatMap { $0 as [String: Any] }
+  wrap(("filler tuple", input))
+    .flatMap { $0 as [AnyHashable: Any] }
     .flatMap { $0[".1"] as? String }
 }
 
@@ -245,10 +245,10 @@ extension IntegerMutatingApp.Model {
       <*> Event.Driver.sessionWith(
         action: sessionAction
       )
-      <*> (try? wrap(self) as [AnyHashable: Any])
+      <*> wrap(self)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> wrap(context)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
@@ -272,10 +272,10 @@ extension Event {
         .flatMap (NonEmptyArray.init)
       <*> wrap(action)
         .map(Event.Driver.valueTogglerWith)
-      <*> (try? wrap(effect) as [AnyHashable: Any])
+      <*> wrap(effect)
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> wrap(context)
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
       <*> .some(nil)
@@ -297,14 +297,18 @@ extension Event {
         .flatMap (NonEmptyArray.init)
       <*> wrap(action)
         .map(Event.Driver.shakesWith)
-      <*> (try? wrap(effect) as [AnyHashable: Any])
+      <*> wrap(effect)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> (try? wrap(context) as [AnyHashable: Any])
+      <*> wrap(context)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
       <*> .some(nil)
   }
+}
+
+func wrap(_ input: Any) -> [AnyHashable: Any]? {
+  return try? wrap(input) as [AnyHashable: Any]
 }
 
 extension IntegerMutatingApp.Model {
