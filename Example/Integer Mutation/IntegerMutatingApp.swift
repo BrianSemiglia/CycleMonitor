@@ -78,7 +78,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       .reduced()
       .share()
     
-    let moments: Observable<Event> = Observable.merge([
+    let moments = Observable.merge([
       valueActions
         .tupledWithLatestFrom(
           valueEffects,
@@ -114,9 +114,9 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .filterNil()
         )
         .map (Event.coerced)
-      ])
-      .unwrap()
-      .share()
+    ])
+    .unwrap()
+    .share()
 
     let json = drivers
       .multipeer
@@ -147,10 +147,10 @@ struct IntegerMutatingApp: SinkSourceConverting {
               return new
             }
           }
-    )
-    .tupledWithLatestFrom(events)
-    .reduced()
-    .share()
+      )
+      .tupledWithLatestFrom(events)
+      .reduced()
+      .share()
 
     return .merge([
       valueEffects,
@@ -233,11 +233,13 @@ extension IntegerMutatingApp.Model {
     context: IntegerMutatingApp.Model
   ) -> Event? { return
     curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
-      <^> NonEmptyArray(possible: [
-        Event.Driver.shakesWith(),
-        Event.Driver.valueTogglerWith(),
-        Event.Driver.sessionWith(action: sessionAction)
-      ])
+      <^> NonEmptyArray(
+        possible: [
+          Event.Driver.shakesWith(),
+          Event.Driver.valueTogglerWith(),
+          Event.Driver.sessionWith(action: sessionAction)
+        ]
+      )
       <*> Event.Driver.sessionWith(
         action: sessionAction
       )
@@ -259,7 +261,7 @@ extension Event {
   ) -> Event? { return
     curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
       <^> wrap(action)
-        .map(Event.Driver.valueTogglerWith)
+        .map (Event.Driver.valueTogglerWith)
         .map {[
             Event.Driver.shakesWith(),
             $0,
@@ -284,8 +286,8 @@ extension Event {
   ) -> Event? { return
     curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
       <^> wrap(action)
-        .map(Event.Driver.shakesWith)
-        .map{ [
+        .map (Event.Driver.shakesWith)
+        .map {[
           $0,
           Event.Driver.valueTogglerWith(),
           Event.Driver.sessionWith()
@@ -335,14 +337,14 @@ extension IntegerMutatingApp.Model {
     context: IntegerMutatingApp.Model
   ) -> Observable<IntegerMutatingApp.Model> {
     switch driver {
-    case .valueToggler(let action):
-      return Observable.just((action, context)).reduced()
-    case .rxUIApplication(let action):
-      return Observable.just((action, context)).reduced()
-    case .bugReporter(let action):
-      return Observable.just((action, context)).reduced()
-    case .shakeDetection(let action):
-      return Observable.just((action, context)).reduced()
+    case .valueToggler(let action): return
+      Observable.just((action, context)).reduced()
+    case .rxUIApplication(let action): return
+      Observable.just((action, context)).reduced()
+    case .bugReporter(let action): return
+      Observable.just((action, context)).reduced()
+    case .shakeDetection(let action): return
+      Observable.just((action, context)).reduced()
     }
   }
 
@@ -484,12 +486,12 @@ extension ValueToggler.Model: Argo.Decodable {
 extension ValueToggler.Action: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<ValueToggler.Action> {
     switch json {
-    case .string(let x) where x == "incrementing":
-      return .success(.incrementing)
-    case .string(let x) where x == "decrementing":
-      return .success(.decrementing)
-    default:
-      return .failure(.custom(""))
+    case .string(let x) where x == "incrementing": return .success(.incrementing)
+    case .string(let x) where x == "decrementing": return .success(.decrementing)
+    default: return
+      .failure(
+        .custom("")
+      )
     }
   }
 }
@@ -535,8 +537,8 @@ extension ValueToggler.Model.Button.State: Argo.Decodable {
 }
 
 extension BugReporter.Model: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<BugReporter.Model> {
-    return curry(BugReporter.Model.init)
+  static func decode(_ json: JSON) -> Decoded<BugReporter.Model> { return
+    curry(BugReporter.Model.init)
       <^> json <| "state"
   }
 }
@@ -550,8 +552,8 @@ extension BugReporter.Model.State: Argo.Decodable {
 }
 
 extension ShakeDetection.Model: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<ShakeDetection.Model> {
-    return curry(ShakeDetection.Model.init)
+  static func decode(_ json: JSON) -> Decoded<ShakeDetection.Model> { return
+    curry(ShakeDetection.Model.init)
       <^> json <| "state"
   }
 }
@@ -561,7 +563,13 @@ extension ShakeDetection.Model.State: Argo.Decodable {
     switch json {
     case .string(let x) where x == "idle": return .success(.idle)
     case .string(let x) where x == "listening": return .success(.listening)
-    default: return .failure(.typeMismatch(expected: "String", actual: ""))
+    default: return
+      .failure(
+        .typeMismatch(
+          expected: "String",
+          actual: ""
+        )
+      )
     }
   }
 }
