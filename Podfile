@@ -3,9 +3,9 @@ target 'CycleMonitor' do
   use_frameworks!
   platform :macos, 10.11
   pod 'RxSwift',  '~> 3.5.0'
+  pod 'RxCocoa',      '~> 3.5.0'
   pod 'Argo',     '~> 4.0'
   pod 'Curry',    '~> 3.0'
-  pod 'RxOptional'
   pod 'RxSwiftExt'
   target 'CycleMonitorTests' do
     inherit! :search_paths
@@ -23,7 +23,6 @@ target 'Integer Mutation' do
   pod 'RxMotionKit',  '~> 0.7.0'
   pod 'Argo',         '~> 4.0'
   pod 'Wrap',         '~> 2.1.1'
-  pod 'RxOptional'
   pod 'RxSwiftExt'
   target 'Integer Mutation Tests' do
     inherit! :search_paths
