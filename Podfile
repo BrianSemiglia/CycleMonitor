@@ -2,12 +2,11 @@
 target 'CycleMonitor' do
   use_frameworks!
   platform :macos, 10.11
-
   pod 'RxSwift',  '~> 3.5.0'
   pod 'Argo',     '~> 4.0'
   pod 'Curry',    '~> 3.0'
   pod 'RxOptional'
-
+  pod 'RxSwiftExt'
   target 'CycleMonitorTests' do
     inherit! :search_paths
   end

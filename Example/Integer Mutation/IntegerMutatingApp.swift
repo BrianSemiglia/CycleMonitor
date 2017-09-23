@@ -13,7 +13,7 @@ import Curry
 import Wrap
 import Argo
 import Runes
-import RxOptional
+import RxSwiftExt
 
 @UIApplicationMain
 class Example: CycledApplicationDelegate<IntegerMutatingApp> {
@@ -84,7 +84,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
           valueEffects,
           events
             .secondToLast()
-            .filterNil()
+            .unwrap()
         )
         .map (Event.coerced)
       ,
@@ -93,7 +93,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
           applicationEffects,
           events
             .secondToLast()
-            .filterNil()
+            .unwrap()
         )
         .map { action, effect, context in
           effect.coerced(
@@ -111,7 +111,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
           shakeEffects,
           events
             .secondToLast()
-            .filterNil()
+            .unwrap()
         )
         .map (Event.coerced)
     ])
@@ -161,6 +161,11 @@ struct IntegerMutatingApp: SinkSourceConverting {
     ])
   }
 }
+
+// 1. observe requirements
+// 2. render requirements: a. String -> Enum -> Driver.Action b. JSON -> App.Model
+// 3. test requirements? same as render?
+// 4. section sample code into these categories
 
 extension Collection where Iterator.Element == Event {
   var eventsPlayable: [AnyHashable: Any] { return

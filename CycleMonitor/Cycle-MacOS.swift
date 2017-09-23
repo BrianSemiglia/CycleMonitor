@@ -8,7 +8,7 @@
 
 import Cocoa
 import RxSwift
-import RxOptional
+import RxSwiftExt
 
 class AppDelegateStub: NSObject, NSApplicationDelegate {
   struct Model {}
@@ -183,7 +183,7 @@ extension Observable where E == CycleMonitorApp.Model {
         x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
     }
     .map { $0.selectedEvent }
-    .filterNil()
+    .unwrap()
   }
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
@@ -195,7 +195,7 @@ extension Observable where E == CycleMonitorApp.Model {
       $0.selectedEffectDraft ??
       $0.selectedEffect
     }
-    .filterNil()
+    .unwrap()
   }
 }
 
