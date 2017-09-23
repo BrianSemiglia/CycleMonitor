@@ -188,14 +188,34 @@ extension Observable where E == CycleMonitorApp.Model {
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
     distinctUntilChanged { x, y in
-      !(y.eventHandlingState == .playingSendingEffects &&
-        x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
+      (
+        y.eventHandlingState == .playingSendingEffects && (
+          x.timeLineView.selectedIndex != y.timeLineView.selectedIndex ||
+          CycleMonitorApp.Model.haveEqualPendingEdits(x: x, y: y) == false
+        )
+      ) == false
     }
     .map {
       $0.selectedEffectDraft ??
       $0.selectedEffect
     }
     .unwrap()
+  }
+}
+
+extension CycleMonitorApp.Model {
+  static func haveEqualPendingEdits(x: CycleMonitorApp.Model, y: CycleMonitorApp.Model) -> Bool {
+    let x = curry(==)
+      <^> x.timeLineView.selectedIndex
+        .flatMap { x.events[safe: $0] }
+        .flatMap { $0.pendingEffectEdit }
+      
+      let b = x
+        <*> y.timeLineView.selectedIndex
+        .flatMap { y.events[safe: $0] }
+        .flatMap { $0.pendingEffectEdit }
+
+    return b ?? false
   }
 }
 
