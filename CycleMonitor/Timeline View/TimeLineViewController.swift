@@ -11,6 +11,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 import Curry
+import Runes
 
 class TimeLineViewController:
       NSViewController,
@@ -166,17 +167,23 @@ class TimeLineViewController:
   
   func textView(
     _ textView: NSTextView,
-    shouldChangeTextIn affectedCharRange: NSRange,
+    shouldChangeTextIn affected: NSRange,
     replacementString: String?
   ) -> Bool {
-    if let from = textView.string as NSString?, let to = replacementString {
+    
+    let possible = (
+        NSString.replacingCharacters
+        <^> textView.string as NSString?
+        >>- curry
+      )
+      <*> affected
+      <*> replacementString
+    
+    if let x = possible {
       output.on(
         .next(
           .didCreatePendingStateEdit(
-            from.replacingCharacters(
-              in: affectedCharRange,
-              with: to
-            )
+            x
           )
         )
       )
