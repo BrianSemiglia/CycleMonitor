@@ -548,26 +548,6 @@ class TerminationDriver {
   }
 }
 
-/*
- Monitor, Driver, Caller
- Model,   JSON,   Model
- 
-           [Cocoa, Cycle-Mac]  [Cocoa]
- [Caller], [Monitor, Driver],  [Cycle-MacOS]
- 
- Dependencies:
- 
- 1.
- [Cocoa]
- [Cycle-Mac, Driver]
- [Monitor]
- 
- 2.
- [Driver]
- [Caller]
- 
- */
-
 extension Event {
   func withPendingEffect() -> [AnyHashable: Any] { return
     [
