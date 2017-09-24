@@ -145,26 +145,6 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
-extension Observable {
-  func secondToLast() -> Observable<E?> { return
-    last(2).map { $0.first }
-  }
-  func lastTwo() -> Observable<(E?, E)> { return
-    last(2).map {
-      if $0.count == 1 {
-        return (nil, $0.first!)
-      } else {
-        return ($0.first!, $0[1])
-      }
-    }
-  }
-  func last(_ count: Int) -> Observable<[E]> { return
-    scan ([]) { $0 + [$1] }
-      .map { $0.suffix(count) }
-      .map (Array.init)
-  }
-}
-
 extension CycleMonitorApp.Model.TimeLineView: Equatable {
   static func ==(
     left: CycleMonitorApp.Model.TimeLineView,
@@ -200,16 +180,16 @@ extension CycleMonitorApp.Model {
 extension Observable where E == CycleMonitorApp.Model {
   var jsonEvents: Observable<[AnyHashable: Any]> { return
     filter { $0.eventHandlingState == .playingSendingEvents }
-    .distinctWhile { $0.timeLineView.selectedIndex != $1.timeLineView.selectedIndex }
+    .distinctUntilChanged { $0.timeLineView.selectedIndex == $1.timeLineView.selectedIndex }
     .map { $0.selectedEvent }
     .unwrap()
   }
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
     filter { $0.eventHandlingState == .playingSendingEffects }
-    .distinctWhile {
-      let a = curry(!=) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
-      let b = curry(!=) <^> $0.selectedPendingEffect() as String? <*> $1.selectedPendingEffect() as String?
+    .distinctUntilChanged {
+      let a = curry(==) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
+      let b = curry(==) <^> $0.selectedPendingEffect() as String? <*> $1.selectedPendingEffect() as String?
       return a ?? b ?? false
     }
     .map {
@@ -815,13 +795,3 @@ public protocol NSApplicationDelegateProviding {
   associatedtype Delegate: NSApplicationDelegate
   var application: Delegate { get }
 }
-
-extension Observable {
-  /* Used instead of `distinctUntilChanged` due to bug. */
-  func distinctWhile(_ function: @escaping (E, E) -> Bool) -> Observable<E> { return
-    lastTwo().flatMap { x in
-      x.0.map { function($0, x.1) ? self : .never() } ?? self
-    }
-  }
-}
-
