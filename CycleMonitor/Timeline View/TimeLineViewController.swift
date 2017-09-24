@@ -153,7 +153,11 @@ class TimeLineViewController:
         if let `self` = self, let timeline = self.timeline {
           let point = timeline.enclosingScrollView!.documentVisibleCenter
           if let x = timeline.indexPathForItem(at:point)?.item {
-            self.output.on(.next(.scrolledToIndex(x)))
+            self.output.on(
+              .next(
+                .scrolledToIndex(x)
+              )
+            )
           }
         }
       }
@@ -165,21 +169,8 @@ class TimeLineViewController:
     shouldForceRender = false
   }
   
-  func textView(
-    _ textView: NSTextView,
-    shouldChangeTextIn affected: NSRange,
-    replacementString: String?
-  ) -> Bool {
-    
-    let possible = (
-        NSString.replacingCharacters
-        <^> textView.string as NSString?
-        >>- curry
-      )
-      <*> affected
-      <*> replacementString
-    
-    if let x = possible {
+  func textDidChange(_ notification: Notification) {
+    if let x = presentedState?.string {
       output.on(
         .next(
           .didCreatePendingStateEdit(
@@ -188,7 +179,6 @@ class TimeLineViewController:
         )
       )
     }
-    return false
   }
   
   override func viewDidLayout() {
@@ -258,7 +248,8 @@ class TimeLineViewController:
     eventHandling?.selectedSegment = new.eventHandlingState.rawValue
     timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
     
-    if shouldForceRender || new.presentedState != old.presentedState {
+    if shouldForceRender || new.presentedState != presentedState?.string {
+      /* convert strings to arrays and diff them. replace one character at a time. maintains cursor? */
       presentedState?.string = new.presentedState
     }
     
