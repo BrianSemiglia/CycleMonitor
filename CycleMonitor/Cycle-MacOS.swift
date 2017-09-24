@@ -99,7 +99,8 @@ struct CycleMonitorApp: SinkSourceConverting {
       .tupledWithLatestFrom(events)
       .reduced()
 
-    let multipeer = drivers.multipeer
+    let multipeer = drivers
+      .multipeer
       .rendered(
         .merge([
           events.jsonEvents,
@@ -144,6 +145,26 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension Observable {
+  func secondToLast() -> Observable<E?> { return
+    last(2).map { $0.first }
+  }
+  func lastTwo() -> Observable<(E?, E)> { return
+    last(2).map {
+      if $0.count == 1 {
+        return (nil, $0.first!)
+      } else {
+        return ($0.first!, $0[1])
+      }
+    }
+  }
+  func last(_ count: Int) -> Observable<[E]> { return
+    scan ([]) { $0 + [$1] }
+      .map { $0.suffix(count) }
+      .map (Array.init)
+  }
+}
+
 extension CycleMonitorApp.Model.TimeLineView: Equatable {
   static func ==(
     left: CycleMonitorApp.Model.TimeLineView,
@@ -161,61 +182,54 @@ extension CycleMonitorApp.Model {
       .map { $0.cause.coerced() as [AnyHashable: Any] }
       .map { ["cause": $0] }
   }
-  var selectedEffectDraft: [AnyHashable: Any]? { return
+  func selectedPendingEffect() -> [AnyHashable: Any]? { return
     timeLineView
       .selectedIndex
       .flatMap { events[safe: $0] }
       .flatMap { $0.pendingEffectEdit }
       .map { ["effect": $0] }
   }
-  var selectedEffect: [AnyHashable: Any]? { return
+  func selectedEffect() -> [AnyHashable: Any]? { return
     timeLineView
       .selectedIndex
       .flatMap { events[safe: $0] }
       .map { ["effect": $0.effect] }
-    }
+  }
 }
 
 extension Observable where E == CycleMonitorApp.Model {
   var jsonEvents: Observable<[AnyHashable: Any]> { return
-    distinctUntilChanged { x, y in
-      !(y.eventHandlingState == .playingSendingEvents &&
-        x.timeLineView.selectedIndex != y.timeLineView.selectedIndex)
-    }
+    filter { $0.eventHandlingState == .playingSendingEvents }
+    .distinctWhile { $0.timeLineView.selectedIndex != $1.timeLineView.selectedIndex }
     .map { $0.selectedEvent }
     .unwrap()
   }
   
   var jsonEffects: Observable<[AnyHashable: Any]> { return
-    distinctUntilChanged { x, y in
-      (
-        y.eventHandlingState == .playingSendingEffects && (
-          x.timeLineView.selectedIndex != y.timeLineView.selectedIndex ||
-          CycleMonitorApp.Model.haveEqualPendingEdits(x: x, y: y) == false
-        )
-      ) == false
+    filter { $0.eventHandlingState == .playingSendingEffects }
+    .distinctWhile {
+      let a = curry(!=) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
+      let b = curry(!=) <^> $0.selectedPendingEffect() as String? <*> $1.selectedPendingEffect() as String?
+      return a ?? b ?? false
     }
     .map {
-      $0.selectedEffectDraft ??
-      $0.selectedEffect
+      $0.selectedPendingEffect() ??
+      $0.selectedEffect()
     }
     .unwrap()
   }
 }
 
 extension CycleMonitorApp.Model {
-  static func haveEqualPendingEdits(x: CycleMonitorApp.Model, y: CycleMonitorApp.Model) -> Bool {
-    let x = curry(==)
-      <^> x.timeLineView.selectedIndex
-        .flatMap { x.events[safe: $0] }
-        .flatMap { $0.pendingEffectEdit }
-      
-      let b = x
-        <*> y.timeLineView.selectedIndex
-        .flatMap { y.events[safe: $0] }
-        .flatMap { $0.pendingEffectEdit }
-
-    return b ?? false
+  func selectedEffect() -> String? { return
+    timeLineView.selectedIndex
+      .flatMap { events[safe: $0] }
+      .flatMap { $0.effect }
+  }
+  func selectedPendingEffect() -> String? { return
+    timeLineView.selectedIndex
+      .flatMap { events[safe: $0] }
+      .flatMap { $0.pendingEffectEdit }
   }
 }
 
@@ -800,5 +814,14 @@ public protocol NSViewControllerProviding {
 public protocol NSApplicationDelegateProviding {
   associatedtype Delegate: NSApplicationDelegate
   var application: Delegate { get }
+}
+
+extension Observable {
+  /* Used instead of `distinctUntilChanged` due to bug. */
+  func distinctWhile(_ function: @escaping (E, E) -> Bool) -> Observable<E> { return
+    lastTwo().flatMap { x in
+      x.0.map { function($0, x.1) ? self : .never() } ?? self
+    }
+  }
 }
 
