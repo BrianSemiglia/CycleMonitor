@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="12121"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
         <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
@@ -704,20 +704,20 @@
                                                 </constraints>
                                             </stackView>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lmS-Ld-qcp">
-                                                <rect key="frame" x="148" y="27" width="706" height="270"/>
+                                                <rect key="frame" x="148" y="0.0" width="706" height="324"/>
                                                 <subviews>
                                                     <scrollView wantsLayer="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TQa-Wm-BzR">
-                                                        <rect key="frame" x="0.0" y="25" width="706" height="245"/>
+                                                        <rect key="frame" x="0.0" y="25" width="706" height="299"/>
                                                         <clipView key="contentView" id="SJT-hB-Gye">
-                                                            <rect key="frame" x="1" y="1" width="704" height="243"/>
+                                                            <rect key="frame" x="1" y="1" width="704" height="297"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textView importsGraphics="NO" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="704" height="243"/>
+                                                                <textView importsGraphics="NO" verticallyResizable="YES" findStyle="panel" incrementalSearchingEnabled="YES" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="Guk-AA-mD0">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="704" height="297"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                    <size key="minSize" width="704" height="243"/>
-                                                                    <size key="maxSize" width="704" height="10000000"/>
+                                                                    <size key="minSize" width="704" height="297"/>
+                                                                    <size key="maxSize" width="706" height="10000000"/>
                                                                     <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                 </textView>
                                                             </subviews>
@@ -728,7 +728,7 @@
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="C8C-a1-IXc">
-                                                            <rect key="frame" x="689" y="1" width="16" height="243"/>
+                                                            <rect key="frame" x="689" y="1" width="16" height="297"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                     </scrollView>
@@ -767,10 +767,17 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7wc-Xc-yJJ">
-                                        <rect key="frame" x="380" y="102" width="95" height="22"/>
+                                        <rect key="frame" x="336" y="102" width="182" height="22"/>
                                         <subviews>
+                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jY5-Dc-WY8">
+                                                <rect key="frame" x="-6" y="-7" width="91" height="33"/>
+                                                <buttonCell key="cell" type="push" title="Clear All" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gu6-lE-We4">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                            </button>
                                             <segmentedControl verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="yBd-nv-jeu">
-                                                <rect key="frame" x="0.0" y="-2" width="71" height="25"/>
+                                                <rect key="frame" x="87" y="-2" width="71" height="25"/>
                                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectOne" id="47I-tR-dRd">
                                                     <font key="font" metaFont="system"/>
                                                     <segments>
@@ -783,12 +790,12 @@
                                                 </connections>
                                             </segmentedControl>
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="Zmb-cf-8h1">
-                                                <rect key="frame" x="79" y="0.0" width="16" height="22"/>
+                                                <rect key="frame" x="166" y="0.0" width="16" height="22"/>
                                                 <subviews>
                                                     <progressIndicator wantsLayer="YES" horizontalHuggingPriority="1000" verticalHuggingPriority="751" maxValue="100" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="IOn-Yo-pL9">
                                                         <rect key="frame" x="0.0" y="0.0" width="16" height="22"/>
                                                     </progressIndicator>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zK6-bw-F6N">
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zK6-bw-F6N">
                                                         <rect key="frame" x="2" y="3" width="13" height="16"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="!" id="I4x-dg-DQ8">
                                                             <font key="font" metaFont="systemHeavy" size="12"/>
@@ -810,8 +817,10 @@
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
@@ -875,6 +884,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="clearAll" destination="jY5-Dc-WY8" id="PiQ-7U-7e8"/>
                         <outlet property="connection" destination="IOn-Yo-pL9" id="RAV-Kw-UWz"/>
                         <outlet property="disconnected" destination="zK6-bw-F6N" id="reJ-Da-OED"/>
                         <outlet property="drivers" destination="fzx-RN-ga6" id="q5p-Lj-b4M"/>

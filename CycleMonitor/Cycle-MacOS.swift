@@ -378,6 +378,11 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         var new = context
         new.events[new.timeLineView.selectedIndex!].pendingEffectEdit = newState
         return new
+      case .didSelectClearAll:
+        var new = context
+        new.events = []
+        new.timeLineView.selectedIndex = nil
+        return new
       default:
         return context
       }

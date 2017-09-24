@@ -71,6 +71,7 @@ class TimeLineViewController:
     case didSelectEventHandling(Model.EventHandlingState)
     case didCommitPendingStateEdit(String)
     case didCreatePendingStateEdit(String)
+    case didSelectClearAll
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -81,6 +82,7 @@ class TimeLineViewController:
   @IBOutlet var eventHandling: NSSegmentedControl?
   @IBOutlet var state: NSTextView?
   @IBOutlet var save: NSButton?
+  @IBOutlet var clearAll: NSButton?
 
   private var cleanup = DisposeBag()
   private let output = BehaviorSubject(value: Action.none)
@@ -162,6 +164,19 @@ class TimeLineViewController:
         }
       }
     )
+    
+    clearAll?
+      .rx
+      .tap
+      .subscribe(onNext: { [weak self] in
+        self?.output.on(
+          .next(
+            .didSelectClearAll
+          )
+        )
+      })
+      .disposed(by: cleanup)
+    
     render(
       old: model,
       new: model
