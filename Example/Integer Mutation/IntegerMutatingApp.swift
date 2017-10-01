@@ -237,7 +237,7 @@ extension IntegerMutatingApp.Model {
     sessionAction: String,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+    curry(Event.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(
         possible: [
           Event.Driver.shakesWith(),
@@ -254,7 +254,6 @@ extension IntegerMutatingApp.Model {
       <*> wrap(context)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> .some(nil)
   }
 }
 
@@ -264,7 +263,7 @@ extension Event {
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+    curry(Event.init(drivers:cause:effect:context:))
       <^> wrap(action)
         .map (Event.Driver.valueTogglerWith)
         .map {[
@@ -281,7 +280,6 @@ extension Event {
       <*> wrap(context)
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
-      <*> .some(nil)
   }
 
   static func coerced(
@@ -289,7 +287,7 @@ extension Event {
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
   ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+    curry(Event.init(drivers:cause:effect:context:))
       <^> wrap(action)
         .map (Event.Driver.shakesWith)
         .map {[
@@ -306,7 +304,6 @@ extension Event {
       <*> wrap(context)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }
-      <*> .some(nil)
   }
 }
 

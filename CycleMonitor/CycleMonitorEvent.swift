@@ -16,25 +16,18 @@ struct Event {
   var cause: Driver
   var effect: String
   var context: String
-  var pendingEffectEdit: String? { // TODO: Make private to CycleMonitor
-    didSet {
-      pendingEffectEdit = pendingEffectEdit?.valid
-    }
-  }
   var isApproved = false
   init(
     drivers: NonEmptyArray<Driver>,
     cause: Driver,
     effect: String,
     context: String,
-    pendingEffectEdit: String?,
     isApproved: Bool
   ) {
     self.drivers = drivers.value
     self.cause = cause
     self.effect = effect
     self.context = context
-    self.pendingEffectEdit = pendingEffectEdit?.valid
     self.isApproved = isApproved
   }
 }
@@ -55,15 +48,13 @@ extension Event {
     drivers: NonEmptyArray<Event.Driver>,
     cause: Event.Driver,
     effect: String,
-    context: String,
-    pendingEffectEdit: String?
+    context: String
   ) {
     self = Event(
       drivers: drivers,
       cause: cause,
       effect: effect,
       context: context,
-      pendingEffectEdit: pendingEffectEdit,
       isApproved: false
     )
   }
@@ -83,7 +74,6 @@ extension Event: Equatable {
     left.cause == right.cause &&
     left.effect == right.effect &&
     left.context == right.context &&
-    left.pendingEffectEdit == right.pendingEffectEdit &&
     left.isApproved == right.isApproved
   }
 }

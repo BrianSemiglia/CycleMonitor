@@ -61,7 +61,6 @@ class TimeLineViewController:
     var selected: Selection?
     var connection: Connection
     var eventHandlingState: EventHandlingState
-    var isDisplayingSave: Bool
   }
   
   enum Action {
@@ -69,7 +68,6 @@ class TimeLineViewController:
     case scrolledToIndex(Int)
     case toggledApproval(Int, Bool)
     case didSelectEventHandling(Model.EventHandlingState)
-    case didCommitPendingStateEdit(String)
     case didCreatePendingStateEdit(String)
     case didSelectClearAll
   }
@@ -81,7 +79,6 @@ class TimeLineViewController:
   @IBOutlet var disconnected: NSTextField?
   @IBOutlet var eventHandling: NSSegmentedControl?
   @IBOutlet var state: NSTextView?
-  @IBOutlet var save: NSButton?
   @IBOutlet var clearAll: NSButton?
 
   private var cleanup = DisposeBag()
@@ -94,8 +91,7 @@ class TimeLineViewController:
     presentedState: "",
     selected: nil,
     connection: .disconnected,
-    eventHandlingState: .playing,
-    isDisplayingSave: false
+    eventHandlingState: .playing
   )
   
   override func viewDidLoad() {
@@ -225,16 +221,6 @@ class TimeLineViewController:
     return output
   }
   
-  @IBAction func didReceiveEventFromStateUpdate(_ input: NSButton) {
-    output.on(
-      .next(
-        .didCommitPendingStateEdit(
-          state!.string!
-        )
-      )
-    )
-  }
-  
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
     if let new = input.selectedSegment.eventHandlingState {
       output.on(.next(.didSelectEventHandling(new)))
@@ -332,11 +318,6 @@ class TimeLineViewController:
         break
       }
     }
-    
-    NSAnimationContext.runAnimationGroup({ group in
-      self.save?.isHidden = new.isDisplayingSave == false
-    })
-    
   }
   
   static func modelFrom(
@@ -466,8 +447,7 @@ extension TimeLineViewController.Model: Equatable {
     left.presentedState == right.presentedState &&
     left.selected == left.selected &&
     left.connection == right.connection &&
-    left.eventHandlingState == right.eventHandlingState &&
-    left.isDisplayingSave == right.isDisplayingSave
+    left.eventHandlingState == right.eventHandlingState
   }
 }
 

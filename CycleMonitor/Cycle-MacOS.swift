@@ -162,13 +162,6 @@ extension CycleMonitorApp.Model {
       .map { $0.cause.coerced() as [AnyHashable: Any] }
       .map { ["cause": $0] }
   }
-  func selectedPendingEffect() -> [AnyHashable: Any]? { return
-    timeLineView
-      .selectedIndex
-      .flatMap { events[safe: $0] }
-      .flatMap { $0.pendingEffectEdit }
-      .map { ["effect": $0] }
-  }
   func selectedEffect() -> [AnyHashable: Any]? { return
     timeLineView
       .selectedIndex
@@ -189,13 +182,9 @@ extension Observable where E == CycleMonitorApp.Model {
     filter { $0.eventHandlingState == .playingSendingEffects }
     .distinctUntilChanged {
       let a = curry(==) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
-      let b = curry(==) <^> $0.selectedPendingEffect() as String? <*> $1.selectedPendingEffect() as String?
-      return a ?? b ?? false
+      return a ?? false
     }
-    .map {
-      $0.selectedPendingEffect() ??
-      $0.selectedEffect()
-    }
+    .map { $0.selectedEffect() }
     .unwrap()
   }
 }
@@ -205,11 +194,6 @@ extension CycleMonitorApp.Model {
     timeLineView.selectedIndex
       .flatMap { events[safe: $0] }
       .flatMap { $0.effect }
-  }
-  func selectedPendingEffect() -> String? { return
-    timeLineView.selectedIndex
-      .flatMap { events[safe: $0] }
-      .flatMap { $0.pendingEffectEdit }
   }
 }
 
@@ -287,19 +271,13 @@ extension CycleMonitorApp.Model {
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
-      presentedState: events[safe: timeLineView.selectedIndex ?? 0]
-        .map { $0.pendingEffectEdit ?? $0.effect }
-        ?? ""
-      ,
+      presentedState: events[safe: timeLineView.selectedIndex ?? 0].map { $0.effect } ?? "",
       selected: TimeLineViewController.Model.Selection(
         color: .cy_lightGray,
         index: timeLineView.selectedIndex ?? 0
       ),
       connection: multipeer.timeLineViewControllerConnection,
-      eventHandlingState: eventHandlingState.timeLineEventHandlingState,
-      isDisplayingSave: events[safe: timeLineView.selectedIndex ?? 0]
-        .flatMap { curry(!=) <^> $0.pendingEffectEdit <*> $0.effect }
-        ?? false
+      eventHandlingState: eventHandlingState.timeLineEventHandlingState
     )
   }
 }
@@ -369,14 +347,9 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
           new.eventHandlingState = .recording
           return new
         }
-      case .didCommitPendingStateEdit(let newState):
-        var new = context
-        new.events[new.timeLineView.selectedIndex!].effect = newState
-        new.events[new.timeLineView.selectedIndex!].pendingEffectEdit = nil
-        return new
       case .didCreatePendingStateEdit(let newState):
         var new = context
-        new.events[new.timeLineView.selectedIndex!].pendingEffectEdit = newState
+        new.events[new.timeLineView.selectedIndex!].effect = newState
         return new
       case .didSelectClearAll:
         var new = context
@@ -553,23 +526,11 @@ class TerminationDriver {
   }
 }
 
-extension Event {
-  func withPendingEffect() -> [AnyHashable: Any] { return
-    [
-      "drivers": drivers.map { $0.coerced() as [AnyHashable: Any] },
-      "cause": cause.coerced() as [AnyHashable: Any],
-      "effect": effect,
-      "context": context,
-      "pendingEffectEdit": pendingEffectEdit ?? ""
-    ]
-  }
-}
-
 extension CycleMonitorApp.Model {
   var timelineFile: [AnyHashable: Any] { return
     [
       "selectedIndex": timeLineView.selectedIndex ?? "",
-      "events": events.map { $0.withPendingEffect() }
+      "events": events.map { $0.testFile }
     ]
   }
 }
@@ -616,7 +577,6 @@ extension Event: Argo.Decodable {
       <*> json <| "cause"
       <*> json <| "effect"
       <*> json <| "context"
-      <*> json <|? "pendingEffectEdit"
       <*> (json <| "isApproved" <|> .success(false))
   }
 }

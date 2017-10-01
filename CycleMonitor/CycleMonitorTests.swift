@@ -15,7 +15,7 @@ import XCTest
 class CycleMonitorTests: XCTestCase {
   
   static func eventSuccess() -> Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
+    curry(Event.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(possible: [
         driverWith(id: "a", action: true),
         driverWith(id: "b", action: false),
@@ -24,7 +24,6 @@ class CycleMonitorTests: XCTestCase {
       <*> driverWith(id: "a", action: true)
       <*> "effect"
       <*> "context"
-      <*> "pendingEffectEdit"
   }
   
   static func eventSuccess() -> [AnyHashable: Any] { return
@@ -49,8 +48,7 @@ class CycleMonitorTests: XCTestCase {
       ],
       "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
       "effect": "effect",
-      "context": "context",
-      "pendingEffectEdit": "pendingEffectEdit"
+      "context": "context"
     ]
   }
   
@@ -59,22 +57,7 @@ class CycleMonitorTests: XCTestCase {
       "drivers": [],
       "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
       "effect": "effect",
-      "context": "context",
-      "pendingEffectEdit": "pendingEffectEdit"
-    ]
-  }
-  
-  static var saveFileEmptyPendingEffectEdit: [AnyHashable: Any] { return
-    [
-      "drivers": [
-        driverWith(id: "a", action: true) as [AnyHashable: Any],
-        driverWith(id: "b", action: false) as [AnyHashable: Any],
-        driverWith(id: "c", action: false) as [AnyHashable: Any]
-      ],
-      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
-      "effect": "effect",
-      "context": "context",
-      "pendingEffectEdit": ""
+      "context": "context"
     ]
   }
   
@@ -89,17 +72,6 @@ class CycleMonitorTests: XCTestCase {
       "effect": "effect",
       "context": "context"
     ]
-  }
-  
-  static var eventEmptyPendingEffect: Event? { return
-    curry(Event.init(drivers:cause:effect:context: pendingEffectEdit:))
-      <^> NonEmptyArray(possible: [
-        driverWith(id: "a", action: true)
-      ])
-      <*> driverWith(id: "a", action: true)
-      <*> ""
-      <*> "context"
-      <*> ""
   }
   
   static var driversJSON: [[AnyHashable: Any]] { return
@@ -158,14 +130,14 @@ class CycleMonitorTests: XCTestCase {
   static func timelineFile() -> [AnyHashable: Any] { return
     [
       "selectedIndex": 0,
-      "events": [eventSuccessWithPendingEffect()]
+      "events": [eventSuccess() as [AnyHashable: Any]]
     ]
   }
 
   static func timelineFileNoSelectedIndex() -> [AnyHashable: Any] { return
     [
       "selectedIndex": "",
-      "events": [eventSuccessWithPendingEffect()]
+      "events": [eventSuccess() as [AnyHashable: Any]]
     ]
   }
   
@@ -173,20 +145,6 @@ class CycleMonitorTests: XCTestCase {
     CycleMonitorApp.Model.TimeLineView(
       selectedIndex: nil
     )
-  }
-  
-  static func eventSuccessWithPendingEffect() -> [AnyHashable: Any] { return
-    [
-      "drivers": [
-        driverWith(id: "a", action: true) as [AnyHashable: Any],
-        driverWith(id: "b", action: false) as [AnyHashable: Any],
-        driverWith(id: "c", action: false) as [AnyHashable: Any]
-      ],
-      "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
-      "effect": "effect",
-      "context": "context",
-      "pendingEffectEdit": "pendingEffectEdit"
-    ]
   }
   
   func testSaveFile() {
@@ -208,18 +166,13 @@ class CycleMonitorTests: XCTestCase {
       decode(CycleMonitorTests.saveFileDriversEmpty) as Event?,
       nil
     )
-    
-    // Should resolve empty-string pending-effect-edit to nil
-    XCTAssertEqual(
-      CycleMonitorTests.eventEmptyPendingEffect?.pendingEffectEdit,
-      nil
-    )
-    
+        
     // should encode event
     XCTAssertEqual(
       CycleMonitorTests.eventSuccess()
         .map { $0.playback() as [AnyHashable: Any] }
-        .map (NSDictionary.init),
+        .map (NSDictionary.init)
+      ,
       NSDictionary(
         dictionary: CycleMonitorTests.eventSuccess()
       )
