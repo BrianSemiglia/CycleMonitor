@@ -12,7 +12,7 @@ import RxSwift
 
 class MultipeerJSON:
       NSObject,
-      MCNearbyServiceAdvertiserDelegate,
+      MCNearbyServiceBrowserDelegate,
       MCSessionDelegate {
 
   enum Action {
@@ -28,21 +28,20 @@ class MultipeerJSON:
   
   var session: MCSession?
   let mine: MCPeerID
-  let advertiser: MCNearbyServiceAdvertiser
+  let browser: MCNearbyServiceBrowser
   
   override init() {
     output = BehaviorSubject<Action>(value: .launching)
     mine = MCPeerID(
       displayName: Host.current().localizedName ?? "Unknown"
     )
-    advertiser = MCNearbyServiceAdvertiser(
+    browser = MCNearbyServiceBrowser(
       peer: mine,
-      discoveryInfo: nil,
       serviceType: "Cycle-Monitor"
     )
     super.init()
-    advertiser.delegate = self
-    advertiser.startAdvertisingPeer()
+    browser.delegate = self
+    browser.startBrowsingForPeers()
   }
   
   public func rendered(
@@ -67,31 +66,32 @@ class MultipeerJSON:
     }
   }
   
-  public func advertiser(
-    _ advertiser: MCNearbyServiceAdvertiser,
-    didReceiveInvitationFromPeer peerID: MCPeerID,
-    withContext context: Data?,
-    invitationHandler: @escaping (Bool, MCSession?) -> Swift.Void
+  public func browser(
+    _ browser: MCNearbyServiceBrowser,
+    foundPeer peerID: MCPeerID,
+    withDiscoveryInfo info: [String : String]?
   ) {
     if session == nil {
-      advertiser.stopAdvertisingPeer()
+      browser.stopBrowsingForPeers()
       let session = MCSession(
         peer: mine,
         securityIdentity: nil,
         encryptionPreference: .required
       )
       session.delegate = self
-      invitationHandler(
-        true,
-        session
+      browser.invitePeer(
+        peerID,
+        to: session,
+        withContext: nil,
+        timeout: 100.0
       )
       self.session = session
     }
   }
   
-  public func advertiser(
-    _ advertiser: MCNearbyServiceAdvertiser,
-    didNotStartAdvertisingPeer error: Error
+  public func browser(
+    _ browser: MCNearbyServiceBrowser,
+    lostPeer peerID: MCPeerID
   ) {
     
   }
@@ -109,7 +109,7 @@ class MultipeerJSON:
     case .notConnected:
       output.on(.next(.disconnected))
       self.session = nil
-      advertiser.startAdvertisingPeer()
+      browser.startBrowsingForPeers()
     }
   }
   
