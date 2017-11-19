@@ -140,9 +140,10 @@ class TimeLineViewController:
     state?.isAutomaticTextReplacementEnabled = false
     state?.delegate = self
     
-    timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
+    timeline?.enclosingScrollView?.horizontalScroller?.alphaValue = 0
     timeline?.enclosingScrollView?.automaticallyAdjustsContentInsets = false
     timeline?.postsBoundsChangedNotifications = true
+
     NotificationCenter.default.addObserver(
       forName: .NSViewBoundsDidChange,
       object: nil,
@@ -246,8 +247,7 @@ class TimeLineViewController:
       }
     }
     
-    eventHandling?.selectedSegment = new.eventHandlingState.rawValue
-    timeline?.enclosingScrollView?.horizontalScroller?.isHidden = true
+    eventHandling?.selectedSegment = new.eventHandlingState.rawValue    
     
     if shouldForceRender || new.presentedState != presentedState?.string {
       /* convert strings to arrays and diff them. replace one character at a time. maintains cursor? */
