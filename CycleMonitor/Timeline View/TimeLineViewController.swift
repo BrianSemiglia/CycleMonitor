@@ -104,7 +104,7 @@ class TimeLineViewController:
       forSegment: 0
     )
     eventHandling?.setWidth(
-      CGFloat(("Review".characters.count * 7) + 14),
+      CGFloat(("Review".count * 7) + 14),
       forSegment: 0
     )
     eventHandling?.setLabel(
@@ -112,7 +112,7 @@ class TimeLineViewController:
       forSegment: 1
     )
     eventHandling?.setWidth(
-      CGFloat(("Events On Device".characters.count * 7) + 14),
+      CGFloat(("Events On Device".count * 7) + 14),
       forSegment: 1
     )
     eventHandling?.setLabel(
@@ -120,7 +120,7 @@ class TimeLineViewController:
       forSegment: 2
     )
     eventHandling?.setWidth(
-      CGFloat(("Effects On Device".characters.count * 7) + 14),
+      CGFloat(("Effects On Device".count * 7) + 14),
       forSegment: 2
     )
     eventHandling?.setLabel(
@@ -128,7 +128,7 @@ class TimeLineViewController:
       forSegment: 3
     )
     eventHandling?.setWidth(
-      CGFloat(("Record".characters.count * 7) + 14),
+      CGFloat(("Record".count * 7) + 14),
       forSegment: 3
     )
     eventHandling?.action = #selector(

@@ -62,7 +62,7 @@ extension Event {
 
 extension String {
   var valid: String? { return
-    characters.count == 0
+    count == 0
       ? nil
       : self
   }

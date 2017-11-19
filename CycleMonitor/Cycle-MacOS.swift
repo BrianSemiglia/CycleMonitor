@@ -234,7 +234,7 @@ extension Event.Driver {
             action: action,
             background: id.hashValue.goldenRatioColored(),
             side: id.hashValue.goldenRatioColored(
-                brightness: action.characters.count == 0 ? 0.95 : 0.5
+                brightness: action.count == 0 ? 0.95 : 0.5
             )
         )
     }
@@ -606,7 +606,7 @@ extension TimeLineViewController.Model.Driver {
       action: action,
       background: id.hashValue.goldenRatioColored(),
       side: id.hashValue.goldenRatioColored(
-        brightness: action.map { $0.characters.count == 0 ? 0.95 : 0.5 } ?? 0.95
+        brightness: action.map { $0.count == 0 ? 0.95 : 0.5 } ?? 0.95
       )
     )
   }
