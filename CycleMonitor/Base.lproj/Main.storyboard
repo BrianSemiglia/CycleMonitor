@@ -692,16 +692,16 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77e-YU-ebm">
-                                <rect key="frame" x="5" y="5" width="925" height="511"/>
+                                <rect key="frame" x="5" y="5" width="925" height="514"/>
                                 <subviews>
-                                    <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-26-3Vw">
-                                        <rect key="frame" x="0.0" y="132" width="925" height="379"/>
+                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-26-3Vw">
+                                        <rect key="frame" x="0.0" y="132" width="925" height="382"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SBi-ks-jum">
-                                                <rect key="frame" x="0.0" y="39" width="211" height="340"/>
+                                                <rect key="frame" x="0.0" y="42" width="214" height="340"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="dWU-zQ-uL6">
-                                                        <rect key="frame" x="60" y="326" width="91" height="14"/>
+                                                        <rect key="frame" x="62" y="326" width="91" height="14"/>
                                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Event Producers" id="Spa-wf-D1H">
                                                             <font key="font" metaFont="system" size="11"/>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -709,7 +709,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <stackView distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="1000" verticalStackHuggingPriority="1" horizontalHuggingPriority="1000" verticalCompressionResistancePriority="999" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzx-RN-ga6">
-                                                        <rect key="frame" x="36" y="0.0" width="140" height="324"/>
+                                                        <rect key="frame" x="37" y="0.0" width="140" height="324"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="140" id="nYv-Fd-sfs"/>
                                                         </constraints>
@@ -725,7 +725,7 @@
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JnI-fS-iTW">
-                                                <rect key="frame" x="219" y="41" width="706" height="338"/>
+                                                <rect key="frame" x="219" y="44" width="706" height="338"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="99t-Up-4ZO">
                                                         <rect key="frame" x="337" y="324" width="32" height="14"/>
@@ -905,7 +905,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="77e-YU-ebm" secondAttribute="trailing" constant="5" id="ALB-dw-lIX"/>
                             <constraint firstAttribute="bottom" secondItem="77e-YU-ebm" secondAttribute="bottom" constant="5" id="Mbc-3g-G7c"/>
-                            <constraint firstItem="77e-YU-ebm" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="5" id="SYt-E7-ucz"/>
+                            <constraint firstItem="77e-YU-ebm" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="2" id="SYt-E7-ucz"/>
                             <constraint firstItem="77e-YU-ebm" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="5" id="qVn-8H-3w9"/>
                         </constraints>
                     </view>
