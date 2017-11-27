@@ -17,6 +17,7 @@ class ValueToggler: UIViewControllerProviding {
     struct Button {
       enum State {
         case enabled
+        case disabled
         case highlighted
       }
       var state: State
@@ -74,10 +75,16 @@ class ValueToggler: UIViewControllerProviding {
       .observeOn(MainScheduler.instance)
       .subscribe { possible in
         if let latest = possible.element {
+          self.increment.isEnabled = latest.increment.state == .enabled
+          self.increment.isEnabled = latest.increment.state != .disabled
+          self.increment.alpha = latest.increment.state == .disabled ? 0.5 : 1
           self.increment.setTitle(
             latest.increment.title,
             for: .normal
           )
+          self.decrement.isEnabled = latest.decrement.state == .enabled
+          self.decrement.isEnabled = latest.decrement.state != .disabled
+          self.decrement.alpha = latest.decrement.state == .disabled ? 0.5 : 1
           self.decrement.setTitle(
             latest.decrement.title,
             for: .normal

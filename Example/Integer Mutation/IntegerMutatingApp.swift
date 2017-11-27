@@ -536,11 +536,12 @@ extension ValueToggler.Model.Button.State: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<ValueToggler.Model.Button.State> {
     switch json {
     case .string(let x) where x == "enabled": return .success(.enabled)
+    case .string(let x) where x == "disabled": return .success(.disabled)
     case .string(let x) where x == "highlighted": return .success(.highlighted)
     default: return
       .failure(
         .typeMismatch(
-          expected: "enabled | highlighted",
+          expected: "enabled | disabled | highlighted",
           actual: json.description
         )
       )
