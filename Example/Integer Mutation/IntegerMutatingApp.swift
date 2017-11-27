@@ -177,6 +177,16 @@ extension Observable {
   func secondToLast() -> Observable<E?> { return
     last(2).map { $0.first }
   }
+  func lastTwo() -> Observable<(E?, E)> { return
+    last(2)
+    .map {
+      switch $0.count {
+      case 1: return (nil, $0[0])
+      case 2: return ($0[0], $0[1])
+      default: abort()
+      }
+    }
+  }
   func last(_ count: Int) -> Observable<[E]> { return
     scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }

@@ -9,18 +9,27 @@
 import Foundation
 import MultipeerConnectivity
 import RxSwift
+import Curry
+import Runes
 
 class MultipeerJSON:
       NSObject,
       MCNearbyServiceBrowserDelegate,
       MCSessionDelegate {
 
+  enum Model {
+    case idle
+    case connecting(peer: Data)
+    case sending(data: [AnyHashable: Any], peer: Data)
+  }
+  
   enum Action {
     case launching
-    case connecting
-    case connected
-    case disconnected
-    case received(data: Data)
+    case connecting(Data)
+    case connected(Data)
+    case disconnected(Data)
+    case received(data: Data, peer: Data)
+    case didFind(name: String, peer: Data)
   }
   
   private let cleanup = DisposeBag()
@@ -45,7 +54,7 @@ class MultipeerJSON:
   }
   
   public func rendered(
-    _ input: Observable<[AnyHashable: Any]>
+    _ input: Observable<(Model?, Model)>
   ) -> Observable<Action> {
     input
       .subscribe(onNext: render)
@@ -53,40 +62,137 @@ class MultipeerJSON:
     return output
   }
   
-  func render(_ input: [AnyHashable: Any]) {
-    if let connected = session?.connectedPeers {
-      try? session?.send(
-        JSONSerialization.data(
-          withJSONObject: input,
-          options: JSONSerialization.WritingOptions(rawValue: 0)
-        ),
-        toPeers: connected,
-        with: .reliable
-      )
-    }
-  }
-  
-  public func browser(
-    _ browser: MCNearbyServiceBrowser,
-    foundPeer peerID: MCPeerID,
-    withDiscoveryInfo info: [String : String]?
-  ) {
+  func render(old: Model?, new: Model) {
     if session == nil {
-      browser.stopBrowsingForPeers()
       let session = MCSession(
         peer: mine,
         securityIdentity: nil,
         encryptionPreference: .required
       )
       session.delegate = self
-      browser.invitePeer(
-        peerID,
-        to: session,
-        withContext: nil,
-        timeout: 100.0
-      )
       self.session = session
     }
+    
+    switch new {
+    case .connecting(let peer):
+      if let peer = peer.coerced() as MCPeerID?, let session = session {
+        browser.invitePeer(
+          peer,
+          to: session,
+          withContext: nil,
+          timeout: 100
+        )
+      }
+    case .sending(let data, let peer):
+      if let peer = peer.coerced() as MCPeerID? {
+        try? session?.send(
+          JSONSerialization.data(
+            withJSONObject: data,
+            options: JSONSerialization.WritingOptions(rawValue: 0)
+          ),
+          toPeers: [peer],
+          with: .reliable
+        )
+      }
+    default:
+      break
+    }
+    
+//    let newConnections = new
+//      .devices
+//      .filter { new in
+//        old?.devices.contains(
+//          where: {
+//            $0.peerID == new.peerID &&
+//            new.transmissionState != .disconnected &&
+//            $0.transmissionState == .disconnected
+//          }
+//        )
+//        ?? false
+//      }
+//      .flatMap { $0.peerID.coerced() as MCPeerID? }
+//
+//    let newDevices = new
+//      .devices
+//      .filter { old?.devices.map { $0.peerID }.contains($0.peerID) == false }
+//      .filter { $0.transmissionState != .disconnected }
+//      .flatMap { $0.peerID.coerced() as MCPeerID? }
+//
+//    // Need to equality check
+//    if let session = session {
+//      (newConnections + newDevices).forEach { peer in
+//        browser.invitePeer(
+//          peer,
+//          to: session,
+//          withContext: nil,
+//          timeout: 100
+//        )
+//      }
+//    }
+//
+////    let x = ["action": "disconnect"]
+////    let y = try? JSONSerialization.data(
+////      withJSONObject: x,
+////      options: JSONSerialization.WritingOptions(rawValue: 0)
+////    )
+////
+////    if peerIsNew == true, let data = y, let old = old?.connectedTo?.coerced() as MCPeerID? {
+////      try? session?.send(
+////        data,
+////        toPeers: [old],
+////        with: .reliable
+////      )
+////    }
+//
+//    let newSending = new
+//      .devices
+//      .filter { new in
+//        old?.devices.contains(
+//          where: {
+//            if case .sending = new.transmissionState { return
+//              $0.peerID == new.peerID &&
+//              new.transmissionState != $0.transmissionState
+//            } else { return
+//              false
+//            }
+//          }
+//        )
+//        ?? false
+//      }
+//      .flatMap { x -> ([AnyHashable: Any], MCPeerID)? in
+//        if case .sending(let data) = x.transmissionState, let peer = x.peerID.coerced() as MCPeerID? {
+//          return (data, peer)
+//        } else {
+//          return nil
+//        }
+//      }
+//
+//    newSending.forEach { data, peer in
+//      try? session?.send(
+//        JSONSerialization.data(
+//          withJSONObject: data,
+//          options: JSONSerialization.WritingOptions(rawValue: 0)
+//        ),
+//        toPeers: [peer],
+//        with: .reliable
+//      )
+//    }
+    
+  }
+  
+  public func browser(
+    _ browser: MCNearbyServiceBrowser,
+    foundPeer peerID: MCPeerID,
+    withDiscoveryInfo info: [String: String]?
+  ) {
+    output.on(
+      .next(
+        .didFind(
+          name: peerID.displayName,
+          peer: peerID.coerced() as Data
+        )
+      )
+    )
   }
   
   public func browser(
@@ -103,11 +209,29 @@ class MultipeerJSON:
   ) {
     switch state {
     case .connected:
-      output.on(.next(.connected))
+      output.on(
+        .next(
+          .connected(
+            peerID.coerced() as Data
+          )
+        )
+      )
     case .connecting:
-      output.on(.next(.connecting))
+      output.on(
+        .next(
+          .connecting(
+            peerID.coerced() as Data
+          )
+        )
+      )
     case .notConnected:
-      output.on(.next(.disconnected))
+      output.on(
+        .next(
+          .disconnected(
+            peerID.coerced() as Data
+          )
+        )
+      )
       self.session = nil
       browser.startBrowsingForPeers()
     }
@@ -118,7 +242,14 @@ class MultipeerJSON:
     didReceive data: Data,
     fromPeer peerID: MCPeerID
   ) {
-    output.on(.next(.received(data: data)))
+    output.on(
+      .next(
+        .received(
+          data: data,
+          peer: peerID.coerced() as Data
+        )
+      )
+    )
   }
   
   public func session(
@@ -150,3 +281,42 @@ class MultipeerJSON:
   }
   
 }
+
+extension MCPeerID {
+  func coerced() -> Data { return
+    NSKeyedArchiver.archivedData(
+      withRootObject: self
+    )
+  }
+}
+
+extension Data {
+  func coerced() -> MCPeerID? { return
+    NSKeyedUnarchiver.unarchiveObject(with: self) as? MCPeerID
+  }
+}
+
+//extension MultipeerJSON.Model.Device: Equatable {
+//  static func ==(
+//    left: MultipeerJSON.Model.Device,
+//    right: MultipeerJSON.Model.Device
+//  ) -> Bool { return
+//    left.peerID == right.peerID &&
+//    left.transmissionState == right.transmissionState
+//  }
+//}
+//
+//extension MultipeerJSON.Model.Device.ConnectionState: Equatable {
+//  static func ==(
+//    left: MultipeerJSON.Model.Device.ConnectionState,
+//    right: MultipeerJSON.Model.Device.ConnectionState
+//  ) -> Bool {
+//    switch (left, right) {
+//    case (.sending(let a), .sending(let b)): return NSDictionary(dictionary: a) == NSDictionary(dictionary: b)
+//    case (.idle, .idle): return true
+//    case (.disconnected, .disconnected): return true
+//    default: return false
+//    }
+//  }
+//}
+

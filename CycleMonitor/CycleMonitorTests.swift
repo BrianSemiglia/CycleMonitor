@@ -123,7 +123,9 @@ class CycleMonitorTests: XCTestCase {
         items: []
       ),
       eventHandlingState: CycleMonitorApp.Model.EventHandlingState.playing,
-      isTerminating: false
+      isTerminating: false,
+      devices: [],
+      connectedTo: nil
     )
   }
   

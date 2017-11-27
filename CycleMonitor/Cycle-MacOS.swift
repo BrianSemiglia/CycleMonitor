@@ -38,6 +38,11 @@ struct CycleMonitorApp: SinkSourceConverting {
       case connecting
       case connected
     }
+    struct Device {
+      var name: String
+      var connection: Connection
+      var peerID: Data
+    }
     var events: [Event] = []
     var timeLineView = TimeLineView(
       selectedIndex: nil
@@ -47,13 +52,15 @@ struct CycleMonitorApp: SinkSourceConverting {
     var browser = BrowserDriver.Model(state: .idle)
     var menuBar = MenuBarDriver.Model(
       items: [
-        MenuBarDriver.Model.Item.openTimeline,
-        MenuBarDriver.Model.Item.saveTimeline,
-        MenuBarDriver.Model.Item.exportTests
+        .openTimeline,
+        .saveTimeline,
+        .exportTests
       ]
     )
     var eventHandlingState = EventHandlingState.playing
     var isTerminating = false
+    var devices: [Device] = []
+    var selectedPeer: Data?
   }
   struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
     let screen: TimeLineViewController
@@ -102,10 +109,12 @@ struct CycleMonitorApp: SinkSourceConverting {
     let multipeer = drivers
       .multipeer
       .rendered(
-        .merge([
+        Observable.merge([
+          events.connection,
           events.jsonEvents,
           events.jsonEffects
         ])
+        .lastTwo()
       )
       .tupledWithLatestFrom(events)
       .reduced()
@@ -145,6 +154,28 @@ struct CycleMonitorApp: SinkSourceConverting {
   }
 }
 
+extension Observable {
+  func secondToLast() -> Observable<E?> { return
+    last(2)
+    .map { $0.first }
+  }
+  func lastTwo() -> Observable<(E?, E)> { return
+    last(2)
+    .map {
+      switch $0.count {
+      case 1: return (nil, $0[0])
+      case 2: return ($0[0], $0[1])
+      default: abort()
+      }
+    }
+  }
+  func last(_ count: Int) -> Observable<[E]> { return
+    scan ([]) { $0 + [$1] }
+    .map { $0.suffix(count) }
+    .map (Array.init)
+  }
+}
+
 extension CycleMonitorApp.Model.TimeLineView: Equatable {
   static func ==(
     left: CycleMonitorApp.Model.TimeLineView,
@@ -157,35 +188,74 @@ extension CycleMonitorApp.Model.TimeLineView: Equatable {
 extension CycleMonitorApp.Model {
   var selectedEvent: [AnyHashable: Any]? { return
     timeLineView
-      .selectedIndex
-      .flatMap { events[safe: $0] }
-      .map { $0.cause.coerced() as [AnyHashable: Any] }
-      .map { ["cause": $0] }
+    .selectedIndex
+    .flatMap { events[safe: $0] }
+    .map { $0.cause.coerced() as [AnyHashable: Any] }
+    .map { ["cause": $0] }
   }
   func selectedEffect() -> [AnyHashable: Any]? { return
     timeLineView
-      .selectedIndex
-      .flatMap { events[safe: $0] }
-      .map { ["effect": $0.effect] }
+    .selectedIndex
+    .flatMap { events[safe: $0] }
+    .map { ["effect": $0.effect] }
   }
 }
 
 extension Observable where E == CycleMonitorApp.Model {
-  var jsonEvents: Observable<[AnyHashable: Any]> { return
+  var connection: Observable<MultipeerJSON.Model> { return
+    flatMap { model in
+      Observable<MultipeerJSON.Model>.concat(
+        model
+        .devices
+        .map { x -> MultipeerJSON.Model in
+          switch x.connection {
+          case .disconnected:
+            return .idle
+          case .connecting:
+            return .connecting(peer: x.peerID)
+          default:
+            return model.selectedPeer == x.peerID
+              ? .connecting(peer: x.peerID)
+              : .idle
+          }
+        }
+        .map(Observable<MultipeerJSON.Model>.just)
+      )
+    }
+  }
+  var jsonEvents: Observable<MultipeerJSON.Model> { return
     filter { $0.eventHandlingState == .playingSendingEvents }
     .distinctUntilChanged { $0.timeLineView.selectedIndex == $1.timeLineView.selectedIndex }
-    .map { $0.selectedEvent }
-    .unwrap()
+    .flatMap { model in
+      Observable<MultipeerJSON.Model>.concat(
+        model
+        .devices
+        .map { device in
+          device.peerID == model.selectedPeer
+            ? (curry(MultipeerJSON.Model.sending) <^> model.selectedEvent <*> device.peerID) ?? .idle
+            : .idle
+        }
+        .map(Observable<MultipeerJSON.Model>.just)
+      )
+    }
   }
   
-  var jsonEffects: Observable<[AnyHashable: Any]> { return
+  var jsonEffects: Observable<MultipeerJSON.Model> { return
     filter { $0.eventHandlingState == .playingSendingEffects }
     .distinctUntilChanged {
       let a = curry(==) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
       return a ?? false
     }
-    .map { $0.selectedEffect() }
-    .unwrap()
+    .flatMap { model in
+      Observable<MultipeerJSON.Model>.concat(
+        model.devices.map { device in
+          device.peerID == model.selectedPeer
+            ? (curry(MultipeerJSON.Model.sending) <^> model.selectedEffect() <*> device.peerID) ?? .idle
+            : .idle
+        }
+        .map(Observable<MultipeerJSON.Model>.just)
+      )
+    }
   }
 }
 
@@ -277,7 +347,13 @@ extension CycleMonitorApp.Model {
         index: timeLineView.selectedIndex ?? 0
       ),
       connection: multipeer.timeLineViewControllerConnection,
-      eventHandlingState: eventHandlingState.timeLineEventHandlingState
+      eventHandlingState: eventHandlingState.timeLineEventHandlingState,
+      devices: devices.map {
+        TimeLineViewController.Model.Device(
+          name: $0.name,
+          connection: $0.connection.timeLineViewControllerConnection
+        )
+      }
     )
   }
 }
@@ -356,6 +432,15 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         new.events = []
         new.timeLineView.selectedIndex = nil
         return new
+      case .didSelectItemWith(id: let id):
+        var new = context
+        new.selectedPeer = context.devices.filter { $0.name == id }.first?.peerID
+        new.devices = context.devices.map {
+          var x = $0
+          x.connection = id != $0.name ? .idle : .connecting
+          return x
+        }
+        return new
       default:
         return context
       }
@@ -367,7 +452,7 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
-      case .received(let data) where context.eventHandlingState == .recording:
+      case .received(let data, let peer) where context.eventHandlingState == .recording && peer == context.selectedPeer:
         var new = context
         new.events += data
           .JSON
@@ -378,16 +463,37 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
           ? new.events.count - 1
           : nil
         return new
-      case .connected:
+      case .didFind(let name, let id):
         var new = context
+        new.devices += [
+          CycleMonitorApp.Model.Device(
+            name: name,
+            connection: .disconnected,
+            peerID: id
+          )
+        ]
+        return new
+      case .connected(let id):
+        var new = context
+        new.devices = new.devices.map {
+          var x = $0
+          x.connection = $0.peerID == id ? .connected : $0.connection
+          return x
+        }
         new.multipeer = .connected
         return new
       case .connecting:
         var new = context
         new.multipeer = .connecting
         return new
-      case .disconnected:
+      case .disconnected(let id):
         var new = context
+        new.selectedPeer = nil
+        new.devices = new.devices.map {
+          var x = $0
+          x.connection = $0.peerID == id ? .disconnected : $0.connection
+          return x
+        }
         new.multipeer = .disconnected
         return new
       default:
@@ -640,6 +746,15 @@ extension MenuBarDriver.Model.Item {
     )
   }
 }
+
+//extension CycleMonitorApp.Model.Connection {
+//  func coerced() -> MultipeerJSON.Model.Device.ConnectionState {
+//    switch self {
+//    case .connected: return .connected
+//      
+//    }
+//  }
+//}
 
 // Cycle Application Delegate
 

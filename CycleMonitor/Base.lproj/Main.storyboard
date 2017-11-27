@@ -688,17 +688,17 @@
             <objects>
                 <viewController storyboardIdentifier="TimeLineViewController" id="XfG-lQ-9wD" customClass="TimeLineViewController" customModule="CycleMonitor" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="935" height="521"/>
+                        <rect key="frame" x="0.0" y="0.0" width="935" height="550"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77e-YU-ebm">
-                                <rect key="frame" x="5" y="5" width="925" height="514"/>
+                                <rect key="frame" x="5" y="5" width="925" height="543"/>
                                 <subviews>
                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="5" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUc-26-3Vw">
-                                        <rect key="frame" x="0.0" y="132" width="925" height="382"/>
+                                        <rect key="frame" x="0.0" y="132" width="925" height="411"/>
                                         <subviews>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SBi-ks-jum">
-                                                <rect key="frame" x="0.0" y="0.0" width="140" height="382"/>
+                                                <rect key="frame" x="0.0" y="29" width="140" height="382"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="dWU-zQ-uL6">
                                                         <rect key="frame" x="25" y="368" width="91" height="14"/>
@@ -725,7 +725,7 @@
                                                 </customSpacing>
                                             </stackView>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JnI-fS-iTW">
-                                                <rect key="frame" x="145" y="0.0" width="780" height="382"/>
+                                                <rect key="frame" x="145" y="29" width="780" height="382"/>
                                                 <subviews>
                                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="99t-Up-4ZO">
                                                         <rect key="frame" x="374" y="368" width="32" height="14"/>
@@ -749,7 +749,7 @@
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                             <size key="minSize" width="778" height="366"/>
-                                                                            <size key="maxSize" width="778" height="10000000"/>
+                                                                            <size key="maxSize" width="780" height="10000000"/>
                                                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         </textView>
                                                                     </subviews>
@@ -793,7 +793,7 @@
                                         </customSpacing>
                                     </stackView>
                                     <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7wc-Xc-yJJ">
-                                        <rect key="frame" x="372" y="102" width="181" height="22"/>
+                                        <rect key="frame" x="333" y="102" width="260" height="22"/>
                                         <subviews>
                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jY5-Dc-WY8">
                                                 <rect key="frame" x="-6" y="-7" width="91" height="33"/>
@@ -839,13 +839,29 @@
                                                     <constraint firstAttribute="bottom" secondItem="IOn-Yo-pL9" secondAttribute="bottom" priority="999" id="xwg-XE-he7"/>
                                                 </constraints>
                                             </customView>
+                                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mUr-Ef-hZN">
+                                                <rect key="frame" x="187" y="-3" width="76" height="27"/>
+                                                <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="PN4-ia-mpx" id="9R4-fv-ue5">
+                                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="menu"/>
+                                                    <menu key="menu" id="7DM-Es-Pkh">
+                                                        <items>
+                                                            <menuItem title="Item 1" state="on" id="PN4-ia-mpx"/>
+                                                            <menuItem title="Item 2" id="b7G-y3-bYP"/>
+                                                            <menuItem title="Item 3" id="MJ6-IQ-0ge"/>
+                                                        </items>
+                                                    </menu>
+                                                </popUpButtonCell>
+                                            </popUpButton>
                                         </subviews>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
@@ -912,6 +928,7 @@
                     <connections>
                         <outlet property="clearAll" destination="jY5-Dc-WY8" id="PiQ-7U-7e8"/>
                         <outlet property="connection" destination="IOn-Yo-pL9" id="RAV-Kw-UWz"/>
+                        <outlet property="devices" destination="mUr-Ef-hZN" id="YeB-tK-Wil"/>
                         <outlet property="disconnected" destination="zK6-bw-F6N" id="reJ-Da-OED"/>
                         <outlet property="drivers" destination="fzx-RN-ga6" id="q5p-Lj-b4M"/>
                         <outlet property="eventHandling" destination="yBd-nv-jeu" id="FcA-nu-Ddk"/>

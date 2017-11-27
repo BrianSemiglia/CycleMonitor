@@ -55,12 +55,17 @@ class TimeLineViewController:
       case playingSendingEffects
       case recording
     }
+    struct Device {
+      var name: String
+      var connection: Connection
+    }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
     var presentedState: String
     var selected: Selection?
     var connection: Connection
     var eventHandlingState: EventHandlingState
+    var devices: [Device]
   }
   
   enum Action {
@@ -70,6 +75,7 @@ class TimeLineViewController:
     case didSelectEventHandling(Model.EventHandlingState)
     case didCreatePendingStateEdit(String)
     case didSelectClearAll
+    case didSelectItemWith(id: String)
   }
 
   @IBOutlet var drivers: NSStackView?
@@ -80,6 +86,7 @@ class TimeLineViewController:
   @IBOutlet var eventHandling: NSSegmentedControl?
   @IBOutlet var state: NSTextView?
   @IBOutlet var clearAll: NSButton?
+  @IBOutlet var devices: NSPopUpButton?
 
   private var cleanup = DisposeBag()
   private let output = BehaviorSubject(value: Action.none)
@@ -91,7 +98,8 @@ class TimeLineViewController:
     presentedState: "",
     selected: nil,
     connection: .disconnected,
-    eventHandlingState: .playing
+    eventHandlingState: .playing,
+    devices: []
   )
   
   override func viewDidLoad() {
@@ -174,11 +182,24 @@ class TimeLineViewController:
       })
       .disposed(by: cleanup)
     
+    devices?.target = self
+    devices?.action = #selector(didReceiveEventFromDevices(_:))
+    
     render(
       old: model,
       new: model
     )
     shouldForceRender = false
+  }
+  
+  func didReceiveEventFromDevices(_ button: NSPopUpButton) {
+    output.on(
+      .next(
+        .didSelectItemWith(
+          id: button.title
+        )
+      )
+    )
   }
   
   func textDidChange(_ notification: Notification) {
@@ -282,6 +303,26 @@ class TimeLineViewController:
         }
       )
       cell.model = x
+    }
+    
+    if new.devices != old.devices {
+      devices?.removeAllItems()
+      devices?.addItem(
+        withTitle: "None"
+      )
+      new.devices.forEach {
+        devices?.addItem(
+          withTitle: $0.name
+        )
+      }
+      let selected = new
+        .devices
+        .first(where: { $0.connection == .connecting || $0.connection == .connected })
+        .map { $0.name }
+      
+      if let selected = selected {
+        devices?.selectItem(withTitle: selected)
+      }
     }
     
     if new.eventHandlingState == .recording,
@@ -531,5 +572,15 @@ extension Int {
     case 3: return .recording
     default: return nil
     }
+  }
+}
+
+extension TimeLineViewController.Model.Device: Equatable {
+  static func ==(
+    left: TimeLineViewController.Model.Device,
+    right: TimeLineViewController.Model.Device
+  ) -> Bool { return
+    left.connection == right.connection &&
+    left.name == right.name
   }
 }

@@ -44,7 +44,6 @@ public class MultipeerJSON:
     super.init()
     advertiser.delegate = self
     advertiser.startAdvertisingPeer()
-
   }
   
   public func rendered(_ input: Observable<[AnyHashable: Any]>) -> Observable<Action> {
@@ -127,7 +126,17 @@ public class MultipeerJSON:
     didReceive data: Data,
     fromPeer peerID: MCPeerID
   ) {
-    output.on(.next(.received(data: data)))
+    if let json = data.JSON, json["action"].flatMap({ $0 as? String }).map({ $0 == "disconnect" }) == true {
+      session.disconnect()
+    } else {
+      output.on(
+        .next(
+          .received(
+            data: data
+          )
+        )
+      )
+    }
   }
   
   public func session(
