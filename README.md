@@ -15,8 +15,16 @@ A MacOS application for monitoring/editing the state of an application over Mult
 ![alt tag](readme_images/editing.gif)
 
 ## Example
-Includes a sample app. 1) `pod install`, 2) boot up the monitor and sample app, 3) hit the Record tab and 4) produce events from the iOS application (button-pressing, backgrounding of app, etc.)
+Includes a sample app. To use:
+1. Run `pod install`
+2. Boot up the monitor and sample app
+3. Hit the Record tab
+4. Select the intended client from the drop-down
+5. Produce events from the iOS application (button-pressing, backgrounding of app, etc.)
 
-## Requirements
-- To allow for playback, monitored application must provide serialized state
-- Optionally, to allow for playback, Monitored application must be able to deserialize and render received serialized events+states
+The sample app also keeps a running total of the last 25 `Events` to allow for later review should you experience something worth review while offline. To retrieve that timeline:
+1. Produce events from the iOS application (button-pressing, backgrounding of app, etc.)
+2. Shake the device
+3. Send the report to yourself
+4. Open the report using `CycleMonitor`
+
