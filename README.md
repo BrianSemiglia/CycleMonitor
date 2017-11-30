@@ -1,6 +1,6 @@
 # CycleMonitor
 
-A MacOS application for monitoring/editing the state of an application over MultipeerConnectivity.
+A MacOS application for monitoring/editing the state of an application over MultipeerConnectivity. It was written with the intent of being paired with applications written using [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/) but is not exclusive to those applications.
 
 ![alt tag](readme_images/overview.gif)
 
