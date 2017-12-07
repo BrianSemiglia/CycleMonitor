@@ -6,7 +6,7 @@
 //  Copyright © 2017 Brian Semiglia. All rights reserved.
 //
 
-struct Event {
+struct Moment {
   struct Driver {
     var label: String
     var action: String
@@ -43,14 +43,14 @@ struct NonEmptyArray<T> {
   }
 }
 
-extension Event {
+extension Moment {
   init(
-    drivers: NonEmptyArray<Event.Driver>,
-    cause: Event.Driver,
+    drivers: NonEmptyArray<Moment.Driver>,
+    cause: Moment.Driver,
     effect: String,
     context: String
   ) {
-    self = Event(
+    self = Moment(
       drivers: drivers,
       cause: cause,
       effect: effect,
@@ -68,8 +68,8 @@ extension String {
   }
 }
 
-extension Event: Equatable {
-  static func ==(left: Event, right: Event) -> Bool { return
+extension Moment: Equatable {
+  static func ==(left: Moment, right: Moment) -> Bool { return
     left.drivers == right.drivers &&
     left.cause == right.cause &&
     left.effect == right.effect &&
@@ -78,15 +78,15 @@ extension Event: Equatable {
   }
 }
 
-extension Event.Driver: Equatable {
-  static func ==(left: Event.Driver, right: Event.Driver) -> Bool { return
+extension Moment.Driver: Equatable {
+  static func ==(left: Moment.Driver, right: Moment.Driver) -> Bool { return
     left.action == right.action &&
     left.id == right.id &&
     left.label == right.label
   }
 }
 
-extension Event.Driver {
+extension Moment.Driver {
   func coerced() -> [AnyHashable: Any] { return [
     "label": label,
     "action": action,
@@ -94,7 +94,7 @@ extension Event.Driver {
   ]}
 }
 
-extension Event {
+extension Moment {
   func playback() -> [AnyHashable: Any] { return [
     "drivers": drivers.map { $0.coerced() as [AnyHashable: Any] },
     "cause": cause.coerced() as [AnyHashable: Any],

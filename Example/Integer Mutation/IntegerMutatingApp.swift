@@ -86,7 +86,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .secondToLast()
             .unwrap()
         )
-        .map (Event.coerced)
+        .map (Moment.coerced)
       ,
       applicationActions
         .tupledWithLatestFrom(
@@ -113,7 +113,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             .secondToLast()
             .unwrap()
         )
-        .map (Event.coerced)
+        .map (Moment.coerced)
     ])
     .unwrap()
     .share()
@@ -167,7 +167,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
 // 3. test requirements? same as render?
 // 4. section sample code into these categories
 
-extension Collection where Iterator.Element == Event {
+extension Collection where Iterator.Element == Moment {
   var eventsPlayable: [AnyHashable: Any] { return
     ["events": map { $0.playback() }]
   }
@@ -200,23 +200,23 @@ func wrap(_ input: Any) -> String? { return
     .flatMap { $0[".1"] as? String }
 }
 
-extension Event.Driver {
-  static func shakesWith(action: String? = nil) -> Event.Driver { return
-    Event.Driver(
+extension Moment.Driver {
+  static func shakesWith(action: String? = nil) -> Moment.Driver { return
+    Moment.Driver(
       label: "shakes",
       action: action ?? "",
       id: "shakes"
     )
   }
-  static func valueTogglerWith(action: String? = nil) -> Event.Driver { return
-    Event.Driver(
+  static func valueTogglerWith(action: String? = nil) -> Moment.Driver { return
+    Moment.Driver(
       label: "toggler",
       action: action ?? "",
       id: "toggler"
     )
   }
-  static func sessionWith(action: String? = nil) -> Event.Driver { return
-    Event.Driver(
+  static func sessionWith(action: String? = nil) -> Moment.Driver { return
+    Moment.Driver(
       label: "session",
       action: action ?? "",
       id: "session"
@@ -246,16 +246,16 @@ extension IntegerMutatingApp.Model {
   func coerced(
     sessionAction: String,
     context: IntegerMutatingApp.Model
-  ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context:))
+  ) -> Moment? { return
+    curry(Moment.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(
         possible: [
-          Event.Driver.shakesWith(),
-          Event.Driver.valueTogglerWith(),
-          Event.Driver.sessionWith(action: sessionAction)
+          Moment.Driver.shakesWith(),
+          Moment.Driver.valueTogglerWith(),
+          Moment.Driver.sessionWith(action: sessionAction)
         ]
       )
-      <*> Event.Driver.sessionWith(
+      <*> Moment.Driver.sessionWith(
         action: sessionAction
       )
       <*> wrap(self)
@@ -267,23 +267,23 @@ extension IntegerMutatingApp.Model {
   }
 }
 
-extension Event {
+extension Moment {
   static func coerced(
     action: ValueToggler.Action,
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
-  ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context:))
+  ) -> Moment? { return
+    curry(Moment.init(drivers:cause:effect:context:))
       <^> wrap(action)
-        .map (Event.Driver.valueTogglerWith)
+        .map (Moment.Driver.valueTogglerWith)
         .map {[
-            Event.Driver.shakesWith(),
+            Moment.Driver.shakesWith(),
             $0,
-            Event.Driver.sessionWith()
+            Moment.Driver.sessionWith()
         ]}
         .flatMap (NonEmptyArray.init)
       <*> wrap(action)
-        .map(Event.Driver.valueTogglerWith)
+        .map(Moment.Driver.valueTogglerWith)
       <*> wrap(effect)
           .flatMap (JSONSerialization.prettyPrinted)
           .flatMap { $0.utf8 }
@@ -296,18 +296,18 @@ extension Event {
     action: ShakeDetection.Action,
     effect: IntegerMutatingApp.Model,
     context: IntegerMutatingApp.Model
-  ) -> Event? { return
-    curry(Event.init(drivers:cause:effect:context:))
+  ) -> Moment? { return
+    curry(Moment.init(drivers:cause:effect:context:))
       <^> wrap(action)
-        .map (Event.Driver.shakesWith)
+        .map (Moment.Driver.shakesWith)
         .map {[
           $0,
-          Event.Driver.valueTogglerWith(),
-          Event.Driver.sessionWith()
+          Moment.Driver.valueTogglerWith(),
+          Moment.Driver.sessionWith()
         ]}
         .flatMap (NonEmptyArray.init)
       <*> wrap(action)
-        .map(Event.Driver.shakesWith)
+        .map(Moment.Driver.shakesWith)
       <*> wrap(effect)
         .flatMap (JSONSerialization.prettyPrinted)
         .flatMap { $0.utf8 }

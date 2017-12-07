@@ -43,7 +43,7 @@ struct CycleMonitorApp: SinkSourceConverting {
       var connection: Connection
       var peerID: Data
     }
-    var events: [Event] = []
+    var events: [Moment] = []
     var timeLineView = TimeLineView(
       selectedIndex: nil
     )
@@ -291,13 +291,13 @@ extension CycleMonitorApp.Model.EventHandlingState {
   }
 }
 
-extension Event.Driver {
-  static func coerced(_ x: Event.Driver) -> TimeLineViewController.Model.Driver {
+extension Moment.Driver {
+  static func coerced(_ x: Moment.Driver) -> TimeLineViewController.Model.Driver {
     return x.coerced()
   }
 }
 
-extension Event.Driver {
+extension Moment.Driver {
     func coerced() -> TimeLineViewController.Model.Driver { return
         TimeLineViewController.Model.Driver(
             label: label,
@@ -311,12 +311,12 @@ extension Event.Driver {
 }
 
 extension TimeLineViewController.Model.CauseEffect {
-  static func coerced(_ x: Event) -> TimeLineViewController.Model.CauseEffect {
+  static func coerced(_ x: Moment) -> TimeLineViewController.Model.CauseEffect {
     return x.coerced()
   }
 }
 
-extension Event {
+extension Moment {
   func coerced() -> TimeLineViewController.Model.CauseEffect { return
     TimeLineViewController.Model.CauseEffect(
       cause: cause.action,
@@ -337,7 +337,7 @@ extension CycleMonitorApp.Model {
   func coerced() -> TimeLineViewController.Model { return
     TimeLineViewController.Model(
       drivers: events[safe: timeLineView.selectedIndex ?? 0]
-        .map { $0.drivers.map (Event.Driver.coerced) }
+        .map { $0.drivers.map (Moment.Driver.coerced) }
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
@@ -511,8 +511,8 @@ extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Mod
   }
 }
 
-extension Event {
-  static func eventsFrom(_ input: [AnyHashable: Any]) -> [Event] { return
+extension Moment {
+  static func eventsFrom(_ input: [AnyHashable: Any]) -> [Moment] { return
     input["events"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
       .flatMap { $0.flatMap(Argo.decode) }
@@ -536,7 +536,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
       switch event {
       case .didOpen(let json):
         var new = context
-        new.events = Event.eventsFrom(json)
+        new.events = Moment.eventsFrom(json)
         new.timeLineView = CycleMonitorApp.Model.TimeLineView.timelineViewFrom(json)
         new.browser.state = .idle
         return new
@@ -641,7 +641,7 @@ extension CycleMonitorApp.Model {
   }
 }
 
-extension Event {
+extension Moment {
   var testFile: [AnyHashable: Any] { return
     [
       "drivers": drivers.map {[
@@ -674,12 +674,12 @@ import Argo
 import Runes
 import Curry
 
-extension Event: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<Event> {
-    return curry(Event.init)
+extension Moment: Argo.Decodable {
+  static func decode(_ json: JSON) -> Decoded<Moment> {
+    return curry(Moment.init)
       <^> (json <|| "drivers")
         .map(NonEmptyArray.init)
-        .flatMap(Decoded<NonEmptyArray<Event>>.fromOptional)
+        .flatMap(Decoded<NonEmptyArray<Moment>>.fromOptional)
       <*> json <| "cause"
       <*> json <| "effect"
       <*> json <| "context"
@@ -687,9 +687,9 @@ extension Event: Argo.Decodable {
   }
 }
 
-extension Event.Driver: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<Event.Driver> {
-    return curry(Event.Driver.init)
+extension Moment.Driver: Argo.Decodable {
+  static func decode(_ json: JSON) -> Decoded<Moment.Driver> {
+    return curry(Moment.Driver.init)
       <^> json <| "label"
       <*> json <| "action"
       <*> json <| "id"

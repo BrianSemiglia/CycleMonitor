@@ -64,7 +64,7 @@ extension Bundle {
     urls(
       forResourcesWithExtension: "moment",
       subdirectory: nil
-      )
-      ?? []
+    )
+    ?? []
   }
 }

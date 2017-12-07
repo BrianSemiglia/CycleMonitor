@@ -14,8 +14,8 @@ import XCTest
 
 class CycleMonitorTests: XCTestCase {
   
-  static func eventSuccess() -> Event? { return
-    curry(Event.init(drivers:cause:effect:context:))
+  static func eventSuccess() -> Moment? { return
+    curry(Moment.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(possible: [
         driverWith(id: "a", action: true),
         driverWith(id: "b", action: false),
@@ -82,7 +82,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var drivers: [Event.Driver] { return
+  static var drivers: [Moment.Driver] { return
     [
       driverWith(id: "a", action: true),
       driverWith(id: "b", action: false),
@@ -90,8 +90,8 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static func driverWith(id: String, action: Bool) -> Event.Driver { return
-    Event.Driver(
+  static func driverWith(id: String, action: Bool) -> Moment.Driver { return
+    Moment.Driver(
       label: id + "-label",
       action: action ? id + "-action" : "",
       id: id + "-id"
@@ -109,7 +109,7 @@ class CycleMonitorTests: XCTestCase {
   static func model() -> CycleMonitorApp.Model { return
     CycleMonitorApp.Model(
       events: eventSuccess()
-        .map { [$0] as [Event] }
+        .map { [$0] as [Moment] }
         ?? [],
       timeLineView: CycleMonitorApp.Model.TimeLineView(
         selectedIndex: 0
@@ -153,19 +153,19 @@ class CycleMonitorTests: XCTestCase {
     
     // should decode event
     XCTAssertNotEqual(
-      decode(CycleMonitorTests.testFileSuccess) as Event?,
+      decode(CycleMonitorTests.testFileSuccess) as Moment?,
       nil
     )
     
     // should decode event driver
     XCTAssertNotEqual(
-      decode(CycleMonitorTests.eventDriverValid) as Event.Driver?,
+      decode(CycleMonitorTests.eventDriverValid) as Moment.Driver?,
       nil
     )
     
     // should have at least one driver
     XCTAssertEqual(
-      decode(CycleMonitorTests.saveFileDriversEmpty) as Event?,
+      decode(CycleMonitorTests.saveFileDriversEmpty) as Moment?,
       nil
     )
         
