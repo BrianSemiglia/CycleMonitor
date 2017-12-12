@@ -33,7 +33,7 @@ The sample app also keeps a running total of the last 25 `Moments` to allow for 
 4. Open the report using `CycleMonitor`
 
 ## State
-### Schema
+### Type
 CycleMonitor records state as `Moment`s over time with a schema of:
 
     struct Moment {
