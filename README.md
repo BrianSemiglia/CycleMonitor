@@ -53,7 +53,7 @@ CycleMonitor records state as `Moment`s over time with a schema of:
 Each `Moment` provides its cause/effect as well as a list of the drivers/event-producers that were being recorded at the time. The moment's active driver/event-producer indicates itself as the cause by providing a non-nil `action`. An `Moment`'s context/effect can be conveniently be created using the reflective abilities of `Wrap` (`func wrap<T>(_ object: T) -> [String: Any]?`).
    
 ### Broadcast
-As events are experienced on the client, they can be encoded as `Moment`s, converted to JSON and broadcasted to the monitor. `MultipeerJSON` is provided as a convenience to make those broadcasts and is designed to consume a type of `RxSwift.Observable<[AnyHashable: Any]>`. `MultipeerJSON` buffers outgoing transmissions until a connection is established. `MultipeerJSON` also provides an  `RxSwift.Observable` of responses should you choose to send state back to the device via `CycleMonitor`'s _Effects On Device_ feature.
+As events are experienced on the client, they can be encoded as `Moment`s, converted to JSON and broadcasted to the monitor. `MultipeerJSON` is provided as a convenience to make those broadcasts and is designed to consume a type of `RxSwift.Observable<[AnyHashable: Any]>`. `MultipeerJSON` buffers outgoing transmissions until a connection is established. `MultipeerJSON` also provides an  `RxSwift.Observable<[AnyHashable: Any]>` of responses should you choose to send state back to the device via the _Effects On Device_ feature.
 
     let moment = CycleMonitor.Moment(...)
     let JSON = moment.coerced() as [AnyHashable: Any]
