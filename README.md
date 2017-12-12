@@ -1,6 +1,8 @@
 # CycleMonitor
 
-A MacOS application for monitoring/editing the state of an application over MultipeerConnectivity. It was written with the intent of being paired with applications written using [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/) but is not exclusive to those applications.
+A MacOS application for monitoring/editing the state of an application over MultipeerConnectivity. 
+
+The visibility and dependability of state can be mysterious. Other mediums enjoy the ability to be quickly manipulated and viewed across a temporal spectrum with applications like [Final Cut](https://www.apple.com/final-cut-pro/) and [Logic](https://www.apple.com/logic-pro/). What would an application like those look like for code? CycleMonitor is an exploration of that idea. It was written with the intent of being paired with applications written using [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/) but is not exclusive to them.
 
 ![alt tag](readme_images/overview.gif)
 
