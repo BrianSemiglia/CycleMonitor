@@ -1,6 +1,6 @@
 # CycleMonitor
 
-A MacOS application for monitoring/editing the state of an application over MultipeerConnectivity. 
+A macOS application for monitoring/editing the state of an application over MultipeerConnectivity. 
 
 ![alt tag](readme_images/overview.gif)
 
