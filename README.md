@@ -63,7 +63,7 @@ As events are experienced on the client, they can be encoded as `Moment`s, conve
     )
 
 ### Consumption
-If your application is designed to maintain and render state seperately, it has the potential to disregard its version of state and instead consume a new state remotely injected. `CycleMonitor` can send states to a client in order to review their rendering. Converting the incoming JSON into your application's `State` is not as easy as the inverse and requires traditional JSON serialization.
+If your application is designed to consume a single source-of-truth/state, it has the potential to disregard its version of that state and instead consume a new state injected remotely. `CycleMonitor` can send states to a client in order to review their rendering. Converting the incoming JSON into your application's `State` is not as easy as the inverse and requires traditional JSON serialization.
 
 ### Validation
 Once the `effect` of a `cause` on a `context` is considered to be correct, that `Moment` can be serialized and further tested as development continues. To save `Moment`s, select their checkbox in the timeline and then select `File > Export Tests`. Those files can then be imported into the client's Xcode project and tested. The sample app uses this single (pseudo code) function for all `Moment`s:
