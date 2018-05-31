@@ -8,15 +8,6 @@ A macOS application for monitoring/editing the state of an application over Mult
 
 The visibility and dependability of state can be mysterious. Other mediums enjoy the ability of being quickly manipulated and viewed across a temporal spectrum with applications like [Final Cut](https://www.apple.com/final-cut-pro/) and [Logic](https://www.apple.com/logic-pro/). What would an application like those look like for code? CycleMonitor is an exploration of that idea. It was written with the intent of being paired with applications written using [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/) but is not exclusive to them.
 
-## Compatibility
-CycleMonitor has the potential to work with any multipeer-connectivity-capable application that relies on a single-source-of-truth. The use of unidirectional architectures/frameworks makes this approach easier. Some of these frameworks include:
-
-- [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/)
-- [ReSwift](https://github.com/ReSwift/ReSwift)
-- [ReactorKit](https://github.com/ReactorKit/ReactorKit)
-- [RxFeedback](https://github.com/NoTests/RxFeedback.swift)
-- [VueFlux](https://github.com/ra1028/VueFlux)
-
 ## Features
 - Recording of events and their resulting state (even while disconnected from monitor)
 - Playback of states back to device
@@ -87,3 +78,12 @@ This approach only tests the business-logic/state-manipulation portion of the ap
 Debuggers usually allow inspection through a 3-dimensional perspective of time, temporarily displaying values as they change. CycleMonitor attempts a 4-dimensional view, where all values are presented at once and can be inspected at will. However, a timeline has the potential to fork in many ways and its presentation could be improved with an additional perspective. 
 
 If a 4th-dimension provides all values as a timeline, a 5th-dimension would provide all possible timelines as a tree. This would be a lot of information to present and a challenge to visualize comprehensively. Visualization would provide a means of user-evaluation but if that evaulation was automated, visualization might not be necessary. Evaluation could be automated if a test-framework was given a means of advancing the timeline. It could throw random values at an application ([QuickCheck](https://en.wikipedia.org/wiki/QuickCheck/)), producing potential timelines to the desired degree, comparing them against intended/forbidden results and returning the offending timelines. This could be further automated with supervised machine-learning, using existing tests to develop an understanding of expectations that could then be further tested and used to return potentially-offending issues.
+
+## Compatibility
+CycleMonitor has the potential to work with any multipeer-connectivity-capable application that relies on a single-source-of-truth. The use of unidirectional architectures/frameworks makes this approach easier. Some of these frameworks include:
+
+- [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/)
+- [ReSwift](https://github.com/ReSwift/ReSwift)
+- [ReactorKit](https://github.com/ReactorKit/ReactorKit)
+- [RxFeedback](https://github.com/NoTests/RxFeedback.swift)
+- [VueFlux](https://github.com/ra1028/VueFlux)
