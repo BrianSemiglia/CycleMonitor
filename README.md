@@ -8,6 +8,15 @@ A macOS application for monitoring/editing the state of an application over Mult
 
 The visibility and dependability of state can be mysterious. Other mediums enjoy the ability of being quickly manipulated and viewed across a temporal spectrum with applications like [Final Cut](https://www.apple.com/final-cut-pro/) and [Logic](https://www.apple.com/logic-pro/). What would an application like those look like for code? CycleMonitor is an exploration of that idea. It was written with the intent of being paired with applications written using [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/) but is not exclusive to them.
 
+## Compatibility
+CycleMonitor has the potential to work with any multipeer-connectivity-capable application that relies on a single-source-of-truth. The use of unidirectional architectures/frameworks makes this approach easier. Some of these frameworks include:
+
+- [Cycle.swift](https://github.com/BrianSemiglia/Cycle.swift/)
+- [ReSwift](https://github.com/ReSwift/ReSwift)
+- [ReactorKit](https://github.com/ReactorKit/ReactorKit)
+- [RxFeedback](https://github.com/NoTests/RxFeedback.swift)
+- [VueFlux](https://github.com/ra1028/VueFlux)
+
 ## Features
 - Recording of events and their resulting state (even while disconnected from monitor)
 - Playback of states back to device
