@@ -79,7 +79,7 @@ class BrowserDriver {
       switch new.state {
       case .opening:
         let open = BrowserDriver.open
-        if open.runModal() == NSModalResponseOK {
+        if open.runModal() == .OK {
           let event = open.url
             >>- { try? Data(contentsOf: $0) }
             >>- {
@@ -100,7 +100,7 @@ class BrowserDriver {
         }
       case .saving(let json):
         let save = NSSavePanel()
-        if save.runModal() == NSModalResponseOK, let url = save.url, let data = json.binaryPList {
+        if save.runModal() == .OK, let url = save.url, let data = json.binaryPList {
           try? data.write(to: url)
         }
       case .savingMany(let JSONs):
@@ -109,7 +109,7 @@ class BrowserDriver {
          */
         
         let save = BrowserDriver.selectDirectory
-        if save.runModal() == NSModalResponseOK, let url = save.directoryURL {
+        if save.runModal() == .OK, let url = save.directoryURL {
           
           let saves = JSONs.enumerated().flatMap { x -> (String, Data)? in
             if let data = x.element.binaryPList {

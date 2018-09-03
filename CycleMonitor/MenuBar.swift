@@ -61,8 +61,8 @@ class MenuBarDriver {
     }
     
     ids = input.items.enumerated().reduce([:]) {
-      var sum = $0.0
-      sum[$0.1.offset] = $0.1.element.id
+      var sum = $0
+      sum[$1.offset] = $1.element.id
       return sum
     }
     
@@ -80,7 +80,7 @@ class MenuBarDriver {
       )
     )
     main.addItem(item)
-    NSApplication.shared().mainMenu = main
+    NSApplication.shared.mainMenu = main
   }
   
   func quit() -> NSMenuItem { return

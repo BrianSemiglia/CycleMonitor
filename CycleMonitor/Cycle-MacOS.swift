@@ -388,7 +388,7 @@ extension NSColor {
 
 extension ObservableType {
   func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> { return
-    withLatestFrom(input) { ($0.0, $0.1 ) }
+    withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
@@ -626,7 +626,7 @@ class TerminationDriver {
   func render(_ input: Model) {
     if input.shouldTerminate {
       NSApplication
-        .shared()
+        .shared
         .terminate(nil)
     }
   }
@@ -771,8 +771,8 @@ class CycledApplicationDelegate:
   }
   
   func applicationWillFinishLaunching(_ notification: Notification) {
-    main = NSStoryboard(name : "Main", bundle: nil)
-      .instantiateController(withIdentifier: "MainWindow") as? NSWindowController
+    main = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
+      .instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "MainWindow")) as? NSWindowController
     main?.window?.contentViewController = cycle.root
     main?.window?.makeKeyAndOrderFront(nil)
   }

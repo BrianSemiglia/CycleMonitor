@@ -153,7 +153,7 @@ class TimeLineViewController:
     timeline?.postsBoundsChangedNotifications = true
 
     NotificationCenter.default.addObserver(
-      forName: .NSViewBoundsDidChange,
+      forName: NSView.boundsDidChangeNotification,
       object: nil,
       queue: .main,
       using: { [weak self] _ in
@@ -192,7 +192,7 @@ class TimeLineViewController:
     shouldForceRender = false
   }
   
-  func didReceiveEventFromDevices(_ button: NSPopUpButton) {
+  @objc func didReceiveEventFromDevices(_ button: NSPopUpButton) {
     output.on(
       .next(
         .didSelectItemWith(
@@ -330,7 +330,7 @@ class TimeLineViewController:
       new.causesEffects.count > 0,
       let newIndex = new.selected?.index {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) { // <-- async hack
-          NSAnimationContext.current().allowsImplicitAnimation = true
+          NSAnimationContext.current.allowsImplicitAnimation = true
           self.timeline?.scrollToItems(
             at: [
               IndexPath(
@@ -338,9 +338,9 @@ class TimeLineViewController:
                 section: 0
               )
             ],
-            scrollPosition: .centeredHorizontally
+            scrollPosition: NSCollectionView.ScrollPosition.centeredHorizontally
           )
-          NSAnimationContext.current().allowsImplicitAnimation = false
+          NSAnimationContext.current.allowsImplicitAnimation = false
         }
     }
     
@@ -405,13 +405,13 @@ class TimeLineViewController:
   ) -> NSCollectionViewItem {
     caller.register(
       NSNib(
-        nibNamed: "TimelineViewItem",
+        nibNamed: NSNib.Name(rawValue: "TimelineViewItem"),
         bundle: nil
       ),
-      forItemWithIdentifier: "TimelineViewItem"
+      forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "TimelineViewItem")
     )
     let x = caller.makeItem(
-      withIdentifier: "TimelineViewItem",
+      withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "TimelineViewItem"),
       for: path
     ) as! TimelineViewItem
     x.model = TimeLineViewController.modelFrom(
@@ -444,8 +444,8 @@ class TimeLineViewController:
     _ collectionView: NSCollectionView,
     layout collectionViewLayout: NSCollectionViewLayout,
     insetForSectionAt section: Int
-  ) -> EdgeInsets {
-    return EdgeInsets(
+  ) -> NSEdgeInsets {
+    return NSEdgeInsets(
       top: 0,
       left: (view.bounds.size.width - cell.width) / 2.0,
       bottom: 0,
@@ -454,12 +454,12 @@ class TimeLineViewController:
   }
 
   func newDriverViewItem() -> DriverViewItem? {
-    var x = NSArray()
-    NSNib(nibNamed: "DriverViewItem", bundle: nil)?.instantiate(
+    var x = Optional.some(NSArray())
+    NSNib(nibNamed: NSNib.Name(rawValue: "DriverViewItem"), bundle: nil)?.instantiate(
       withOwner: self,
       topLevelObjects: &x
     )
-    return x.first { $0 is DriverViewItem } as! DriverViewItem?
+    return x?.first { $0 is DriverViewItem } as! DriverViewItem?
   }
   
   var cell: NSSize { return
@@ -472,7 +472,7 @@ class TimeLineViewController:
 
 extension TimeLineViewController {
   static func new(model: TimeLineViewController.Model) -> TimeLineViewController {
-    let x = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "TimeLineViewController") as! TimeLineViewController
+    let x = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "TimeLineViewController")) as! TimeLineViewController
     x.model = model
     return x
   }

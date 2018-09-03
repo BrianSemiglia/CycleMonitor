@@ -37,7 +37,7 @@ class TimelineViewItem: NSCollectionViewItem {
   @IBOutlet private var top: NSBox!
   
   func render(_ input: Model) {
-    checkbox.state = input.selected ? 1 : 0
+    checkbox.state = NSControl.StateValue(rawValue: input.selected ? 1 : 0)
     background.fillColor = input.background
     top.fillColor = input.top
   }
@@ -50,8 +50,10 @@ class TimelineViewItem: NSCollectionViewItem {
     )
   }
   
-  func didReceiveEventFromCheckbox(button: NSButton) {
-    model?.selection(checkbox.state > 0)
+  @objc func didReceiveEventFromCheckbox(button: NSButton) {
+    model?.selection(
+        checkbox.state.rawValue > 0
+    )
   }
   
 }
@@ -92,6 +94,6 @@ extension TimelineViewItem.Model: Equatable {
   override func draw(_ dirtyRect: NSRect) {
     super.draw(dirtyRect)
     backgroundColor?.setFill()
-    NSRectFill(dirtyRect)
+    dirtyRect.fill()
   }
 }

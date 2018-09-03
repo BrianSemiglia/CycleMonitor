@@ -125,7 +125,7 @@ class CycleMonitorTests: XCTestCase {
       eventHandlingState: CycleMonitorApp.Model.EventHandlingState.playing,
       isTerminating: false,
       devices: [],
-      connectedTo: nil
+      selectedPeer: nil
     )
   }
   
