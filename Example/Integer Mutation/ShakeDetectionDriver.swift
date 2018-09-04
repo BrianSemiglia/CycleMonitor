@@ -34,19 +34,15 @@ class ShakeDetection {
     manager
       .rx
       .accelerometerData
-      .map {(
-        $0.acceleration.x,
-        $0.acceleration.y,
-        $0.acceleration.z
-      )}
-      .scan([(Double, Double, Double)]()) { $0 + [$1] }
+      .map { $0.acceleration }
+      .scan([]) { $0 + [$1] }
       .map { $0.suffix(2) }
       .map (Array.init)
       .filter {
         if $0.count > 1 { return
-          fabs($0[0].0) > (fabs($0[1].0) + 0.75) ||
-          fabs($0[0].1) > (fabs($0[1].1) + 0.75) ||
-          fabs($0[0].2) > (fabs($0[1].2) + 0.75)
+          fabs($0[0].x) > (fabs($0[1].x) + 0.75) ||
+          fabs($0[0].y) > (fabs($0[1].y) + 0.75) ||
+          fabs($0[0].z) > (fabs($0[1].z) + 0.75)
         } else {
           return false
         }
