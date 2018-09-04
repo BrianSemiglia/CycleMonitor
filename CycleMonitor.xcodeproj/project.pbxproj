@@ -310,7 +310,6 @@
 				D33F06DB1F60F5890099AD39 /* Frameworks */,
 				D33F06DC1F60F5890099AD39 /* Resources */,
 				4F5CE17DB762E4974965A0FE /* [CP] Embed Pods Frameworks */,
-				075A0471500D4B983950EAF2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -331,7 +330,6 @@
 				D33F8D4A1F5B383F002C122D /* Frameworks */,
 				D33F8D4B1F5B383F002C122D /* Resources */,
 				C467DA137FDC8859EEE87DD6 /* [CP] Embed Pods Frameworks */,
-				BCA7D4816DC9BAFA2FB4CCFE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -351,7 +349,6 @@
 				D3F5B7081EFF08530020290A /* Frameworks */,
 				D3F5B7091EFF08530020290A /* Resources */,
 				97DF53CB0F4B02E9E61AD1FC /* [CP] Embed Pods Frameworks */,
-				BB3201983D26A30EB8360EA7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -370,8 +367,6 @@
 				D3F5B7181EFF08530020290A /* Sources */,
 				D3F5B7191EFF08530020290A /* Frameworks */,
 				D3F5B71A1EFF08530020290A /* Resources */,
-				9F52BC1A29AECF5A212E8432 /* [CP] Embed Pods Frameworks */,
-				0E2569C4E0E4E50FFD867892 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -479,36 +474,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		075A0471500D4B983950EAF2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		0E2569C4E0E4E50FFD867892 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		17E271923D4034DAB24AD3FB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -611,21 +576,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9F52BC1A29AECF5A212E8432 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B648E7D73EE231DB89AF7FA1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -644,36 +594,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BB3201983D26A30EB8360EA7 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BCA7D4816DC9BAFA2FB4CCFE /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C467DA137FDC8859EEE87DD6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -689,7 +609,7 @@
 				"${BUILT_PRODUCTS_DIR}/RxSwiftExt-iOS/RxSwiftExt.framework",
 				"${BUILT_PRODUCTS_DIR}/Changeset/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Cycle/Cycle.framework",
-				"${BUILT_PRODUCTS_DIR}/RxMotionKit/RxMotionKit.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCoreMotion/RxCoreMotion.framework",
 				"${BUILT_PRODUCTS_DIR}/Wrap/Wrap.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -702,7 +622,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxMotionKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCoreMotion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Wrap.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

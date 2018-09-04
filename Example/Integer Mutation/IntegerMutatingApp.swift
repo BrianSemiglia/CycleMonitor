@@ -19,13 +19,14 @@ import RxSwiftExt
 class Example: CycledApplicationDelegate<IntegerMutatingApp> {
   init() {
     super.init(
-      filter: IntegerMutatingApp()
+      router: IntegerMutatingApp()
     )
   }
 }
 
-struct IntegerMutatingApp: SinkSourceConverting {
-  struct Model: Initializable {
+struct IntegerMutatingApp: IORouter {
+  static let seed = Model()
+  struct Model {
     var screen = ValueToggler.Model.empty
     var application = RxUIApplication.Model.empty
     var bugReporter = BugReporter.Model(state: .idle)
@@ -38,43 +39,46 @@ struct IntegerMutatingApp: SinkSourceConverting {
     let bugReporter: BugReporter
     let motionReporter: ShakeDetection
   }
-  func driversFrom(initial: IntegerMutatingApp.Model) -> IntegerMutatingApp.Drivers { return
+  func driversFrom(seed: IntegerMutatingApp.Model) -> IntegerMutatingApp.Drivers { return
     Drivers(
       screen: ValueToggler(),
-      application: RxUIApplication(initial: initial.application),
+      application: RxUIApplication(initial: seed.application),
       multipeer: MultipeerJSON(),
-      bugReporter: BugReporter(initial: initial.bugReporter),
-      motionReporter: ShakeDetection(initial: initial.motionReporter)
+      bugReporter: BugReporter(initial: seed.bugReporter),
+      motionReporter: ShakeDetection(initial: seed.motionReporter)
     )
   }
-  func effectsFrom(events: Observable<Model>, drivers: Drivers) -> Observable<Model> {
+  func effectsOfEventsCapturedAfterRendering(
+    incoming: Observable<Model>,
+    to drivers: Drivers
+  ) -> Observable<Model> {
     let valueActions = drivers
       .screen
-      .rendered(events.map { $0.screen })
+      .rendered(incoming.map { $0.screen })
       .share()
     
     let applicationActions = drivers
       .application
-      .rendered(events.map { $0.application })
+      .eventsCapturedAfterRendering(incoming.map { $0.application })
       .share()
 
     let valueEffects = valueActions
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
       .share()
 
     let applicationEffects = applicationActions
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
       .share()
 
     let shakeActions = drivers
       .motionReporter
-      .rendered(events.map { $0.motionReporter })
+      .rendered(incoming.map { $0.motionReporter })
       .share()
     
     let shakeEffects = shakeActions
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
       .share()
     
@@ -82,7 +86,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       valueActions
         .tupledWithLatestFrom(
           valueEffects,
-          events
+          incoming
             .secondToLast()
             .unwrap()
         )
@@ -91,7 +95,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       applicationActions
         .tupledWithLatestFrom(
           applicationEffects,
-          events
+          incoming
             .secondToLast()
             .unwrap()
         )
@@ -109,7 +113,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
       shakeActions
         .tupledWithLatestFrom(
           shakeEffects,
-          events
+          incoming
             .secondToLast()
             .unwrap()
         )
@@ -121,14 +125,14 @@ struct IntegerMutatingApp: SinkSourceConverting {
     let json = drivers
       .multipeer
       .rendered(moments.map { $0.playback() })
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
       .share()
 
     let reporter = drivers
       .bugReporter
       .rendered(
-        events
+        incoming
           .map { $0.bugReporter }
           .tupledWithLatestFrom(
             moments
@@ -148,7 +152,7 @@ struct IntegerMutatingApp: SinkSourceConverting {
             }
           }
       )
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
       .share()
 

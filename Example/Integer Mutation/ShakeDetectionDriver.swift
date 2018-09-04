@@ -8,7 +8,8 @@
 
 import Foundation
 import RxSwift
-import RxMotionKit
+import CoreMotion
+import RxCoreMotion
 
 class ShakeDetection {
   struct Model {
@@ -26,19 +27,18 @@ class ShakeDetection {
   let cleanup = DisposeBag()
   let output = BehaviorSubject(value: Action.none)
   var model: Model
-  let manager = MotionManager.shared
+  let manager = CMMotionManager()
   
   init(initial: Model) {
     model = initial
-    manager.rx_didUpdateAccelerometerData
-      .map { x -> (Double, Double, Double) in
-        switch x {
-        case .accelerometr(acceleration: let new):
-          return (new.x, new.y, new.z)
-        default:
-          return (0,0,0)
-        }
-      }
+    manager
+      .rx
+      .accelerometerData
+      .map {(
+        $0.acceleration.x,
+        $0.acceleration.y,
+        $0.acceleration.z
+      )}
       .scan([(Double, Double, Double)]()) { $0 + [$1] }
       .map { $0.suffix(2) }
       .map (Array.init)
@@ -51,7 +51,10 @@ class ShakeDetection {
           return false
         }
       }
-      .throttle(0.5, scheduler: MainScheduler.asyncInstance)
+      .throttle(
+        0.5,
+        scheduler: MainScheduler.asyncInstance
+      )
       .subscribe { [weak self] x in
         self?.output.on(.next(.detecting))
       }
@@ -71,14 +74,9 @@ class ShakeDetection {
   func render(_ input: Model) {
     switch input.state {
     case .idle:
-      manager.stopUpdating(
-        [.accelerometr]
-      )
+      manager.stopAccelerometerUpdates()
     case .listening:
-      manager.startUpdating(
-        [.accelerometr],
-        withInterval: 1
-      )
+      manager.startAccelerometerUpdates()
     }
   }
 }
