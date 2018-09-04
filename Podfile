@@ -5,7 +5,7 @@ target 'CycleMonitor' do
   pod 'RxSwift',  '~> 4.0'
   pod 'RxCocoa',  '~> 4.0'
   pod 'Argo',     '~> 4.0'
-  pod 'Curry',    '~> 3.0'
+  pod 'Curry',    '~> 4.0'
   pod 'RxSwiftExt'
   target 'CycleMonitorTests' do
     inherit! :search_paths
@@ -19,7 +19,7 @@ target 'Integer Mutation' do
   pod 'Cycle',        '~> 0.0.11'
   pod 'RxSwift',      '~> 4.0'
   pod 'RxCocoa',      '~> 4.0'
-  pod 'Curry',        '~> 3.0'
+  pod 'Curry',        '~> 4.0'
   pod 'RxCoreMotion'
   pod 'Argo',         '~> 4.0'
   pod 'Wrap',         '~> 2.1.1'
