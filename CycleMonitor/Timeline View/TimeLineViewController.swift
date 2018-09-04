@@ -254,8 +254,9 @@ class TimeLineViewController:
       drivers?.arrangedSubviews.forEach {
         $0.removeFromSuperview()
       }
-      new.drivers
-        .flatMap { (x: Model.Driver) -> DriverViewItem? in
+      new
+        .drivers
+        .compactMap { (x: Model.Driver) -> DriverViewItem? in
           let y = newDriverViewItem()
           y?.set(labelTop: x.label)
           y?.set(labelBottom: x.action ?? "")
@@ -279,7 +280,7 @@ class TimeLineViewController:
       timeline?.reloadData()
     }
     
-    let pathsCells = timeline?.indexPathsForVisibleItems().flatMap { x -> (IndexPath, TimelineViewItem)? in
+    let pathsCells = timeline?.indexPathsForVisibleItems().compactMap { x -> (IndexPath, TimelineViewItem)? in
       timeline
         .flatMap { $0.item(at: x) }
         .flatMap { $0 as? TimelineViewItem }

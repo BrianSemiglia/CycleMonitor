@@ -111,16 +111,18 @@ class BrowserDriver {
         let save = BrowserDriver.selectDirectory
         if save.runModal() == .OK, let url = save.directoryURL {
           
-          let saves = JSONs.enumerated().flatMap { x -> (String, Data)? in
-            if let data = x.element.binaryPList {
-              return (
-                Date().description + String(describing: x.offset),
-                data
-              )
-            } else {
-              return nil
+          let saves = JSONs
+            .enumerated()
+            .compactMap { x -> (String, Data)? in
+              if let data = x.element.binaryPList {
+                return (
+                  Date().description + String(describing: x.offset),
+                  data
+                )
+              } else {
+                return nil
+              }
             }
-          }
           
           saves.forEach {
             try? $0.1.write(
