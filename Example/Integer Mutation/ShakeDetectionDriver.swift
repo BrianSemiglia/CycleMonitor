@@ -27,11 +27,11 @@ class ShakeDetection {
   let cleanup = DisposeBag()
   let output = BehaviorSubject(value: Action.none)
   var model: Model
-  let manager = CMMotionManager()
+  let motions = CMMotionManager()
   
   init(initial: Model) {
     model = initial
-    manager
+    motions
       .rx
       .accelerometerData
       .map { $0.acceleration }
@@ -70,9 +70,9 @@ class ShakeDetection {
   func render(_ input: Model) {
     switch input.state {
     case .idle:
-      manager.stopAccelerometerUpdates()
+      motions.stopAccelerometerUpdates()
     case .listening:
-      manager.startAccelerometerUpdates()
+      motions.startAccelerometerUpdates()
     }
   }
 }
