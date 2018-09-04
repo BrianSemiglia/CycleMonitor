@@ -16,11 +16,11 @@ class CycleMonitorTests: XCTestCase {
   
   static func eventSuccess() -> Moment? { return
     curry(Moment.init(drivers:cause:effect:context:))
-      <^> NonEmptyArray(possible: [
+      <^> NonEmptyArray(
         driverWith(id: "a", action: true),
         driverWith(id: "b", action: false),
         driverWith(id: "c", action: false)
-      ])
+      )
       <*> driverWith(id: "a", action: true)
       <*> "effect"
       <*> "context"

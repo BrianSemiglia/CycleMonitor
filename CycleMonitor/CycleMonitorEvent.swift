@@ -34,6 +34,9 @@ struct Moment {
 
 struct NonEmptyArray<T> {
   let value: [T]
+  init(_ values: T...) {
+    self.init(possible: values)!
+  }
   init?(possible: [T]) {
     if possible.count > 0 {
       value = possible

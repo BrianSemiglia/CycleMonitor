@@ -249,11 +249,9 @@ extension IntegerMutatingApp.Model {
   ) -> Moment? { return
     curry(Moment.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(
-        possible: [
-          Moment.Driver.shakesWith(),
-          Moment.Driver.valueTogglerWith(),
-          Moment.Driver.sessionWith(action: sessionAction)
-        ]
+        Moment.Driver.shakesWith(),
+        Moment.Driver.valueTogglerWith(),
+        Moment.Driver.sessionWith(action: sessionAction)
       )
       <*> Moment.Driver.sessionWith(
         action: sessionAction
@@ -281,7 +279,7 @@ extension Moment {
             $0,
             Moment.Driver.sessionWith()
         ]}
-        .flatMap (NonEmptyArray.init)
+        .flatMap (NonEmptyArray.init(possible:))
       <*> wrap(action)
         .map(Moment.Driver.valueTogglerWith)
       <*> wrap(effect)
@@ -305,7 +303,7 @@ extension Moment {
           Moment.Driver.valueTogglerWith(),
           Moment.Driver.sessionWith()
         ]}
-        .flatMap (NonEmptyArray.init)
+        .flatMap (NonEmptyArray.init(possible:))
       <*> wrap(action)
         .map(Moment.Driver.shakesWith)
       <*> wrap(effect)
