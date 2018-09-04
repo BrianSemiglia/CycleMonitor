@@ -22,7 +22,7 @@ target 'Integer Mutation' do
   pod 'Curry',        '~> 4.0'
   pod 'RxCoreMotion'
   pod 'Argo',         '~> 4.0'
-  pod 'Wrap',         '~> 2.1.1'
+  pod 'Wrap',         '~> 3.0'
   pod 'RxSwiftExt'
   target 'Integer Mutation Tests' do
     inherit! :search_paths
