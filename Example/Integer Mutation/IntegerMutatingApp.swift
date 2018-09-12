@@ -14,10 +14,11 @@ import Wrap
 import Argo
 import Runes
 import RxSwiftExt
+import RxUIApplicationDelegate
 
 @UIApplicationMain
 class Example: CycledApplicationDelegate<IntegerMutatingApp> {
-  init() {
+  override init() {
     super.init(
       router: IntegerMutatingApp()
     )
@@ -28,13 +29,13 @@ struct IntegerMutatingApp: IORouter {
   static let seed = Model()
   struct Model {
     var screen = ValueToggler.Model.empty
-    var application = RxUIApplication.Model.empty
+    var application = RxUIApplicationDelegate.Model.empty
     var bugReporter = BugReporter.Model(state: .idle)
     var motionReporter = ShakeDetection.Model(state: .listening)
   }
   struct Drivers: UIApplicationDelegateProviding, ScreenDrivable {
     let screen: ValueToggler
-    let application: RxUIApplication
+    let application: RxUIApplicationDelegate
     let multipeer: MultipeerJSON
     let bugReporter: BugReporter
     let motionReporter: ShakeDetection
@@ -42,7 +43,7 @@ struct IntegerMutatingApp: IORouter {
   func driversFrom(seed: IntegerMutatingApp.Model) -> IntegerMutatingApp.Drivers { return
     Drivers(
       screen: ValueToggler(),
-      application: RxUIApplication(initial: seed.application),
+      application: RxUIApplicationDelegate(initial: seed.application),
       multipeer: MultipeerJSON(),
       bugReporter: BugReporter(initial: seed.bugReporter),
       motionReporter: ShakeDetection(initial: seed.motionReporter)
@@ -367,7 +368,7 @@ extension IntegerMutatingApp.Model {
 extension IntegerMutatingApp.Drivers {
   enum Either {
     case valueToggler(ValueToggler.Action)
-    case rxUIApplication(RxUIApplication.Model)
+    case rxUIApplication(RxUIApplicationDelegate.Model)
     case bugReporter(BugReporter.Action)
     case shakeDetection(ShakeDetection.Action)
   }
@@ -482,7 +483,7 @@ extension IntegerMutatingApp.Model: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<IntegerMutatingApp.Model> {
     return curry(IntegerMutatingApp.Model.init)
       <^> json <| "screen"
-      <*> .success(RxUIApplication.Model.empty)
+      <*> .success(RxUIApplicationDelegate.Model.empty)
       <*> json <| "bugReporter"
       <*> json <| "motionReporter"
   }
@@ -638,7 +639,7 @@ extension ObservableType where E == (ValueToggler.Action, IntegerMutatingApp.Mod
   }
 }
 
-extension ObservableType where E == (RxUIApplication.Model, IntegerMutatingApp.Model) {
+extension ObservableType where E == (RxUIApplicationDelegate.Model, IntegerMutatingApp.Model) {
   func reduced() -> Observable<IntegerMutatingApp.Model> { return
     map { event, global in
       var new = global

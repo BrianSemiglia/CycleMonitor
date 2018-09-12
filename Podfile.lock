@@ -18,6 +18,9 @@ PODS:
     - RxSwift (~> 4.0)
   - RxTest (4.2.0):
     - RxSwift (~> 4.0)
+  - RxUIApplicationDelegate (0.1.0):
+    - Changeset (= 3.1)
+    - RxSwift (~> 4.0)
   - Wrap (3.0.0)
 
 DEPENDENCIES:
@@ -29,6 +32,7 @@ DEPENDENCIES:
   - RxSwift (~> 4.0)
   - RxSwiftExt
   - RxTest
+  - RxUIApplicationDelegate
   - Wrap (~> 3.0)
 
 SPEC REPOS:
@@ -43,6 +47,7 @@ SPEC REPOS:
     - RxSwift
     - RxSwiftExt
     - RxTest
+    - RxUIApplicationDelegate
     - Wrap
 
 SPEC CHECKSUMS:
@@ -56,8 +61,9 @@ SPEC CHECKSUMS:
   RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
   RxTest: 8da864c0ee47534f586ff18fb0c7e5b2f1fe5023
+  RxUIApplicationDelegate: 4793b479468c69097bf3b34de6910c35f090f093
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: 77f271fe72fb27978314e374dcb79a8dcb6db375
+PODFILE CHECKSUM: ac2663d403bb843ae9e401fe8e12e75c6d055c2c
 
 COCOAPODS: 1.5.3

@@ -24,6 +24,7 @@ target 'Integer Mutation' do
   pod 'Argo',         '~> 4.0'
   pod 'Wrap',         '~> 3.0'
   pod 'RxSwiftExt'
+  pod 'RxUIApplicationDelegate'
   target 'Integer Mutation Tests' do
     inherit! :search_paths
     pod 'RxTest'

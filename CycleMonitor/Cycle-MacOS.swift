@@ -515,7 +515,7 @@ extension Moment {
   static func eventsFrom(_ input: [AnyHashable: Any]) -> [Moment] { return
     input["events"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
-      .flatMap { $0.flatMap(Argo.decode) }
+      .flatMap { $0.compactMap(Argo.decode) }
       ?? []
   }
 }
