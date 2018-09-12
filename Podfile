@@ -16,7 +16,7 @@ end
 target 'Integer Mutation' do
   use_frameworks!
   platform :ios, 9.0
-  pod 'Cycle',        '~> 0.0.11'
+  pod 'Cycle'
   pod 'RxSwift',      '~> 4.0'
   pod 'RxCocoa',      '~> 4.0'
   pod 'Curry',        '~> 4.0'

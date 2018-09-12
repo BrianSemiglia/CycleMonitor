@@ -3,7 +3,7 @@ PODS:
     - Runes (>= 4.0.0)
   - Changeset (3.1)
   - Curry (4.0.0)
-  - Cycle (0.0.11):
+  - Cycle (0.0.14):
     - Changeset (= 3.1)
     - RxSwift (~> 4.0)
   - Runes (4.1.0)
@@ -23,7 +23,7 @@ PODS:
 DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
-  - Cycle (~> 0.0.11)
+  - Cycle
   - RxCocoa (~> 4.0)
   - RxCoreMotion
   - RxSwift (~> 4.0)
@@ -49,7 +49,7 @@ SPEC CHECKSUMS:
   Argo: 5db06502fc1222d83011f574243089dab25202ff
   Changeset: 2c246447b9ed25c1ed6f40c29a235e154917b1d1
   Curry: 887c0b9de9a9947820a59557459c7895e76d7b90
-  Cycle: dbd6e60885b7249d095491e7353bc1df00045b9f
+  Cycle: f10572337bb3dd83b3d73ed897d1898ec3317293
   Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
   RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
   RxCoreMotion: b2c5ea9451c53f1ae3d2e30eb0e9b034d04b584f
@@ -58,6 +58,6 @@ SPEC CHECKSUMS:
   RxTest: 8da864c0ee47534f586ff18fb0c7e5b2f1fe5023
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: c97b03a6e2db10a84faef1c7b2e4ad89fea9e46b
+PODFILE CHECKSUM: 77f271fe72fb27978314e374dcb79a8dcb6db375
 
 COCOAPODS: 1.5.3
