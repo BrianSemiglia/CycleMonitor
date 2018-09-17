@@ -33,7 +33,7 @@ struct IntegerMutatingApp: IORouter {
     var bugReporter = BugReporter.Model(state: .idle)
     var motionReporter = ShakeDetection.Model(state: .listening)
   }
-  struct Drivers: UIApplicationDelegateProviding, ScreenDrivable {
+  struct Drivers: MainDelegateProviding, ScreenDrivable {
     let screen: ValueToggler
     let application: RxUIApplicationDelegate
     let multipeer: MultipeerJSON

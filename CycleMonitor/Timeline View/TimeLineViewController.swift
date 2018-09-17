@@ -12,12 +12,13 @@ import RxSwift
 import RxCocoa
 import Curry
 import Runes
+import Cycle
 
 class TimeLineViewController:
       NSViewController,
       NSCollectionViewDataSource,
       NSCollectionViewDelegateFlowLayout,
-      NSViewControllerProviding,
+      RootViewProviding,
       NSTextViewDelegate {
   
   struct Model {

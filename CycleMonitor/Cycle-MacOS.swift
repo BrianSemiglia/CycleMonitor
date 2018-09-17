@@ -9,6 +9,7 @@
 import Cocoa
 import RxSwift
 import RxSwiftExt
+import Cycle
 
 class AppDelegateStub: NSObject, NSApplicationDelegate {
   struct Model {}
@@ -21,8 +22,9 @@ class AppDelegateStub: NSObject, NSApplicationDelegate {
   }
 }
 
-struct CycleMonitorApp: SinkSourceConverting {
-  struct Model: Initializable {
+struct CycleMonitorApp: IORouter {
+  static let seed = Model()
+  struct Model {
     enum EventHandlingState {
       case playing
       case playingSendingEvents
@@ -62,7 +64,7 @@ struct CycleMonitorApp: SinkSourceConverting {
     var devices: [Device] = []
     var selectedPeer: Data?
   }
-  struct Drivers: NSApplicationDelegateProviding, ScreenDrivable {
+  struct Drivers: MainDelegateProviding, ScreenDrivable {
     let screen: TimeLineViewController
     let multipeer: MultipeerJSON
     let application: AppDelegateStub
@@ -70,77 +72,77 @@ struct CycleMonitorApp: SinkSourceConverting {
     let menuBar: MenuBarDriver
     let termination: TerminationDriver
   }
-  func driversFrom(initial: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
+  func driversFrom(seed: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
     Drivers(
       screen: TimeLineViewController.new(
-        model: initial.coerced()
+        model: seed.coerced()
       ),
       multipeer: MultipeerJSON(),
       application: AppDelegateStub(),
       browser: BrowserDriver(
-        initial: initial.browser
+        initial: seed.browser
       ),
       menuBar: MenuBarDriver(
-        model: initial.menuBar
+        model: seed.menuBar
       ),
       termination: TerminationDriver(
         model: TerminationDriver.Model(
-          shouldTerminate: initial.isTerminating
+          shouldTerminate: seed.isTerminating
         )
       )
     )
   }
-  func effectsFrom(
-    events: Observable<Model>,
-    drivers: Drivers
+  func effectsOfEventsCapturedAfterRendering(
+    incoming: Observable<Model>,
+    to drivers: Drivers
   ) -> Observable<Model> {
     let screen = drivers
       .screen
-      .rendered(events.map (TimeLineViewController.Model.coerced))
-      .tupledWithLatestFrom(events)
+      .rendered(incoming.map (TimeLineViewController.Model.coerced))
+      .tupledWithLatestFrom(incoming)
       .reduced()
     
     let application = drivers
       .application
-      .rendered(events.map { $0.application })
-      .tupledWithLatestFrom(events)
+      .rendered(incoming.map { $0.application })
+      .tupledWithLatestFrom(incoming)
       .reduced()
 
     let multipeer = drivers
       .multipeer
       .rendered(
         Observable.merge([
-          events.connection,
-          events.jsonEvents,
-          events.jsonEffects
+          incoming.connection,
+          incoming.jsonEvents,
+          incoming.jsonEffects
         ])
         .lastTwo()
       )
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .reduced()
     
     let browser = drivers
       .browser
-      .rendered(events.map { $0.browser })
-      .tupledWithLatestFrom(events)
+      .rendered(incoming.map { $0.browser })
+      .tupledWithLatestFrom(incoming)
       .reduced()
     
     let menuBar = drivers
       .menuBar
-      .rendered(events.map { $0.menuBar })
-      .tupledWithLatestFrom(events)
+      .rendered(incoming.map { $0.menuBar })
+      .tupledWithLatestFrom(incoming)
       .reduced()
     
     let termination = drivers
       .termination
       .rendered(
-        events.map {
+        incoming.map {
           TerminationDriver.Model(
             shouldTerminate: $0.isTerminating
           )
         }
       )
-      .tupledWithLatestFrom(events)
+      .tupledWithLatestFrom(incoming)
       .map { $0.1 }
     
     return .merge([
@@ -745,113 +747,4 @@ extension MenuBarDriver.Model.Item {
       id: exportTestsID
     )
   }
-}
-
-//extension CycleMonitorApp.Model.Connection {
-//  func coerced() -> MultipeerJSON.Model.Device.ConnectionState {
-//    switch self {
-//    case .connected: return .connected
-//      
-//    }
-//  }
-//}
-
-// Cycle Application Delegate
-
-class CycledApplicationDelegate:
-      NSObject,
-      NSApplicationDelegate {
-  
-  private var cycle: Cycle<CycleMonitorApp>
-  var main: NSWindowController?
-  
-  public override init() {
-    cycle = Cycle(transformer: CycleMonitorApp())
-    super.init()
-  }
-  
-  func applicationWillFinishLaunching(_ notification: Notification) {
-    main = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
-      .instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "MainWindow")) as? NSWindowController
-    main?.window?.contentViewController = cycle.root
-    main?.window?.makeKeyAndOrderFront(nil)
-  }
-  
-  override open func forwardingTarget(for input: Selector!) -> Any? { return
-    cycle.delegate
-  }
-  
-  override open func responds(to input: Selector!) -> Bool {
-    if input == #selector(applicationWillFinishLaunching(_:)) {
-      applicationWillFinishLaunching(
-        Notification(
-          name: Notification.Name(
-            rawValue: ""
-          )
-        )
-      )
-    }
-    return cycle.delegate.responds(
-      to: input
-    )
-  }
-  
-}
-
-// Cycle Mac
-
-public final class Cycle<E: SinkSourceConverting> {
-  private var events: Observable<E.Source>?
-  private var eventsProxy: ReplaySubject<E.Source>?
-  private let cleanup = DisposeBag()
-  fileprivate let delegate: NSApplicationDelegate
-  fileprivate let root: NSViewController
-  private let drivers: E.Drivers
-  public required init(transformer: E) {
-    eventsProxy = ReplaySubject.create(
-      bufferSize: 1
-    )
-    drivers = transformer.driversFrom(initial: E.Source())
-    root = drivers.screen.root
-    delegate = drivers.application
-    events = transformer.effectsFrom(
-      events: eventsProxy!,
-      drivers: drivers
-    )
-    // `.startWith` is redundant, but necessary to kickoff cycle
-    // Possibly removed if `events` was BehaviorSubject?
-    // Not sure how to `merge` observables to single BehaviorSubject though.
-    events?
-      .startWith(E.Source())
-      .observeOn(SerialDispatchQueueScheduler(qos: .default))
-      .subscribe { [weak self] in
-        self?.eventsProxy?.on($0)
-      }
-      .disposed(by: cleanup)
-  }
-}
-
-public protocol SinkSourceConverting {
-  associatedtype Source: Initializable
-  associatedtype Drivers: NSApplicationDelegateProviding, ScreenDrivable
-  func driversFrom(initial: Source) -> Drivers
-  func effectsFrom(events: Observable<Source>, drivers: Drivers) -> Observable<Source>
-}
-
-public protocol Initializable {
-  init()
-}
-
-public protocol ScreenDrivable {
-  associatedtype Driver: NSViewControllerProviding
-  var screen: Driver { get }
-}
-
-public protocol NSViewControllerProviding {
-  var root: NSViewController { get }
-}
-
-public protocol NSApplicationDelegateProviding {
-  associatedtype Delegate: NSApplicationDelegate
-  var application: Delegate { get }
 }

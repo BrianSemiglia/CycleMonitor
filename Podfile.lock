@@ -3,7 +3,11 @@ PODS:
     - Runes (>= 4.0.0)
   - Changeset (3.1)
   - Curry (4.0.0)
-  - Cycle (0.0.14):
+  - Cycle (0.0.15):
+    - Changeset (= 3.1)
+    - Cycle/Core (= 0.0.15)
+    - RxSwift (~> 4.0)
+  - Cycle/Core (0.0.15):
     - Changeset (= 3.1)
     - RxSwift (~> 4.0)
   - Runes (4.1.0)
@@ -16,23 +20,23 @@ PODS:
     - RxSwiftExt/Core (= 3.3.0)
   - RxSwiftExt/Core (3.3.0):
     - RxSwift (~> 4.0)
-  - RxTest (4.2.0):
+  - RxTest (4.3.0):
     - RxSwift (~> 4.0)
-  - RxUIApplicationDelegate (0.1.0):
+  - RxUIApplicationDelegate (0.1.1):
     - Changeset (= 3.1)
-    - RxSwift (~> 4.0)
+    - RxSwift (~> 4.2.0)
   - Wrap (3.0.0)
 
 DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
-  - Cycle
-  - RxCocoa (~> 4.0)
+  - Cycle (from `https://github.com/BrianSemiglia/Cycle.swift.git`, branch `platforms`, tag `0.0.15`)
+  - RxCocoa (~> 4.2.0)
   - RxCoreMotion
-  - RxSwift (~> 4.0)
+  - RxSwift (~> 4.2.0)
   - RxSwiftExt
   - RxTest
-  - RxUIApplicationDelegate
+  - RxUIApplicationDelegate (from `https://github.com/BrianSemiglia/RxUIApplicationDelegate.git`)
   - Wrap (~> 3.0)
 
 SPEC REPOS:
@@ -40,30 +44,45 @@ SPEC REPOS:
     - Argo
     - Changeset
     - Curry
-    - Cycle
     - Runes
     - RxCocoa
     - RxCoreMotion
     - RxSwift
     - RxSwiftExt
     - RxTest
-    - RxUIApplicationDelegate
     - Wrap
+
+EXTERNAL SOURCES:
+  Cycle:
+    :branch: platforms
+    :git: https://github.com/BrianSemiglia/Cycle.swift.git
+    :tag: 0.0.15
+  RxUIApplicationDelegate:
+    :git: https://github.com/BrianSemiglia/RxUIApplicationDelegate.git
+
+CHECKOUT OPTIONS:
+  Cycle:
+    :commit: e5f3d50548029defe50b12e1c8573be246403e18
+    :git: https://github.com/BrianSemiglia/Cycle.swift.git
+    :tag: 0.0.15
+  RxUIApplicationDelegate:
+    :commit: 27bd5a900bd85bb53ef092484615c607d914dfce
+    :git: https://github.com/BrianSemiglia/RxUIApplicationDelegate.git
 
 SPEC CHECKSUMS:
   Argo: 5db06502fc1222d83011f574243089dab25202ff
   Changeset: 2c246447b9ed25c1ed6f40c29a235e154917b1d1
   Curry: 887c0b9de9a9947820a59557459c7895e76d7b90
-  Cycle: f10572337bb3dd83b3d73ed897d1898ec3317293
+  Cycle: 30bfaa56f4e2df34cde4579751ad00d0229207cf
   Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
   RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
   RxCoreMotion: b2c5ea9451c53f1ae3d2e30eb0e9b034d04b584f
   RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
-  RxTest: 8da864c0ee47534f586ff18fb0c7e5b2f1fe5023
-  RxUIApplicationDelegate: 4793b479468c69097bf3b34de6910c35f090f093
+  RxTest: 831444848ac3c5efdd7d80ff5dc4b50ba08877a9
+  RxUIApplicationDelegate: ba0d6f02020fecb6afa61976d346235cfa607f75
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: ac2663d403bb843ae9e401fe8e12e75c6d055c2c
+PODFILE CHECKSUM: 2cb33642d658f93afb0e29a5a8f9f1162f6d24ca
 
 COCOAPODS: 1.5.3

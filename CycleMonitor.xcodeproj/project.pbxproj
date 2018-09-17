@@ -518,13 +518,13 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-iOS/Argo.framework",
+				"${BUILT_PRODUCTS_DIR}/Changeset-iOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-iOS/Curry.framework",
+				"${BUILT_PRODUCTS_DIR}/Cycle-iOS/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/Runes-iOS/Runes.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-iOS/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwiftExt-iOS/RxSwiftExt.framework",
-				"${BUILT_PRODUCTS_DIR}/Changeset/Changeset.framework",
-				"${BUILT_PRODUCTS_DIR}/Cycle/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCoreMotion/RxCoreMotion.framework",
 				"${BUILT_PRODUCTS_DIR}/RxUIApplicationDelegate/RxUIApplicationDelegate.framework",
 				"${BUILT_PRODUCTS_DIR}/Wrap/Wrap.framework",
@@ -532,13 +532,13 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Argo.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Runes.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCoreMotion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxUIApplicationDelegate.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Wrap.framework",
@@ -576,7 +576,9 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-macOS/Argo.framework",
+				"${BUILT_PRODUCTS_DIR}/Changeset-macOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-macOS/Curry.framework",
+				"${BUILT_PRODUCTS_DIR}/Cycle-macOS/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/Runes-macOS/Runes.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-macOS/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-macOS/RxSwift.framework",
@@ -585,7 +587,9 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Argo.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Runes.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
