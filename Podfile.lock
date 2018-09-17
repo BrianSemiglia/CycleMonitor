@@ -6,10 +6,10 @@ PODS:
   - Cycle (0.0.15):
     - Changeset (= 3.1)
     - Cycle/Core (= 0.0.15)
-    - RxSwift (~> 4.0)
+    - RxSwift (~> 4.2.0)
   - Cycle/Core (0.0.15):
     - Changeset (= 3.1)
-    - RxSwift (~> 4.0)
+    - RxSwift (~> 4.2.0)
   - Runes (4.1.0)
   - RxCocoa (4.2.0):
     - RxSwift (~> 4.0)
@@ -30,13 +30,13 @@ PODS:
 DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
-  - Cycle (from `https://github.com/BrianSemiglia/Cycle.swift.git`, branch `platforms`, tag `0.0.15`)
+  - Cycle (~> 0.0.15)
   - RxCocoa (~> 4.2.0)
   - RxCoreMotion
   - RxSwift (~> 4.2.0)
   - RxSwiftExt
   - RxTest
-  - RxUIApplicationDelegate (from `https://github.com/BrianSemiglia/RxUIApplicationDelegate.git`)
+  - RxUIApplicationDelegate (~> 0.1.1)
   - Wrap (~> 3.0)
 
 SPEC REPOS:
@@ -44,45 +44,30 @@ SPEC REPOS:
     - Argo
     - Changeset
     - Curry
+    - Cycle
     - Runes
     - RxCocoa
     - RxCoreMotion
     - RxSwift
     - RxSwiftExt
     - RxTest
+    - RxUIApplicationDelegate
     - Wrap
-
-EXTERNAL SOURCES:
-  Cycle:
-    :branch: platforms
-    :git: https://github.com/BrianSemiglia/Cycle.swift.git
-    :tag: 0.0.15
-  RxUIApplicationDelegate:
-    :git: https://github.com/BrianSemiglia/RxUIApplicationDelegate.git
-
-CHECKOUT OPTIONS:
-  Cycle:
-    :commit: e5f3d50548029defe50b12e1c8573be246403e18
-    :git: https://github.com/BrianSemiglia/Cycle.swift.git
-    :tag: 0.0.15
-  RxUIApplicationDelegate:
-    :commit: 27bd5a900bd85bb53ef092484615c607d914dfce
-    :git: https://github.com/BrianSemiglia/RxUIApplicationDelegate.git
 
 SPEC CHECKSUMS:
   Argo: 5db06502fc1222d83011f574243089dab25202ff
   Changeset: 2c246447b9ed25c1ed6f40c29a235e154917b1d1
   Curry: 887c0b9de9a9947820a59557459c7895e76d7b90
-  Cycle: 30bfaa56f4e2df34cde4579751ad00d0229207cf
+  Cycle: 8e8264e4263efb3aa708ffbd49b2730d00bd9ad8
   Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
   RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
   RxCoreMotion: b2c5ea9451c53f1ae3d2e30eb0e9b034d04b584f
   RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
   RxTest: 831444848ac3c5efdd7d80ff5dc4b50ba08877a9
-  RxUIApplicationDelegate: ba0d6f02020fecb6afa61976d346235cfa607f75
+  RxUIApplicationDelegate: 82e53bbb6f553d77b6e2d4ad02c0fe24a81b531b
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: 2cb33642d658f93afb0e29a5a8f9f1162f6d24ca
+PODFILE CHECKSUM: 6efbd9a9e2172c0663947788c15d77df142130c8
 
 COCOAPODS: 1.5.3
