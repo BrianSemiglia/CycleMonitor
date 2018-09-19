@@ -3,40 +3,40 @@ PODS:
     - Runes (>= 4.0.0)
   - Changeset (3.1)
   - Curry (4.0.0)
-  - Cycle (0.0.15):
+  - Cycle (0.0.17):
     - Changeset (= 3.1)
-    - Cycle/Core (= 0.0.15)
-    - RxSwift (~> 4.2.0)
-  - Cycle/Core (0.0.15):
+    - Cycle/Core (= 0.0.17)
+    - RxSwift (~> 4.3.0)
+  - Cycle/Core (0.0.17):
     - Changeset (= 3.1)
-    - RxSwift (~> 4.2.0)
+    - RxSwift (~> 4.3.0)
   - Runes (4.1.0)
-  - RxCocoa (4.2.0):
+  - RxCocoa (4.3.0):
     - RxSwift (~> 4.0)
   - RxCoreMotion (1.3.0):
     - RxSwift (~> 4.0)
-  - RxSwift (4.2.0)
+  - RxSwift (4.3.0)
   - RxSwiftExt (3.3.0):
     - RxSwiftExt/Core (= 3.3.0)
   - RxSwiftExt/Core (3.3.0):
     - RxSwift (~> 4.0)
   - RxTest (4.3.0):
     - RxSwift (~> 4.0)
-  - RxUIApplicationDelegate (0.1.1):
+  - RxUIApplicationDelegate (0.1.3):
     - Changeset (= 3.1)
-    - RxSwift (~> 4.2.0)
+    - RxSwift (~> 4.3.0)
   - Wrap (3.0.0)
 
 DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
-  - Cycle (~> 0.0.15)
-  - RxCocoa (~> 4.2.0)
+  - Cycle (~> 0.0.17)
+  - RxCocoa (~> 4.3.0)
   - RxCoreMotion
-  - RxSwift (~> 4.2.0)
+  - RxSwift (~> 4.3.0)
   - RxSwiftExt
   - RxTest
-  - RxUIApplicationDelegate (~> 0.1.1)
+  - RxUIApplicationDelegate (~> 0.1.3)
   - Wrap (~> 3.0)
 
 SPEC REPOS:
@@ -58,16 +58,16 @@ SPEC CHECKSUMS:
   Argo: 5db06502fc1222d83011f574243089dab25202ff
   Changeset: 2c246447b9ed25c1ed6f40c29a235e154917b1d1
   Curry: 887c0b9de9a9947820a59557459c7895e76d7b90
-  Cycle: 8e8264e4263efb3aa708ffbd49b2730d00bd9ad8
+  Cycle: bc4127d0daea672bf2722bc8df0a5a38949652c5
   Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
-  RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
+  RxCocoa: 71b9cce833fbcb89a8eec11816dd225830c2bd3c
   RxCoreMotion: b2c5ea9451c53f1ae3d2e30eb0e9b034d04b584f
-  RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
+  RxSwift: a9717a34df3179fe63563f76e046ad345078dd3a
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
   RxTest: 831444848ac3c5efdd7d80ff5dc4b50ba08877a9
-  RxUIApplicationDelegate: 82e53bbb6f553d77b6e2d4ad02c0fe24a81b531b
+  RxUIApplicationDelegate: 5ba976bc25056d101df6dada048cc5bc397e35d1
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: 6efbd9a9e2172c0663947788c15d77df142130c8
+PODFILE CHECKSUM: 01e290bbe696ba3163f88e87fd94c20e23372c24
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.1
