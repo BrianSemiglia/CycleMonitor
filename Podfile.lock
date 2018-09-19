@@ -31,7 +31,7 @@ DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
   - Cycle (~> 0.0.17)
-  - RxCocoa (~> 4.3.0)
+  - RxCocoa (from `https://github.com/ReactiveX/RxSwift`, branch `master`)
   - RxCoreMotion
   - RxSwift (~> 4.3.0)
   - RxSwiftExt
@@ -46,7 +46,6 @@ SPEC REPOS:
     - Curry
     - Cycle
     - Runes
-    - RxCocoa
     - RxCoreMotion
     - RxSwift
     - RxSwiftExt
@@ -54,13 +53,23 @@ SPEC REPOS:
     - RxUIApplicationDelegate
     - Wrap
 
+EXTERNAL SOURCES:
+  RxCocoa:
+    :branch: master
+    :git: https://github.com/ReactiveX/RxSwift
+
+CHECKOUT OPTIONS:
+  RxCocoa:
+    :commit: 04183f61b9f62d961d61d796634482ed9421fc97
+    :git: https://github.com/ReactiveX/RxSwift
+
 SPEC CHECKSUMS:
   Argo: 5db06502fc1222d83011f574243089dab25202ff
   Changeset: 2c246447b9ed25c1ed6f40c29a235e154917b1d1
   Curry: 887c0b9de9a9947820a59557459c7895e76d7b90
   Cycle: bc4127d0daea672bf2722bc8df0a5a38949652c5
   Runes: 72a67a5bbbe1b5fdae08b5a01b10c60d83fc69aa
-  RxCocoa: 71b9cce833fbcb89a8eec11816dd225830c2bd3c
+  RxCocoa: c10508e66f23b21eb22f105a9b1466bf14d7fbbf
   RxCoreMotion: b2c5ea9451c53f1ae3d2e30eb0e9b034d04b584f
   RxSwift: a9717a34df3179fe63563f76e046ad345078dd3a
   RxSwiftExt: 81afb48ab0602f503147417baeb3989d64c7687d
@@ -68,6 +77,6 @@ SPEC CHECKSUMS:
   RxUIApplicationDelegate: 5ba976bc25056d101df6dada048cc5bc397e35d1
   Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: 01e290bbe696ba3163f88e87fd94c20e23372c24
+PODFILE CHECKSUM: 7ab7d5d52ba4ebd5be2014debecc41b137c9fdd4
 
 COCOAPODS: 1.6.0.beta.1
