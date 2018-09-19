@@ -725,7 +725,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
 			};
 			name = Debug;
@@ -744,7 +744,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -764,7 +764,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -783,7 +783,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -906,7 +906,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -921,7 +921,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -937,7 +937,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
 			};
 			name = Debug;
@@ -954,7 +954,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
 			};
 			name = Release;

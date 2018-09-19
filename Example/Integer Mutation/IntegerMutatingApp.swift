@@ -454,7 +454,7 @@ extension ObservableType {
   func tupledWithLatestFrom<T>(
     _ input: Observable<T>
   ) -> Observable<(E, T)> { return
-    withLatestFrom(input) { ($0.0, $0.1 ) }
+    withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
