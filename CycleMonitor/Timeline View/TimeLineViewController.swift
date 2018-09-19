@@ -407,7 +407,7 @@ class TimeLineViewController:
   ) -> NSCollectionViewItem {
     caller.register(
       NSNib(
-        nibNamed: NSNib.Name(rawValue: "TimelineViewItem"),
+        nibNamed: "TimelineViewItem",
         bundle: nil
       ),
       forItemWithIdentifier: NSUserInterfaceItemIdentifier(rawValue: "TimelineViewItem")
@@ -457,7 +457,7 @@ class TimeLineViewController:
 
   func newDriverViewItem() -> DriverViewItem? {
     var x = Optional.some(NSArray())
-    NSNib(nibNamed: NSNib.Name(rawValue: "DriverViewItem"), bundle: nil)?.instantiate(
+    NSNib(nibNamed: "DriverViewItem", bundle: nil)?.instantiate(
       withOwner: self,
       topLevelObjects: &x
     )
@@ -474,7 +474,7 @@ class TimeLineViewController:
 
 extension TimeLineViewController {
   static func new(model: TimeLineViewController.Model) -> TimeLineViewController {
-    let x = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil).instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "TimeLineViewController")) as! TimeLineViewController
+    let x = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "TimeLineViewController") as! TimeLineViewController
     x.model = model
     return x
   }
