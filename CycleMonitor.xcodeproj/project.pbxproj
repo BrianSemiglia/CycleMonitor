@@ -516,7 +516,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-iOS/Argo.framework",
 				"${BUILT_PRODUCTS_DIR}/Changeset-iOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-iOS/Curry.framework",
@@ -545,7 +545,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8F90079999DB96B9536AA35D /* [CP] Embed Pods Frameworks */ = {
@@ -554,7 +554,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
@@ -565,7 +565,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9EC9C2EB6D9EEF767B2E9F2F /* [CP] Embed Pods Frameworks */ = {
@@ -574,7 +574,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-macOS/Argo.framework",
 				"${BUILT_PRODUCTS_DIR}/Changeset-macOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-macOS/Curry.framework",
@@ -597,7 +597,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A6A98DC32D0EFDA02B730E75 /* [CP] Check Pods Manifest.lock */ = {
