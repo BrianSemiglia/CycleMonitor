@@ -73,11 +73,15 @@ Once the `effect` of a `cause` on a `context` is considered to be correct, that 
     
 This approach only tests the business-logic/state-manipulation portion of the application, not the rendering of the resulting state.
 
-## Potential Improvements
+## Potentials
 
+### Automatic Testing
 Debuggers usually allow inspection through a 3-dimensional perspective of time, temporarily displaying values as they change. CycleMonitor attempts a 4-dimensional view, where all values are presented at once and can be inspected at will. However, a timeline has the potential to fork in many ways and its presentation could be improved with an additional perspective. 
 
 If a 4th-dimension provides all values as a timeline, a 5th-dimension would provide all possible timelines as a tree. This would be a lot of information to present and a challenge to visualize comprehensively. Visualization would provide a means of user-evaluation but if that evaulation was automated, visualization might not be necessary. Evaluation could be automated if a test-framework was given a means of advancing the timeline. It could throw random values at an application ([QuickCheck](https://en.wikipedia.org/wiki/QuickCheck/)), producing potential timelines to the desired degree, comparing them against intended/forbidden results and returning the offending timelines. This could be further automated with supervised machine-learning, using existing tests to develop an understanding of expectations that could then be further tested and used to return potentially-offending issues.
+
+### UX Testing
+In the same way that observing patterns in state sequences could be used to find bugs in code, patterns could be observed to find bugs in UX design. If a client was configured to report sequences to a repo, those sequences could be used to find common patterns of user-activity. Those patterns could then be used to improve the UX. For example, a timeline that contained multiple errors might indicate a confusing UX. Changes could be made to the application, released and the resulting reported-timelines measured for a decrease in error-states.
 
 ## Compatibility
 CycleMonitor has the potential to work with any multipeer-connectivity-capable application that relies on a single-source-of-truth. The use of unidirectional architectures/frameworks makes this approach easier. Some of these frameworks include:
