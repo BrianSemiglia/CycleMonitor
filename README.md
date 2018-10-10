@@ -53,7 +53,7 @@ CycleMonitor records state as `Moments` over time with a schema of:
 Each `Moment` provides its cause/effect as well as a list of the drivers/event-producers that were being recorded at the time. The moment's active driver/event-producer indicates itself as the cause by providing a non-nil `action`. A `Moment's` context/effect can conveniently be created using the reflective abilities of `Wrap` (`func wrap<T>(_ object: T) -> [String: Any]?`).
    
 ### Broadcast
-As events are experienced on the client, they can be encoded as `Moments`, converted to JSON and broadcasted to the monitor. `MultipeerJSON` is provided as a convenience to make those broadcasts and is designed to consume a type of `RxSwift.Observable<[AnyHashable: Any]>`. `MultipeerJSON` buffers outgoing transmissions until a connection is established. `MultipeerJSON` also provides an  `RxSwift.Observable<[AnyHashable: Any]>` of responses should you choose to send state back to the device via the _Effects On Device_ feature.
+As events are experienced on the client, they can be encoded as `Moments`, converted to JSON and broadcasted to the monitor. `MultipeerJSON` is provided as a convenience to make those broadcasts and is designed to consume a incoming stream of JSON encoded `Moments`. `MultipeerJSON` also buffers outgoing transmissions until a connection is established.
 
     let moment = CycleMonitor.Moment(...)
     let JSON = moment.coerced() as [AnyHashable: Any]
@@ -63,15 +63,15 @@ As events are experienced on the client, they can be encoded as `Moments`, conve
     )
 
 ### Consumption
-If your application is designed to consume a single source-of-truth/state, it has the potential to disregard its version of that state and instead consume a new state injected remotely. `CycleMonitor` can send states to a client in order to review their rendering. Converting the incoming JSON into your application's `State` is not as easy as the inverse and requires traditional JSON serialization.
+If your application is designed to consume a single source-of-truth/state, it has the potential to disregard its version of that state and instead consume a new state injected remotely. `CycleMonitor` can send states to a client in order to review their rendering. However, converting incoming JSON to your application's `State` is not as easy as the inverse and requires traditional JSON serialization. Selecting the _Effects On Device_ tab begins the broadcast of a stream of JSON serialized `Moments` back to the client.
 
 ### Validation
-Once the `effect` of a `cause` on a `context` is considered to be correct, that `Moment` can be serialized and further tested as development continues. To save `Moments`, select their checkbox in the timeline and then select `File > Export Tests`. Those files can then be imported into the client's Xcode project and tested. The sample app uses this single (pseudo code) function for all `Moments`:
+Once the `effect` of a `cause` on a `context` is considered to be correct, that `Moment` can be serialized and further tested as development continues. To save `Moments`, select their checkbox in the timeline and then select `File > Export Tests`. Those files can then be imported into the client's Xcode project and tested. The sample app uses this single (pseudo code) process for all `Moments`:
 
     // 1. deserialize all `.moment` files into the application's `Moment` types
     // 2. assert that each `Moment's` `cause` applied to its `context` produces its `effect`
     
-This approach only tests the business-logic/state-manipulation portion of the application, not the rendering of the resulting state.
+This approach only tests the business-logic/state-manipulation portion of the application, not the rendering of the resulting state via drivers.
 
 ## Potentials
 
