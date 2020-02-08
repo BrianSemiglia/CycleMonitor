@@ -985,18 +985,18 @@ extension Observable {
                 driver
                     .events()
                     .tupledWithLatestFrom(state.map { $0 })
-                    .map { ($0.1, $0.0, reducer($0.1, $0.0)) }
+                    .map { (old: $0.1, event: $0.0, new: reducer($0.1, $0.0)) }
                     .map {
                         Debug(
-                            model: $0.2,
+                            model: $0.new,
                             frame: Moment.Frame(
                                 cause: Moment.Driver(
                                     label: "\(type(of: driver))",
-                                    action: "\($0.1)",
+                                    action: "\($0.event)",
                                     id: ""
                                 ),
-                                effect: "\($0.2)",
-                                context: "\($0.0.model)",
+                                effect: "\($0.new)",
+                                context: "\($0.old.model)",
                                 isApproved: false
                             )
                         )
@@ -1025,18 +1025,18 @@ extension Observable {
                 driver
                     .events()
                     .tupledWithLatestFrom(state)
-                    .map { (stateOld: $0.1, event: $0.0, stateNew: reducer($0.1.model, $0.0)) }
+                    .map { (old: $0.1, event: $0.0, new: reducer($0.1.model, $0.0)) }
                     .map {
                         Debug(
-                            model: $0.2,
+                            model: $0.new,
                             frame: Moment.Frame(
                                 cause: Moment.Driver(
                                     label: "\(type(of: driver))",
-                                    action: "\($0.1)",
+                                    action: "\($0.event)",
                                     id: ""
                                 ),
-                                effect: "\($0.2)",
-                                context: "\($0.0.model)",
+                                effect: "\($0.new)",
+                                context: "\($0.old.model)",
                                 isApproved: false
                             )
                         )
@@ -1092,22 +1092,6 @@ extension MutatingLens {
                 )},
                 set: { _, _ in self.set }
             )
-//        return MutatingLens(
-//            value: value,
-//            get: { values -> (B, MultipeerJSON) in (
-//                self.get,
-//                MultipeerJSON().rendering(moments) { multipeer, states in
-//                    // multipeer.render(states.map { $0.coerced() as [AnyHashable: Any] })
-//                }
-//            )},
-//            set: { driver, values -> Observable<(T, Moment.Frame)> in
-//                // if sending -> (same.state, new.moment)
-//                // if receiving -> (new.state, same.moment)
-//                .never()
-////                values.tupledWithLatestFrom(moments)
-//                // don't forget to add multipeer callbacks!
-//            }
-//        )
     }
 }
 
@@ -1124,15 +1108,5 @@ extension Moment.Driver {
         var new = self
         new.id = id
         return new
-    }
-}
- 
-extension MutatingLens {
-    func events<X>(_ transform: @escaping (C) -> X) -> MutatingLens<A, B, X> {
-        MutatingLens<A, B, X>(
-            value: value,
-            get: { _ in self.get },
-            set: { _, _ in self.set.map(transform) }
-        )
     }
 }
