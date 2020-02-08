@@ -13,13 +13,6 @@ struct Meta<T: Equatable>: Equatable {
 
 public struct Moment: Equatable {
     
-    public struct Color: Equatable {
-        var red: Double
-        var green: Double
-        var blue: Double
-        var alpha: Double
-    }
-    
     public struct Driver: Equatable {
         var label: String
         var action: String
@@ -56,25 +49,6 @@ public struct Moment: Equatable {
         self.frame = frame
     }
 }
-
-//extension Moment {
-//  init(
-//    drivers: NonEmptyArray<Moment.Driver>,
-//    cause: Moment.Driver,
-//    effect: String,
-//    context: String
-//  ) {
-//    self = Moment(
-//      drivers: drivers,
-//      frame: Frame(
-//        cause: cause,
-//        effect: effect,
-//        context: context,
-//        isApproved: false
-//        )
-//    )
-//  }
-//}
 
 struct NonEmptyArray<T> {
   let value: [T]
