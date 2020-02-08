@@ -14,157 +14,424 @@ import Wrap
 import Argo
 import Runes
 import RxSwiftExt
-import RxUIApplicationDelegate
 
-@UIApplicationMain
-class Example: CycledApplicationDelegate<IntegerMutatingApp> {
-  override init() {
-    super.init(
-      router: IntegerMutatingApp()
-    )
-  }
+//struct CycledLensDebug<Receiver, Value: Equatable> {
+//
+////    struct Debug<T: Equatable>: Equatable {
+////        let value: T
+////        let frame: Moment.Frame
+////    }
+//
+//    public let receiver: Receiver
+//    private let multipeer: MultipeerJSON
+//    private let producer = PublishSubject<Debug<Value>>()
+//    private let cleanup = DisposeBag()
+//
+//    init(
+//        lens: (Observable<Debug<Value>>) -> MutatingLens<Observable<Debug<Value>>, Receiver, Observable<Debug<Value>>>
+//    ) {
+//        let lens = lens(
+//            producer
+//                .distinctUntilChanged()
+//                .share()
+//        )
+//        .multipeered()
+//
+//        receiver = lens.get.0
+//        multipeer = lens.get.1
+//        Observable
+//            .merge(lens.set)
+//            .observeOn(MainScheduler.asyncInstance)
+//            .bind(to: producer)
+//            .disposed(by: cleanup)
+//    }
+//}
+
+@UIApplicationMain class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    var window: UIWindow?
+    var lens: Any?
+    
+    /* TODO
+        1. new type that enforces a prefix on a lens that must be returned by CycledLens init to ensure kickoff
+        2. Debug CycledLens that records Moments and wraps/unwraps inner lenses for convenience
+    */
+    
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        
+        let lens = CycledLens(
+            lens: { source in
+                MutatingLens.zip(
+                    source.lens(
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
+                    ),
+                    source.lens(
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
+                    ),
+                    source.lens(
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
+                    ),
+                    MutatingLens(
+                        value: source,
+                        get: { states -> ShakeDetection in
+                            ShakeDetection(initial: .init(state: .listening)).rendering(
+                                states.map { $0.model.motionReporter }
+                            ) { shakes, state in
+                                shakes.render(state)
+                            }
+                        },
+                        set: { shake, states in
+                            shake.output.tupledWithLatestFrom(states.last(25)).map { event, xs in
+                                switch event {
+                                case .detecting:
+                                    var new = xs.last!.model
+                                    new.bugReporter.state = xs.map { x in
+                                        Moment(
+                                            drivers: NonEmptyArray(
+                                                Moment.Driver(
+                                                    label: "",
+                                                    action: "",
+                                                    id: ""
+                                                )
+                                            ),
+                                            frame: x.frame
+                                        )
+                                    }
+                                    .eventsPlayable
+                                    .binaryPropertyList()
+                                    .map(BugReporter.Model.State.sending)
+                                    ?? .idle
+                                    return Debug(model: new, frame: xs.last!.frame)
+                                default:
+                                    return Debug(model: xs.last!.model, frame: xs.last!.frame)
+                                }
+                            }
+                        }
+                    ),
+                    source.lens(
+                        lifter: { $0.bugReporter },
+                        driver: BugReporter(initial: .init(state: .idle)),
+                        reducer: { s, _ in s }
+                    )
+                )
+                .map { state, toggle -> UIViewController in
+                    toggle.0.backgroundColor = .white
+                    toggle.1.backgroundColor = .lightGray
+                    toggle.2.backgroundColor = .darkGray
+                    let stack = UIStackView(arrangedSubviews: [toggle.0, toggle.1, toggle.2])
+                    stack.axis = .vertical
+                    stack.distribution = .fillEqually
+                    let vc = UIViewController()
+                    vc.view = stack
+                    return vc
+                }
+                .multipeered()
+                .prefixed(
+                    with: .just(
+                        Debug(
+                            model: IntegerMutatingApp.Model(),
+                            frame: Moment.Frame(
+                                cause: Moment.Driver(label: "", action: "", id: ""),
+                                effect: "",
+                                context: "",
+                                isApproved: false
+                            )
+                        )
+                    )
+                )
+                
+                /*
+                 
+                 let valueActions = drivers
+                   .screen
+                   .rendered(incoming.map { $0.screen })
+                   .share()
+                 
+                 let applicationActions = drivers
+                   .application
+                   .eventsCapturedAfterRendering(incoming.map { $0.application })
+                   .share()
+
+                 let valueEffects = valueActions
+                   .tupledWithLatestFrom(incoming)
+                   .reduced()
+                   .share()
+
+                 let applicationEffects = applicationActions
+                   .tupledWithLatestFrom(incoming)
+                   .reduced()
+                   .share()
+
+                 let shakeActions = drivers
+                   .motionReporter
+                   .rendered(incoming.map { $0.motionReporter })
+                   .share()
+                 
+                 let shakeEffects = shakeActions
+                   .tupledWithLatestFrom(incoming)
+                   .reduced()
+                   .share()
+                 
+                 let moments = Observable.merge([
+                   valueActions
+                     .tupledWithLatestFrom(
+                       valueEffects,
+                       incoming
+                         .secondToLast()
+                         .unwrap()
+                     )
+                     .map (Moment.coerced)
+                   ,
+                   applicationActions
+                     .tupledWithLatestFrom(
+                       applicationEffects,
+                       incoming
+                         .secondToLast()
+                         .unwrap()
+                     )
+                     .map { action, effect, context in
+                       effect.coerced(
+                         sessionAction: wrap(action.session.state)
+                           .flatMap { $0 as [AnyHashable: Any] }
+                           .flatMap { $0.description }
+                           ?? ""
+                         ,
+                         context: context
+                       )
+                     }
+                   ,
+                   shakeActions
+                     .tupledWithLatestFrom(
+                       shakeEffects,
+                       incoming
+                         .secondToLast()
+                         .unwrap()
+                     )
+                     .map (Moment.coerced)
+                 ])
+                 .unwrap()
+                 .share()
+
+                 let json = drivers
+                   .multipeer
+                   .rendered(moments.map { $0.coerced() as [AnyHashable: Any] })
+                   .tupledWithLatestFrom(incoming)
+                   .reduced()
+                   .share()
+
+                 let reporter = drivers
+                   .bugReporter
+                   .rendered(
+                     incoming
+                       .map { $0.bugReporter }
+                       .tupledWithLatestFrom(
+                         moments
+                           .last(25)
+                           .map { $0.eventsPlayable }
+                       )
+                       .map { reporter, moments in
+                         switch reporter.state {
+                         case .shouldSend:
+                           var new = reporter
+                           new.state = moments.binaryPropertyList().map(BugReporter.Model.State.sending) ?? .idle
+                           return new
+                         default:
+                           var new = reporter
+                           new.state = .idle
+                           return new
+                         }
+                       }
+                   )
+                   .tupledWithLatestFrom(incoming)
+                   .reduced()
+                   .share()
+
+                 return .merge([
+                   valueEffects,
+                   applicationEffects,
+                   json,
+                   reporter,
+                   shakeEffects
+                 ])
+                 
+                 */
+            }
+        )
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = lens.receiver.0
+        self.lens = lens
+
+        return true
+    }
+
 }
 
-struct IntegerMutatingApp: IORouter {
-  static let seed = Model()
-  struct Model {
-    var screen = ValueToggler.Model.empty
-    var application = RxUIApplicationDelegate.Model.empty
-    var bugReporter = BugReporter.Model(state: .idle)
-    var motionReporter = ShakeDetection.Model(state: .listening)
-  }
-  struct Drivers: MainDelegateProviding, ScreenDrivable {
-    let screen: ValueToggler
-    let application: RxUIApplicationDelegate
-    let multipeer: MultipeerJSON
-    let bugReporter: BugReporter
-    let motionReporter: ShakeDetection
-  }
-  func driversFrom(seed: IntegerMutatingApp.Model) -> IntegerMutatingApp.Drivers { return
-    Drivers(
-      screen: ValueToggler(),
-      application: RxUIApplicationDelegate(initial: seed.application),
-      multipeer: MultipeerJSON(),
-      bugReporter: BugReporter(initial: seed.bugReporter),
-      motionReporter: ShakeDetection(initial: seed.motionReporter)
-    )
-  }
-  func effectsOfEventsCapturedAfterRendering(
-    incoming: Observable<Model>,
-    to drivers: Drivers
-  ) -> Observable<Model> {
-    let valueActions = drivers
-      .screen
-      .rendered(incoming.map { $0.screen })
-      .share()
-    
-    let applicationActions = drivers
-      .application
-      .eventsCapturedAfterRendering(incoming.map { $0.application })
-      .share()
+func mutatingInteger(
+    state: IntegerMutatingApp.Model,
+    event: ValueToggler.Event
+) -> IntegerMutatingApp.Model {
+    switch event {
+    case .incrementing:
+      var x = state
+      x.screen.total = Int(x.screen.total).map { $0 + 1 }.map(String.init) ?? ""
+      x.screen.increment.state = .enabled
+      return x
+    case .decrementing:
+      var x = state
+      x.screen.total = Int(x.screen.total).map { $0 - 1 }.map(String.init) ?? ""
+      x.screen.decrement.state = .enabled
+      return x
+    }
+}
 
-    let valueEffects = valueActions
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-      .share()
-
-    let applicationEffects = applicationActions
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-      .share()
-
-    let shakeActions = drivers
-      .motionReporter
-      .rendered(incoming.map { $0.motionReporter })
-      .share()
-    
-    let shakeEffects = shakeActions
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-      .share()
-    
-    let moments = Observable.merge([
-      valueActions
-        .tupledWithLatestFrom(
-          valueEffects,
-          incoming
-            .secondToLast()
-            .unwrap()
+struct IntegerMutatingApp: Equatable {
+    static let seed = Model()
+    struct Model: Equatable {
+        var screen = ValueToggler.Model.empty
+        var bugReporter = BugReporter.Model(state: .idle)
+        var motionReporter = ShakeDetection.Model(state: .listening)
+    }
+    struct Drivers {
+        let screen: ValueToggler
+        let multipeer: MultipeerJSON
+        let bugReporter: BugReporter
+        let motionReporter: ShakeDetection
+    }
+    func driversFrom(seed: IntegerMutatingApp.Model) -> IntegerMutatingApp.Drivers { return
+        Drivers(
+            screen: ValueToggler(),
+            multipeer: MultipeerJSON(),
+            bugReporter: BugReporter(initial: seed.bugReporter),
+            motionReporter: ShakeDetection(initial: seed.motionReporter)
         )
-        .map (Moment.coerced)
-      ,
-      applicationActions
-        .tupledWithLatestFrom(
-          applicationEffects,
-          incoming
-            .secondToLast()
-            .unwrap()
-        )
-        .map { action, effect, context in
-          effect.coerced(
-            sessionAction: wrap(action.session.state)
-              .flatMap { $0 as [AnyHashable: Any] }
-              .flatMap { $0.description }
-              ?? ""
-            ,
-            context: context
-          )
-        }
-      ,
-      shakeActions
-        .tupledWithLatestFrom(
-          shakeEffects,
-          incoming
-            .secondToLast()
-            .unwrap()
-        )
-        .map (Moment.coerced)
-    ])
-    .unwrap()
-    .share()
-
-    let json = drivers
-      .multipeer
-      .rendered(moments.map { $0.playback() })
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-      .share()
-
-    let reporter = drivers
-      .bugReporter
-      .rendered(
-        incoming
-          .map { $0.bugReporter }
-          .tupledWithLatestFrom(
-            moments
-              .last(25)
-              .map { $0.eventsPlayable }
-          )
-          .map { reporter, moments in
-            switch reporter.state {
-            case .shouldSend:
-              var new = reporter
-              new.state = moments.binaryPropertyList().map(BugReporter.Model.State.sending) ?? .idle
-              return new
-            default:
-              var new = reporter
-              new.state = .idle
-              return new
-            }
-          }
-      )
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-      .share()
-
-    return .merge([
-      valueEffects,
-      applicationEffects,
-      json,
-      reporter,
-      shakeEffects
-    ])
-  }
+    }
+//  func effectsOfEventsCapturedAfterRendering(
+//    incoming: Observable<Model>,
+//    to drivers: Drivers
+//  ) -> Observable<Model> {
+//    let valueActions = drivers
+//      .screen
+//      .rendered(incoming.map { $0.screen })
+//      .share()
+//
+//    let applicationActions = drivers
+//      .application
+//      .eventsCapturedAfterRendering(incoming.map { $0.application })
+//      .share()
+//
+//    let valueEffects = valueActions
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
+//      .share()
+//
+//    let applicationEffects = applicationActions
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
+//      .share()
+//
+//    let shakeActions = drivers
+//      .motionReporter
+//      .rendered(incoming.map { $0.motionReporter })
+//      .share()
+//
+//    let shakeEffects = shakeActions
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
+//      .share()
+//
+//    let moments = Observable.merge([
+//      valueActions
+//        .tupledWithLatestFrom(
+//          valueEffects,
+//          incoming
+//            .secondToLast()
+//            .unwrap()
+//        )
+//        .map (Moment.coerced)
+//      ,
+//      applicationActions
+//        .tupledWithLatestFrom(
+//          applicationEffects,
+//          incoming
+//            .secondToLast()
+//            .unwrap()
+//        )
+//        .map { action, effect, context in
+//          effect.coerced(
+//            sessionAction: wrap(action.session.state)
+//              .flatMap { $0 as [AnyHashable: Any] }
+//              .flatMap { $0.description }
+//              ?? ""
+//            ,
+//            context: context
+//          )
+//        }
+//      ,
+//      shakeActions
+//        .tupledWithLatestFrom(
+//          shakeEffects,
+//          incoming
+//            .secondToLast()
+//            .unwrap()
+//        )
+//        .map (Moment.coerced)
+//    ])
+//    .unwrap()
+//    .share()
+//
+//    let json = drivers
+//      .multipeer
+//      .rendered(moments.map { $0.coerced() as [AnyHashable: Any] })
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
+//      .share()
+//
+//    let reporter = drivers
+//      .bugReporter
+//      .rendered(
+//        incoming
+//          .map { $0.bugReporter }
+//          .tupledWithLatestFrom(
+//            moments
+//              .last(25)
+//              .map { $0.eventsPlayable }
+//          )
+//          .map { reporter, moments in
+//            switch reporter.state {
+//            case .shouldSend:
+//              var new = reporter
+//              new.state = moments.binaryPropertyList().map(BugReporter.Model.State.sending) ?? .idle
+//              return new
+//            default:
+//              var new = reporter
+//              new.state = .idle
+//              return new
+//            }
+//          }
+//      )
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
+//      .share()
+//
+//    return .merge([
+//      valueEffects,
+//      applicationEffects,
+//      json,
+//      reporter,
+//      shakeEffects
+//    ])
+//  }
 }
 
 // 1. observe requirements
@@ -174,15 +441,15 @@ struct IntegerMutatingApp: IORouter {
 
 extension Collection where Iterator.Element == Moment {
   var eventsPlayable: [AnyHashable: Any] { return
-    ["events": map { $0.playback() }]
+    ["events": map { $0.coerced() as [AnyHashable: Any] }]
   }
 }
 
 extension Observable {
-  func secondToLast() -> Observable<E?> { return
+  func secondToLast() -> Observable<Element?> { return
     last(2).map { $0.first }
   }
-  func lastTwo() -> Observable<(E?, E)> { return
+  func lastTwo() -> Observable<(Element?, Element)> { return
     last(2)
     .map {
       switch $0.count {
@@ -192,17 +459,20 @@ extension Observable {
       }
     }
   }
-  func last(_ count: Int) -> Observable<[E]> { return
+  func last(_ count: Int) -> Observable<[Element]> { return
     scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }
     .map (Array.init)
   }
 }
 
-func wrap(_ input: Any) -> String? { return
-  wrap(("filler tuple", input))
-    .flatMap { $0 as [AnyHashable: Any] }
-    .flatMap { $0[".1"] as? String }
+func wrap(_ input: Any) -> String? {
+    wrap(input)
+    .map { $0 as [AnyHashable: Any] }
+    .map { $0.sorted { a, b in a.key.description > b.key.description } }
+    .map { $0.description }
+//    .flatMap { JSONSerialization.prettyPrinted($0) }
+//    .flatMap { JSONSerialization.prettyPrinted($0)?.utf8 }
 }
 
 extension Moment.Driver {
@@ -247,78 +517,78 @@ extension Data {
   }
 }
 
-extension IntegerMutatingApp.Model {
-  func coerced(
-    sessionAction: String,
-    context: IntegerMutatingApp.Model
-  ) -> Moment? { return
-    curry(Moment.init(drivers:cause:effect:context:))
-      <^> NonEmptyArray(
-        Moment.Driver.shakesWith(),
-        Moment.Driver.valueTogglerWith(),
-        Moment.Driver.sessionWith(action: sessionAction)
-      )
-      <*> Moment.Driver.sessionWith(
-        action: sessionAction
-      )
-      <*> wrap(self)
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-      <*> wrap(context)
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-  }
-}
+//extension IntegerMutatingApp.Model {
+//  func coerced(
+//    sessionAction: String,
+//    context: IntegerMutatingApp.Model
+//  ) -> Moment? { return
+//    curry(Moment.init(drivers:cause:effect:context:))
+//      <^> NonEmptyArray(
+//        Moment.Driver.shakesWith(),
+//        Moment.Driver.valueTogglerWith(),
+//        Moment.Driver.sessionWith(action: sessionAction)
+//      )
+//      <*> Moment.Driver.sessionWith(
+//        action: sessionAction
+//      )
+//      <*> wrap(self)
+//        .flatMap (JSONSerialization.prettyPrinted)
+//        .flatMap { $0.utf8 }
+//      <*> wrap(context)
+//        .flatMap (JSONSerialization.prettyPrinted)
+//        .flatMap { $0.utf8 }
+//  }
+//}
 
-extension Moment {
-  static func coerced(
-    action: ValueToggler.Action,
-    effect: IntegerMutatingApp.Model,
-    context: IntegerMutatingApp.Model
-  ) -> Moment? { return
-    curry(Moment.init(drivers:cause:effect:context:))
-      <^> wrap(action)
-        .map (Moment.Driver.valueTogglerWith)
-        .map {[
-            Moment.Driver.shakesWith(),
-            $0,
-            Moment.Driver.sessionWith()
-        ]}
-        .flatMap (NonEmptyArray.init(possible:))
-      <*> wrap(action)
-        .map(Moment.Driver.valueTogglerWith)
-      <*> wrap(effect)
-          .flatMap (JSONSerialization.prettyPrinted)
-          .flatMap { $0.utf8 }
-      <*> wrap(context)
-          .flatMap (JSONSerialization.prettyPrinted)
-          .flatMap { $0.utf8 }
-  }
-
-  static func coerced(
-    action: ShakeDetection.Action,
-    effect: IntegerMutatingApp.Model,
-    context: IntegerMutatingApp.Model
-  ) -> Moment? { return
-    curry(Moment.init(drivers:cause:effect:context:))
-      <^> wrap(action)
-        .map (Moment.Driver.shakesWith)
-        .map {[
-          $0,
-          Moment.Driver.valueTogglerWith(),
-          Moment.Driver.sessionWith()
-        ]}
-        .flatMap (NonEmptyArray.init(possible:))
-      <*> wrap(action)
-        .map(Moment.Driver.shakesWith)
-      <*> wrap(effect)
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-      <*> wrap(context)
-        .flatMap (JSONSerialization.prettyPrinted)
-        .flatMap { $0.utf8 }
-  }
-}
+//extension Moment {
+//  static func coerced(
+//    action: ValueToggler.Event,
+//    effect: IntegerMutatingApp.Model,
+//    context: IntegerMutatingApp.Model
+//  ) -> Moment? { return
+//    curry(Moment.init(drivers:cause:effect:context:))
+//      <^> wrap(action)
+//        .map (Moment.Driver.valueTogglerWith)
+//        .map {[
+//            Moment.Driver.shakesWith(),
+//            $0,
+//            Moment.Driver.sessionWith()
+//        ]}
+//        .flatMap (NonEmptyArray.init(possible:))
+//      <*> wrap(action)
+//        .map(Moment.Driver.valueTogglerWith)
+//      <*> wrap(effect)
+//          .flatMap (JSONSerialization.prettyPrinted)
+//          .flatMap { $0.utf8 }
+//      <*> wrap(context)
+//          .flatMap (JSONSerialization.prettyPrinted)
+//          .flatMap { $0.utf8 }
+//  }
+//
+//  static func coerced(
+//    action: ShakeDetection.Action,
+//    effect: IntegerMutatingApp.Model,
+//    context: IntegerMutatingApp.Model
+//  ) -> Moment? { return
+//    curry(Moment.init(drivers:cause:effect:context:))
+//      <^> wrap(action)
+//        .map (Moment.Driver.shakesWith)
+//        .map {[
+//          $0,
+//          Moment.Driver.valueTogglerWith(),
+//          Moment.Driver.sessionWith()
+//        ]}
+//        .flatMap (NonEmptyArray.init(possible:))
+//      <*> wrap(action)
+//        .map(Moment.Driver.shakesWith)
+//      <*> wrap(effect)
+//        .flatMap (JSONSerialization.prettyPrinted)
+//        .flatMap { $0.utf8 }
+//      <*> wrap(context)
+//        .flatMap (JSONSerialization.prettyPrinted)
+//        .flatMap { $0.utf8 }
+//  }
+//}
 
 func wrap(_ input: Any) -> [AnyHashable: Any]? {
   return try? wrap(input) as [AnyHashable: Any]
@@ -354,8 +624,8 @@ extension IntegerMutatingApp.Model {
     switch driver {
     case .valueToggler(let action): return
       Observable.just((action, context)).reduced()
-    case .rxUIApplication(let action): return
-      Observable.just((action, context)).reduced()
+//    case .rxUIApplication(let action): return
+//      Observable.just((action, context)).reduced()
     case .bugReporter(let action): return
       Observable.just((action, context)).reduced()
     case .shakeDetection(let action): return
@@ -365,10 +635,14 @@ extension IntegerMutatingApp.Model {
 
 }
 
+//class RxUIApplicationDelegate {
+//    struct Model {}
+//}
+
 extension IntegerMutatingApp.Drivers {
   enum Either {
-    case valueToggler(ValueToggler.Action)
-    case rxUIApplication(RxUIApplicationDelegate.Model)
+    case valueToggler(ValueToggler.Event)
+//    case rxUIApplication(RxUIApplicationDelegate.Model)
     case bugReporter(BugReporter.Action)
     case shakeDetection(ShakeDetection.Action)
   }
@@ -427,12 +701,12 @@ extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
 }
 
 extension ObservableType {
-  func pacedBy(delay: Double) -> Observable<E> { return
+  func pacedBy(delay: Double) -> Observable<Element> { return
     map {
       Observable
         .empty()
         .delay(
-          delay,
+          .milliseconds(Int(delay * 1000)),
           scheduler: MainScheduler.instance
         )
         .startWith($0)
@@ -445,7 +719,7 @@ extension ObservableType {
   func tupledWithLatestFrom<X, Y>(
     _ x: Observable<X>,
     _ y: Observable<Y>
-  ) -> Observable<(E, X, Y)> { return
+  ) -> Observable<(Element, X, Y)> { return
     tupledWithLatestFrom(x)
       .tupledWithLatestFrom(y)
       .map { ($0.0, $0.1, $1) }
@@ -453,12 +727,12 @@ extension ObservableType {
   
   func tupledWithLatestFrom<T>(
     _ input: Observable<T>
-  ) -> Observable<(E, T)> { return
+  ) -> Observable<(Element, T)> { return
     withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
-extension ObservableType where E == (MultipeerJSON.Action, IntegerMutatingApp.Model) {
+extension ObservableType where Element == (MultipeerJSON.Action, IntegerMutatingApp.Model) {
   func reduced() -> Observable<IntegerMutatingApp.Model> { return
     flatMap { (event, context) -> Observable<IntegerMutatingApp.Model> in
       switch event {
@@ -483,7 +757,7 @@ extension IntegerMutatingApp.Model: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<IntegerMutatingApp.Model> {
     return curry(IntegerMutatingApp.Model.init)
       <^> json <| "screen"
-      <*> .success(RxUIApplicationDelegate.Model.empty)
+//      <*> .success(RxUIApplicationDelegate.Model.empty)
       <*> json <| "bugReporter"
       <*> json <| "motionReporter"
   }
@@ -498,8 +772,8 @@ extension ValueToggler.Model: Argo.Decodable {
   }
 }
 
-extension ValueToggler.Action: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<ValueToggler.Action> {
+extension ValueToggler.Event: Argo.Decodable {
+  static func decode(_ json: JSON) -> Decoded<ValueToggler.Event> {
     switch json {
     case .string(let x) where x == "incrementing": return .success(.incrementing)
     case .string(let x) where x == "decrementing": return .success(.decrementing)
@@ -590,7 +864,21 @@ extension ShakeDetection.Model.State: Argo.Decodable {
   }
 }
 
-extension ObservableType where E == (ShakeDetection.Action, IntegerMutatingApp.Model) {
+//func reduced(
+//    before: Debug<IntegerMutatingApp.Model>,
+//    event: ShakeDetection.Action
+//) -> IntegerMutatingApp.Model {
+//    switch event {
+//    case .detecting:
+//        var new = before.model
+//        new.bugReporter.state = .sending(<#T##Data#>)
+//        return new
+//    default:
+//        return before.model
+//    }
+//}
+
+extension ObservableType where Element == (ShakeDetection.Action, IntegerMutatingApp.Model) {
   func reduced() -> Observable<IntegerMutatingApp.Model> { return
     map { event, context in
       switch event {
@@ -605,7 +893,7 @@ extension ObservableType where E == (ShakeDetection.Action, IntegerMutatingApp.M
   }
 }
 
-extension ObservableType where E == (BugReporter.Action, IntegerMutatingApp.Model) {
+extension ObservableType where Element == (BugReporter.Action, IntegerMutatingApp.Model) {
   func reduced() -> Observable<IntegerMutatingApp.Model> { return
     map { event, context in
       switch event {
@@ -620,7 +908,7 @@ extension ObservableType where E == (BugReporter.Action, IntegerMutatingApp.Mode
   }
 }
 
-extension ObservableType where E == (ValueToggler.Action, IntegerMutatingApp.Model) {
+extension ObservableType where Element == (ValueToggler.Event, IntegerMutatingApp.Model) {
   func reduced() -> Observable<IntegerMutatingApp.Model> { return
     map { event, context in
       switch event {
@@ -639,54 +927,179 @@ extension ObservableType where E == (ValueToggler.Action, IntegerMutatingApp.Mod
   }
 }
 
-extension ObservableType where E == (RxUIApplicationDelegate.Model, IntegerMutatingApp.Model) {
-  func reduced() -> Observable<IntegerMutatingApp.Model> { return
-    map { event, global in
-      var new = global
-      new.application.shouldLaunch = true
-      if case .pre(.active(.some)) = event.session.state {
-        new.screen.total = "55"
-      }
-      return new
+//extension ObservableType where Element == (RxUIApplicationDelegate.Model, IntegerMutatingApp.Model) {
+//  func reduced() -> Observable<IntegerMutatingApp.Model> { return
+//    map { event, global in
+//      var new = global
+//      new.application.shouldLaunch = true
+//      if case .pre(.active(.some)) = event.session.state {
+//        new.screen.total = "55"
+//      }
+//      return new
+//    }
+//  }
+//}
+
+public protocol Drivable: NSObject {
+    associatedtype Model
+    associatedtype Event
+    func render(_ input: Model)
+    func events() -> Observable<Event>
+}
+
+extension Observable {
+    public func lens<Driver: Drivable>(
+        driver: Driver,
+        reducer: @escaping (Element, Driver.Event) -> Element
+    ) -> MutatingLens<Observable<Element>, Driver, Observable<Element>> where Element == Driver.Model {
+        lens(
+            get: { (states: Observable<Element>) -> Driver in
+                driver.rendering(states) { driver, state in
+                    driver.render(state)
+                }
+            },
+            set: { toggler, state -> Observable<Element> in
+                toggler
+                    .events()
+                    .tupledWithLatestFrom(state)
+                    .map { ($0.1, $0.0) }
+                    .map(reducer)
+            }
+        )
     }
-  }
+    
+    func lens<T, Driver: Drivable>(
+        lifter: @escaping (T) -> Driver.Model, // Need to figure out getting subset from source -> MutatingLens wants same type on incoming stream
+        driver: Driver,
+        reducer: @escaping (Element, Driver.Event) -> T
+    )
+    -> MutatingLens<Observable<Element>, Driver, Observable<Element>>
+        where Element == Debug<T> {
+        lens(
+            get: { (state: Observable<Element>) -> Driver in
+                driver.rendering(state.map { $0.model }.map(lifter)) { driver, state in
+                    driver.render(state)
+                }
+            },
+            set: { driver, state -> Observable<Element> in
+                driver
+                    .events()
+                    .tupledWithLatestFrom(state.map { $0 })
+                    .map { ($0.1, reducer($0.1, $0.0)) }
+                    .map { Debug(model: $0.1, frame: $0.0.frame) }
+            }
+        )
+    }
+    
+    func lens<T, Driver: Drivable>(
+        lifter: @escaping (T) -> Driver.Model, // Need to figure out getting subset from source -> MutatingLens wants same type on incoming stream
+        driver: Driver,
+        reducer: @escaping (T, Driver.Event) -> T
+    )
+    -> MutatingLens<
+        Observable<Element>,
+        Driver,
+        Observable<Element>
+    > where Element == Debug<T> {
+        lens(
+            get: { state in
+                driver.rendering(state.map { $0.model }.map(lifter)) { driver, state in
+                    driver.render(state)
+                }
+            },
+            set: { driver, state  in
+                driver
+                    .events()
+                    .tupledWithLatestFrom(state)
+                    .map { (stateOld: $0.1, stateNew: reducer($0.1.model, $0.0)) }
+                    .map { Debug(model: $0.stateNew, frame: $0.stateOld.frame) }
+            }
+        )
+    }
 }
 
-extension IntegerMutatingApp.Model: Equatable {
-  static func ==(
-    left: IntegerMutatingApp.Model,
-    right: IntegerMutatingApp.Model
-  ) -> Bool { return
-    left.screen == right.screen &&
-    left.application == right.application &&
-    left.bugReporter == right.bugReporter &&
-    left.motionReporter == right.motionReporter
-  }
+extension Collection {
+    func tagged<T>() -> [Observable<(tag: Int, element: T)>] where Element == Observable<T> {
+        enumerated().map { indexed in
+            indexed.element.map { x in (indexed.offset, x) }
+        }
+    }
 }
 
-extension ValueToggler.Model: Equatable {
-  static func ==(left: ValueToggler.Model, right: ValueToggler.Model) -> Bool { return
-    left.total == right.total &&
-    left.increment == right.increment &&
-    left.decrement == right.decrement
-  }
+extension MutatingLens {
+    func multipeered<T>(
+        reducer: @escaping (T, Moment.Frame) -> T = { t, m in t }
+    ) -> MutatingLens<A, (B, MultipeerJSON), Observable<Debug<T>>>
+        where A == Observable<Debug<T>>, C == Observable<Debug<T>> {
+        
+        let moments = Observable
+            .merge(self.set.tagged())
+            .map { ($0.tag, $0.1.frame) }
+            .map { states in
+                Moment(
+                    drivers: NonEmptyArray(
+                        possible: self.set.enumerated().map { x in
+                            Moment.Driver(
+                                label: "\(type(of: self.get))", // label is coming from combined lens. need inner lens labels
+                                action: x.offset == states.0 ? states.1.cause.action : "", //
+                                id: String(x.offset)
+                            )
+                        }
+                    )!,
+                    frame: states.1.setting(
+                        cause: Moment.Driver(
+                            label: "\(type(of: self.get))",
+                            action: states.1.cause.action,
+                            id: String(states.0)
+                        )
+                    )
+                )
+            }
+        
+            return MutatingLens<A, (B, MultipeerJSON), Observable<Debug<T>>>(
+                value: value,
+                get: { values in (
+                    self.get,
+                    MultipeerJSON().rendering(moments) { multipeer, state in
+                        multipeer.render(state.coerced() as [AnyHashable: Any])
+                        // multipeer.render(states.map { $0.model.coerced() as [AnyHashable: Any] })
+                    }
+                )},
+                set: { _, _ in self.set }
+            )
+//        return MutatingLens(
+//            value: value,
+//            get: { values -> (B, MultipeerJSON) in (
+//                self.get,
+//                MultipeerJSON().rendering(moments) { multipeer, states in
+//                    // multipeer.render(states.map { $0.coerced() as [AnyHashable: Any] })
+//                }
+//            )},
+//            set: { driver, values -> Observable<(T, Moment.Frame)> in
+//                // if sending -> (same.state, new.moment)
+//                // if receiving -> (new.state, same.moment)
+//                .never()
+////                values.tupledWithLatestFrom(moments)
+//                // don't forget to add multipeer callbacks!
+//            }
+//        )
+    }
 }
 
-extension ValueToggler.Model.Button: Equatable {
-  static func ==(
-    left: ValueToggler.Model.Button,
-    right: ValueToggler.Model.Button
-  ) -> Bool { return
-    left.state == right.state &&
-    left.title == right.title
-  }
+extension Moment.Frame {
+    func setting(cause: Moment.Driver) -> Moment.Frame {
+        var new = self
+        new.cause = cause
+        return new
+    }
 }
-
-extension ShakeDetection.Model: Equatable {
-  static func ==(
-    left: ShakeDetection.Model,
-    right: ShakeDetection.Model
-  ) -> Bool { return
-    left.state == right.state
-  }
+ 
+extension MutatingLens {
+    func events<X>(_ transform: @escaping (C) -> X) -> MutatingLens<A, B, X> {
+        MutatingLens<A, B, X>(
+            value: value,
+            get: { _ in self.get },
+            set: { _, _ in self.set.map(transform) }
+        )
+    }
 }

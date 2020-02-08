@@ -10,16 +10,16 @@ import Foundation
 import RxSwift
 import MessageUI
 
-class BugReporter: NSObject, MFMailComposeViewControllerDelegate {
-  struct Model {
-    enum State {
+final class BugReporter: NSObject, MFMailComposeViewControllerDelegate, Drivable {
+  struct Model: Equatable {
+    enum State: Equatable {
       case idle
       case shouldSend
       case sending(Data)
     }
     var state: State
   }
-  enum Action {
+  enum Action: Equatable {
     case none
     case didSuccessfullySend
   }
@@ -32,19 +32,26 @@ class BugReporter: NSObject, MFMailComposeViewControllerDelegate {
     model = initial
   }
   
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.observeOn(MainScheduler.instance).subscribe { [weak self] in
-      if let new = $0.element {
-        if let `self` = self {
-          if self.model != new {
-            self.model = new
-            self.render(new)
-          }
-        }
-      }
-    }.disposed(by: cleanup)
-    return output
-  }
+    func rendering(model input: Observable<Model>) -> Self {
+        input
+            .observeOn(MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] new in
+                    if let `self` = self {
+                      if self.model != new {
+                        self.model = new
+                        self.render(new)
+                      }
+                    }
+                }
+            )
+            .disposed(by: cleanup)
+        return self
+    }
+    
+    func events() -> Observable<Action> {
+        return output.asObservable()
+    }
   
   func render(_ input: Model) {
     switch input.state {
@@ -75,34 +82,5 @@ class BugReporter: NSObject, MFMailComposeViewControllerDelegate {
     error: Error?
   ) {
     output.on(.next(.didSuccessfullySend))
-  }
-}
-
-extension BugReporter.Model: Equatable {
-  static func ==(
-    left: BugReporter.Model,
-    right: BugReporter.Model
-  ) -> Bool {
-    return left.state == right.state
-  }
-}
-
-extension BugReporter.Model.State: Equatable {
-  static func ==(
-    left: BugReporter.Model.State,
-    right: BugReporter.Model.State
-  ) -> Bool {
-    switch (left, right) {
-    case (.idle, .idle):
-      return true
-    case (.shouldSend, .shouldSend):
-      return true
-//    case (.sending(let a), .sending(let b)):
-//      return a.hashValue == b.hashValue
-    case (.sending(_), .sending(_)):
-      return true
-    default:
-      return false
-    }
   }
 }

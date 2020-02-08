@@ -11,7 +11,7 @@ import Foundation
 import RxSwift
 import Runes
 
-class BrowserDriver {
+class BrowserDriver: NSObject {
   
   struct Model {
     enum State {
@@ -37,6 +37,7 @@ class BrowserDriver {
 
   required init(initial: Model) {
     model = initial
+    super.init()
   }
   
   static var open: NSOpenPanel {

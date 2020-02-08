@@ -55,10 +55,6 @@ class Integer_MutationTests: XCTestCase {
   
 }
 
-func ==(_ stream: Observable<IntegerMutatingApp.Model>, _ model: IntegerMutatingApp.Model) -> Observable<Bool> {
-  return stream.map { $0 == model }
-}
-
 extension Bundle {
   var moments: [URL] { return
     urls(

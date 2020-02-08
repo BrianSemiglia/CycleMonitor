@@ -11,14 +11,14 @@ import AppKit
 import RxSwift
 import Runes
 
-class MenuBarDriver {
+class MenuBarDriver: NSObject {
   
-  struct Model {
-    struct MenuItem {
+  struct Model: Equatable {
+    struct MenuItem: Equatable {
       let title: String
       let item: Item
     }
-    struct Item {
+    struct Item: Equatable {
       let title: String
       let enabled: Bool
       let id: String
@@ -26,7 +26,7 @@ class MenuBarDriver {
     let items: [Item]
   }
   
-  enum Action {
+  enum Action: Equatable {
     case none
     case didSelectItemWith(id: String)
     case didSelectQuit
@@ -37,6 +37,7 @@ class MenuBarDriver {
   var ids: [Int: String] = [:]
   
   init(model: Model) {
+    super.init()
     render(model)
   }
   
@@ -112,26 +113,6 @@ extension NSMenuItem {
     parent.submenu = appMenu
     items.forEach(appMenu.addItem)
     return parent
-  }
-}
-
-extension MenuBarDriver.Model: Equatable {
-  static func ==(
-    left: MenuBarDriver.Model,
-    right: MenuBarDriver.Model
-  ) -> Bool { return
-    left.items == right.items
-  }
-}
-
-extension MenuBarDriver.Model.Item: Equatable {
-  static func ==(
-    left: MenuBarDriver.Model.Item,
-    right: MenuBarDriver.Model.Item
-  ) -> Bool { return
-    left.enabled == right.enabled &&
-    left.id == right.id &&
-    left.title == left.title
   }
 }
 

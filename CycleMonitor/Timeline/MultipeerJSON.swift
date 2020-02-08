@@ -12,7 +12,7 @@ import RxSwift
 import Curry
 import Runes
 
-class MultipeerJSON:
+final class MultipeerJSON:
       NSObject,
       MCNearbyServiceBrowserDelegate,
       MCSessionDelegate {
@@ -62,7 +62,7 @@ class MultipeerJSON:
     return output
   }
   
-  func render(old: Model?, new: Model) {
+  public func render(old: Model?, new: Model) {
     if session == nil {
       let session = MCSession(
         peer: mine,
@@ -295,28 +295,4 @@ extension Data {
     NSKeyedUnarchiver.unarchiveObject(with: self) as? MCPeerID
   }
 }
-
-//extension MultipeerJSON.Model.Device: Equatable {
-//  static func ==(
-//    left: MultipeerJSON.Model.Device,
-//    right: MultipeerJSON.Model.Device
-//  ) -> Bool { return
-//    left.peerID == right.peerID &&
-//    left.transmissionState == right.transmissionState
-//  }
-//}
-//
-//extension MultipeerJSON.Model.Device.ConnectionState: Equatable {
-//  static func ==(
-//    left: MultipeerJSON.Model.Device.ConnectionState,
-//    right: MultipeerJSON.Model.Device.ConnectionState
-//  ) -> Bool {
-//    switch (left, right) {
-//    case (.sending(let a), .sending(let b)): return NSDictionary(dictionary: a) == NSDictionary(dictionary: b)
-//    case (.idle, .idle): return true
-//    case (.disconnected, .disconnected): return true
-//    default: return false
-//    }
-//  }
-//}
 

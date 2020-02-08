@@ -15,7 +15,6 @@
 		D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */; };
 		D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* MultipeerJSON.swift */; };
 		D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */; };
-		D31D15921F0CBEF20009DE25 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D15911F0CBEF20009DE25 /* main.swift */; };
 		D33F06E11F60F58A0099AD39 /* Integer_Mutation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */; };
 		D33F8D451F5B37B4002C122D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33F8D401F5B37B4002C122D /* Info.plist */; };
 		D33F8D5F1F5B3874002C122D /* BugReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D3F1F5B37B4002C122D /* BugReporter.swift */; };
@@ -30,6 +29,7 @@
 		D3AAF99D1F6B89B30069C457 /* 2017-09-15 04:00:55 +00002.moment in Resources */ = {isa = PBXBuildFile; fileRef = D3AAF99A1F6B88320069C457 /* 2017-09-15 04:00:55 +00002.moment */; };
 		D3AAF99E1F6B89B30069C457 /* 2017-09-15 04:00:55 +00003.moment in Resources */ = {isa = PBXBuildFile; fileRef = D3AAF9971F6B88310069C457 /* 2017-09-15 04:00:55 +00003.moment */; };
 		D3AAF99F1F6B89B30069C457 /* 2017-09-15 04:00:55 +00004.moment in Resources */ = {isa = PBXBuildFile; fileRef = D3AAF9991F6B88320069C457 /* 2017-09-15 04:00:55 +00004.moment */; };
+		D3ACAE7523D41920009B7FD7 /* RxSwiftHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */; };
 		D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
 		D3CA844B1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
 		D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */; };
@@ -74,7 +74,6 @@
 		D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
 		D31169561F0B13A5004A0135 /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
 		D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cycle-MacOS.swift"; sourceTree = "<group>"; };
-		D31D15911F0CBEF20009DE25 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		D33F06DE1F60F5890099AD39 /* Integer Mutation Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Integer Mutation Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer_Mutation_Tests.swift; sourceTree = "<group>"; };
 		D33F06E21F60F58A0099AD39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -92,6 +91,7 @@
 		D3AAF9981F6B88310069C457 /* 2017-09-15 04:00:55 +00001.moment */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "2017-09-15 04:00:55 +00001.moment"; sourceTree = "<group>"; };
 		D3AAF9991F6B88320069C457 /* 2017-09-15 04:00:55 +00004.moment */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "2017-09-15 04:00:55 +00004.moment"; sourceTree = "<group>"; };
 		D3AAF99A1F6B88320069C457 /* 2017-09-15 04:00:55 +00002.moment */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "2017-09-15 04:00:55 +00002.moment"; sourceTree = "<group>"; };
+		D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxSwiftHelper.swift; sourceTree = "<group>"; };
 		D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleMonitorEvent.swift; sourceTree = "<group>"; };
 		D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserDriver.swift; sourceTree = "<group>"; };
 		D3F5B70B1EFF08530020290A /* CycleMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CycleMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,7 +168,7 @@
 				D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */,
 				D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */,
 				D39E19691F5FA99B0087BF3A /* CycleMonitorTests.swift */,
-				D31D15911F0CBEF20009DE25 /* main.swift */,
+				D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */,
 			);
 			name = Cycle;
 			sourceTree = "<group>";
@@ -401,7 +401,7 @@
 					D3F5B70A1EFF08530020290A = {
 						CreatedOnToolsVersion = 8.2.1;
 						LastSwiftMigration = 0940;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					D3F5B71B1EFF08530020290A = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -416,6 +416,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -516,36 +517,34 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-iOS/Argo.framework",
-				"${BUILT_PRODUCTS_DIR}/Changeset-iOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-iOS/Curry.framework",
 				"${BUILT_PRODUCTS_DIR}/Cycle-iOS/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/Runes-iOS/Runes.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-iOS/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay-iOS/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwiftExt-iOS/RxSwiftExt.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCoreMotion/RxCoreMotion.framework",
-				"${BUILT_PRODUCTS_DIR}/RxUIApplicationDelegate/RxUIApplicationDelegate.framework",
 				"${BUILT_PRODUCTS_DIR}/Wrap/Wrap.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Argo.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Runes.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCoreMotion.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxUIApplicationDelegate.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Wrap.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8F90079999DB96B9536AA35D /* [CP] Embed Pods Frameworks */ = {
@@ -554,7 +553,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
@@ -565,7 +564,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9EC9C2EB6D9EEF767B2E9F2F /* [CP] Embed Pods Frameworks */ = {
@@ -574,30 +573,30 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Argo-macOS/Argo.framework",
-				"${BUILT_PRODUCTS_DIR}/Changeset-macOS/Changeset.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-macOS/Curry.framework",
 				"${BUILT_PRODUCTS_DIR}/Cycle-macOS/Cycle.framework",
 				"${BUILT_PRODUCTS_DIR}/Runes-macOS/Runes.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-macOS/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay-macOS/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift-macOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwiftExt-macOS/RxSwiftExt.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Argo.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Changeset.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Runes.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwiftExt.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A6A98DC32D0EFDA02B730E75 /* [CP] Check Pods Manifest.lock */ = {
@@ -664,7 +663,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D31D15921F0CBEF20009DE25 /* main.swift in Sources */,
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
 				D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
@@ -673,6 +671,7 @@
 				D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */,
 				D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */,
 				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,
+				D3ACAE7523D41920009B7FD7 /* RxSwiftHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -725,7 +724,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
 			};
 			name = Debug;
@@ -744,7 +743,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Integer Mutation.app/Integer Mutation";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -756,15 +755,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9R3LQ2Q36B;
 				INFOPLIST_FILE = "Example/Integer Mutation/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -775,15 +777,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9R3LQ2Q36B;
 				INFOPLIST_FILE = "Example/Integer Mutation/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.briansemiglia.Integer-Mutation";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -900,13 +905,16 @@
 			baseConfigurationReference = 33C9813CB0D5810BF73BD00A /* Pods-CycleMonitor.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CycleMonitor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -915,13 +923,16 @@
 			baseConfigurationReference = ADFACFACEDF671E39855239D /* Pods-CycleMonitor.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CycleMonitor/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -937,7 +948,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
 			};
 			name = Debug;
@@ -954,7 +965,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.briansemiglia.CycleMonitorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CycleMonitor.app/Contents/MacOS/CycleMonitor";
 			};
 			name = Release;

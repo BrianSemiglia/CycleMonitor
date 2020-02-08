@@ -12,7 +12,7 @@ import RxCocoa
 import Runes
 
 class TimelineViewItem: NSCollectionViewItem {
-  enum Output {
+  enum Output: Equatable {
     case idle
     case selected
     case deselected

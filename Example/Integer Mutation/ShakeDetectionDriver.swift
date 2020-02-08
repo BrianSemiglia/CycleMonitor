@@ -11,15 +11,15 @@ import RxSwift
 import CoreMotion
 import RxCoreMotion
 
-class ShakeDetection {
-  struct Model {
-    enum State {
+final class ShakeDetection: NSObject, Drivable {
+  struct Model: Equatable {
+    enum State: Equatable {
       case idle
       case listening
     }
     var state: State
   }
-  enum Action {
+  enum Action: Equatable {
     case none
     case detecting
   }
@@ -31,6 +31,7 @@ class ShakeDetection {
   
   init(initial: Model) {
     model = initial
+    super.init()
     motions
       .rx
       .accelerometerData
@@ -38,17 +39,18 @@ class ShakeDetection {
       .scan([]) { $0 + [$1] }
       .map { $0.suffix(2) }
       .map (Array.init)
+      .filter { _ in self.model.state == ShakeDetection.Model.State.listening }
       .filter {
         if $0.count > 1 { return
-          fabs($0[0].x) > (fabs($0[1].x) + 0.75) ||
-          fabs($0[0].y) > (fabs($0[1].y) + 0.75) ||
-          fabs($0[0].z) > (fabs($0[1].z) + 0.75)
+          fabs($0[0].x) > (fabs($0[1].x) + 0.65) ||
+          fabs($0[0].y) > (fabs($0[1].y) + 0.65) ||
+          fabs($0[0].z) > (fabs($0[1].z) + 0.65)
         } else {
           return false
         }
       }
       .throttle(
-        0.5,
+        .milliseconds(500),
         scheduler: MainScheduler.asyncInstance
       )
       .subscribe { [weak self] x in
@@ -57,22 +59,17 @@ class ShakeDetection {
       .disposed(by: cleanup)
     render(initial)
   }
-  
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input.subscribe {
-      if let new = $0.element {
-        self.render(new)
-      }
-    }.disposed(by: cleanup)
-    return output
-  }
+      
+    func events() -> Observable<ShakeDetection.Action> {
+        return output.asObservable()
+    }
   
   func render(_ input: Model) {
-    switch input.state {
-    case .idle:
-      motions.stopAccelerometerUpdates()
-    case .listening:
-      motions.startAccelerometerUpdates()
-    }
+//    switch input.state {
+//    case .idle:
+//      motions.stopAccelerometerUpdates()
+//    case .listening:
+//      motions.startAccelerometerUpdates()
+//    }
   }
 }

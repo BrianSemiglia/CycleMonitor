@@ -18,17 +18,16 @@ class TimeLineViewController:
       NSViewController,
       NSCollectionViewDataSource,
       NSCollectionViewDelegateFlowLayout,
-      RootViewProviding,
       NSTextViewDelegate {
   
-  struct Model {
-    struct Driver {
+  struct Model: Equatable {
+    struct Driver: Equatable {
       let label: String
       let action: String?
       let background: NSColor
       let side: NSColor
     }
-    struct CauseEffect {
+    struct CauseEffect: Equatable {
       var cause: String
       var effect: String
       var approved: Bool
@@ -40,23 +39,23 @@ class TimeLineViewController:
         self.color = color
       }
     }
-    enum Connection {
+    enum Connection: Equatable {
       case idle
       case connecting
       case connected
       case disconnected
     }
-    struct Selection {
+    struct Selection: Equatable {
       var color: NSColor
       let index: Int
     }
-    enum EventHandlingState: Int {
+    enum EventHandlingState: Int, Equatable {
       case playing
       case playingSendingEvents
       case playingSendingEffects
       case recording
     }
-    struct Device {
+    struct Device: Equatable {
       var name: String
       var connection: Connection
     }
@@ -69,7 +68,7 @@ class TimeLineViewController:
     var devices: [Device]
   }
   
-  enum Action {
+  enum Action: Equatable {
     case none
     case scrolledToIndex(Int)
     case toggledApproval(Int, Bool)
@@ -90,7 +89,7 @@ class TimeLineViewController:
   @IBOutlet var devices: NSPopUpButton?
 
   private var cleanup = DisposeBag()
-  private let output = BehaviorSubject(value: Action.none)
+  public  let output = BehaviorSubject(value: Action.none)
   private var shouldForceRender = false
 
   var model = Model(
@@ -226,8 +225,17 @@ class TimeLineViewController:
   var root: NSViewController {
     return self
   }
-  
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
+
+    public func rendered(_ input: Model) {
+        let old = self.model
+        self.model = input
+        self.render(
+          old: old,
+          new: input
+        )
+    }
+    
+  public func rendered(_ input: Observable<Model>) {
     input
       .observeOn(MainScheduler.instance)
       .subscribe(
@@ -241,9 +249,8 @@ class TimeLineViewController:
         }
       )
       .disposed(by: cleanup)
-    return output
   }
-  
+      
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
     if let new = input.selectedSegment.eventHandlingState {
       output.on(.next(.didSelectEventHandling(new)))
@@ -480,82 +487,6 @@ extension TimeLineViewController {
   }
 }
 
-extension TimeLineViewController.Model: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model,
-    right: TimeLineViewController.Model
-  ) -> Bool { return
-    left.drivers == right.drivers &&
-    left.causesEffects == right.causesEffects &&
-    left.presentedState == right.presentedState &&
-    left.selected == left.selected &&
-    left.connection == right.connection &&
-    left.eventHandlingState == right.eventHandlingState
-  }
-}
-
-extension TimeLineViewController.Action: Equatable {
-  static func ==(left: TimeLineViewController.Action, right: TimeLineViewController.Action) -> Bool {
-    switch (left, right) {
-    case (.none, .none):
-      return true
-    case (scrolledToIndex(let a), scrolledToIndex(let b)):
-      return a == b
-    case (.toggledApproval(let a, let c), .toggledApproval(let b, let d)):
-      return a == b && c == d
-    default:
-      return false
-    }
-  }
-}
-
-extension TimeLineViewController.Model.CauseEffect: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model.CauseEffect,
-    right: TimeLineViewController.Model.CauseEffect
-  ) -> Bool { return
-    left.cause == right.cause &&
-    left.effect == right.effect &&
-    left.approved == right.approved
-  }
-}
-
-extension TimeLineViewController.Model.Driver: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model.Driver,
-    right: TimeLineViewController.Model.Driver
-  ) -> Bool { return
-    left.label == right.label &&
-    left.action == right.action &&
-    left.background == right.background &&
-    left.side == right.side
-  }
-}
-
-extension TimeLineViewController.Model.Connection: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model.Connection,
-    right: TimeLineViewController.Model.Connection
-  ) -> Bool {
-    switch (left, right) {
-    case (.connecting, .connecting): return true
-    case (.connected, connected): return true
-    case (.disconnected, disconnected): return true
-    default: return false
-    }
-  }
-}
-
-extension TimeLineViewController.Model.Selection: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model.Selection,
-    right: TimeLineViewController.Model.Selection
-  ) -> Bool { return
-    left.color == right.color &&
-    left.index == right.index
-  }
-}
-
 extension NSScrollView {
     var documentVisibleCenter: NSPoint { return
         NSPoint(
@@ -574,15 +505,5 @@ extension Int {
     case 3: return .recording
     default: return nil
     }
-  }
-}
-
-extension TimeLineViewController.Model.Device: Equatable {
-  static func ==(
-    left: TimeLineViewController.Model.Device,
-    right: TimeLineViewController.Model.Device
-  ) -> Bool { return
-    left.connection == right.connection &&
-    left.name == right.name
   }
 }

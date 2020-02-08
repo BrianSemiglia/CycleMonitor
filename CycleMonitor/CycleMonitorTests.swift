@@ -172,7 +172,7 @@ class CycleMonitorTests: XCTestCase {
     // should encode event
     XCTAssertEqual(
       CycleMonitorTests.eventSuccess()
-        .map { $0.playback() as [AnyHashable: Any] }
+        .map { $0.coerced() as [AnyHashable: Any] }
         .map (NSDictionary.init)
       ,
       NSDictionary(

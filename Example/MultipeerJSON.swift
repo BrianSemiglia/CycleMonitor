@@ -11,11 +11,19 @@ import MultipeerConnectivity
 import RxSwift
 import RxSwiftExt
 
-public class MultipeerJSON:
+public final class MultipeerJSON:
              NSObject,
              MCNearbyServiceAdvertiserDelegate,
              MCSessionDelegate {
 
+    struct Model {
+        enum State {
+            case sending([AnyHashable: Any])
+            case receiving([AnyHashable: Any])
+        }
+        var state: State
+    }
+    
   public enum Action {
     case idle
     case connecting
@@ -169,7 +177,7 @@ public class MultipeerJSON:
   
 }
 
-extension Observable where E == MultipeerJSON.Action {
+extension Observable where Element == MultipeerJSON.Action {
   var isConnected: Observable<Bool> { return
     map {
       switch $0 {

@@ -11,123 +11,101 @@ import RxCocoa
 import RxSwift
 import Cycle
 
-class ValueToggler: RootViewProviding {
+final class ValueToggler: UIView, Drivable {
     
-  struct Model {
-    struct Button {
-      enum State {
-        case enabled
-        case disabled
-        case highlighted
-      }
-      var state: State
-      var title: String
-    }
-    var total: String
-    var increment: Button
-    var decrement: Button
-  }
-  
-  enum Action {
-    case incrementing
-    case decrementing
-  }
-  
-  let label = UILabel(
-    frame: CGRect(
-      origin: CGPoint(
-        x: 50,
-        y: 100
-      ),
-      size: CGSize(
-        width: 100,
-        height: 44
-      )
-    )
-  )
-  
-  var increment = UIButton(
-    frame: CGRect(
-      origin: CGPoint(x: 114, y: 144),
-      size: CGSize(width: 44, height: 44)
-    )
-  )
-  var decrement = UIButton(
-    frame: CGRect(
-      origin: CGPoint(x: 50, y: 144),
-      size: CGSize(width: 44, height: 44)
-    )
-  )
-  
-  var cleanup = DisposeBag()
-  let root = UIViewController.empty
-  
-  init() {
-    increment.backgroundColor = .gray
-    decrement.backgroundColor = .red
-    root.view.addSubview(label)
-    root.view.addSubview(increment)
-    root.view.addSubview(decrement)
-  }
-  
-  func rendered(_ input: Observable<ValueToggler.Model>) -> Observable<ValueToggler.Action> {
-    input
-      .observeOn(MainScheduler.instance)
-      .subscribe { possible in
-        if let latest = possible.element {
-          self.increment.isEnabled = latest.increment.state == .enabled
-          self.increment.isEnabled = latest.increment.state != .disabled
-          self.increment.alpha = latest.increment.state == .disabled ? 0.5 : 1
-          self.increment.setTitle(
-            latest.increment.title,
-            for: .normal
-          )
-          self.decrement.isEnabled = latest.decrement.state == .enabled
-          self.decrement.isEnabled = latest.decrement.state != .disabled
-          self.decrement.alpha = latest.decrement.state == .disabled ? 0.5 : 1
-          self.decrement.setTitle(
-            latest.decrement.title,
-            for: .normal
-          )
-          self.label.text = latest.total
+    struct Model: Equatable {
+        struct Button: Equatable {
+            enum State: Equatable {
+                case enabled
+                case disabled
+                case highlighted
+            }
+            var state: State
+            var title: String
         }
-      }
-      .disposed(by:cleanup)
-
-    let inc = self.increment.rx.tap.asObservable().map { _ in
-        ValueToggler.Action.incrementing
+        var total: String
+        var increment: Button
+        var decrement: Button
     }
     
-    let dec = self.decrement.rx.tap.asObservable().map { _ in
-      ValueToggler.Action.decrementing
+    enum Event {
+        case incrementing
+        case decrementing
     }
-    return Observable.of(inc, dec).merge()
-  }
-}
-
-extension ValueToggler.Model {
-  func copyWith(inc: ValueToggler.Model.Button.State, dec: ValueToggler.Model.Button.State) -> ValueToggler.Model {
-    var x = self
-    x.decrement.state = dec
-    x.increment.state = inc
-    return x
-  }
-}
-
-extension ValueToggler.Model {
-  static var empty: ValueToggler.Model { return
-    ValueToggler.Model(
-      total: "0",
-      increment: ValueToggler.Model.Button(state: .enabled, title: "+"),
-      decrement: ValueToggler.Model.Button(state: .enabled, title: "-")
+    
+    let label = UILabel(
+        frame: CGRect(
+            origin: CGPoint(
+                x: 50,
+                y: 100
+            ),
+            size: CGSize(
+                width: 100,
+                height: 44
+            )
+        )
     )
-  }
+    
+    var increment = UIButton(
+        frame: CGRect(
+            origin: CGPoint(x: 114, y: 144),
+            size: CGSize(width: 44, height: 44)
+        )
+    )
+    var decrement = UIButton(
+        frame: CGRect(
+            origin: CGPoint(x: 50, y: 144),
+            size: CGSize(width: 44, height: 44)
+        )
+    )
+    
+    var cleanup = DisposeBag()
+    
+    @available(*, unavailable) required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init() {
+        increment.backgroundColor = .gray
+        decrement.backgroundColor = .red
+        super.init(frame: .zero)
+        addSubview(label)
+        addSubview(increment)
+        addSubview(decrement)
+    }
+  
+    func render(_ input: Model) {
+        self.increment.setTitle(
+            input.increment.title,
+            for: .normal
+        )
+        self.increment.isEnabled =
+            input.increment.state == .enabled ||
+            input.increment.state == .highlighted
+        self.decrement.setTitle(
+            input.decrement.title,
+            for: .normal
+        )
+        self.decrement.isEnabled =
+            input.decrement.state == .enabled ||
+            input.decrement.state == .highlighted
+        self.label.text = input.total
+    }
+    
+    func events() -> Observable<ValueToggler.Event> {
+        return Observable.merge(
+            self.increment.rx.tap.asObservable().map { Event.incrementing },
+            self.decrement.rx.tap.asObservable().map { Event.decrementing }
+        )
+    }
 }
 
-extension UIViewController {
-  public static var empty: UIViewController {
-    let x = UIViewController()
-    x.view.backgroundColor = .white
-    return x
-  }
+extension ValueToggler.Model {
+    static var empty: ValueToggler.Model { return
+        ValueToggler.Model(
+            total: "0",
+            increment: ValueToggler.Model.Button(state: .enabled, title: "+"),
+            decrement: ValueToggler.Model.Button(state: .enabled, title: "-")
+        )
+    }
 }

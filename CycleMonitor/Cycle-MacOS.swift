@@ -11,9 +11,209 @@ import RxSwift
 import RxSwiftExt
 import Cycle
 
+@NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
+    
+    var lens: CycledLens<
+        (TimeLineViewController,
+        AppDelegateStub,
+        MultipeerJSON,
+        BrowserDriver,
+        MenuBarDriver,
+        TerminationDriver),
+        CycleMonitorApp.Model
+    >?
+    let cleanup = DisposeBag()
+    var main: NSWindowController?
+
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        
+        self.lens = CycledLens { state in
+            let view = state.lens(
+                get: { states in
+                    TimeLineViewController
+                        .new(
+                            model: TimeLineViewController.Model(
+                                drivers: [],
+                                causesEffects: [],
+                                presentedState: "",
+                                selected: nil,
+                                connection: .connected,
+                                eventHandlingState: .playing,
+                                devices: []
+                            )
+                        )
+                        .rendering(states) { view, state in
+                            view.rendered(state.coerced())
+                        }
+                },
+                set: { view, states in
+                    view.output.tupledWithLatestFrom(states).reduced()
+                }
+            )
+            
+            let appDelegate = state.lens(
+                get: { states in
+                    AppDelegateStub().rendering(states) { driver, states in }
+                },
+                set: { driver, states in states }
+            )
+            
+            let multipeer = state.lens(
+                get: { states in
+                    MultipeerJSON()
+                        .rendering(
+                            Observable
+                                .merge([
+                                  states.connection,
+                                  states.jsonEvents,
+                                  states.jsonEffects
+                                ])
+                                .lastTwo()
+                        ) { driver, states in
+                            driver.render(
+                                old: states.0,
+                                new: states.1
+                            )
+                        }
+                },
+                set: { driver, states in
+                    driver.output.tupledWithLatestFrom(states).reduced()
+                }
+            )
+            
+            let browser = state.lens(
+                get: { states in
+                    BrowserDriver(
+                        initial: BrowserDriver.Model(
+                            state: BrowserDriver.Model.State.opening
+                        )
+                    )
+                    .rendering(states) { driver, states in
+                        
+                    }
+                },
+                set: { driver, states in states }
+            )
+            
+            let menuBar = state.lens(
+                get: { states in
+                    MenuBarDriver(
+                        model: MenuBarDriver.Model(
+                            items: []
+                        )
+                    )
+                    .rendering(states) { driver, states in
+                        
+                    }
+                },
+                set: { driver, states in states }
+            )
+            
+            let terminator = state.lens(
+                get: { states in
+                    TerminationDriver(
+                        model: TerminationDriver.Model(
+                            shouldTerminate: false
+                        )
+                    )
+                    .rendering(states) { driver, states in
+                        
+                    }
+                },
+                set: { driver, states in states }
+            )
+            
+            return MutatingLens.zip(
+                view,
+                appDelegate,
+                multipeer,
+                browser,
+                menuBar,
+                terminator
+            )
+                .prefixed(
+                    with: .just(CycleMonitorApp.Model.init())
+                )
+            /*
+            
+            let screen = drivers
+              .screen
+              .rendered(incoming.map (TimeLineViewController.Model.coerced))
+              .tupledWithLatestFrom(incoming)
+              .reduced()
+            
+            let application = drivers
+              .application
+              .rendered(incoming.map { $0.application })
+              .tupledWithLatestFrom(incoming)
+              .reduced()
+
+            let multipeer = drivers
+              .multipeer
+              .rendered(
+                Observable.merge([
+                  incoming.connection,
+                  incoming.jsonEvents,
+                  incoming.jsonEffects
+                ])
+                .lastTwo()
+              )
+              .tupledWithLatestFrom(incoming)
+              .reduced()
+            
+            let browser = drivers
+              .browser
+              .rendered(incoming.map { $0.browser })
+              .tupledWithLatestFrom(incoming)
+              .reduced()
+            
+            let menuBar = drivers
+              .menuBar
+              .rendered(incoming.map { $0.menuBar })
+              .tupledWithLatestFrom(incoming)
+              .reduced()
+            
+            let termination = drivers
+              .termination
+              .rendered(
+                incoming.map {
+                  TerminationDriver.Model(
+                    shouldTerminate: $0.isTerminating
+                  )
+                }
+              )
+              .tupledWithLatestFrom(incoming)
+              .map { $0.1 }
+            
+            return .merge([
+              screen,
+              application,
+              multipeer,
+              browser,
+              menuBar,
+              termination
+            ])
+ 
+             */
+        }
+        
+        main = NSStoryboard(
+            name: "Main",
+            bundle: nil
+        )
+        .instantiateController(
+            withIdentifier: "MainWindow"
+        )
+        as? NSWindowController
+
+        main?.window?.contentViewController = lens?.receiver.0
+        main?.window?.makeKeyAndOrderFront(nil)
+    }
+}
+
 class AppDelegateStub: NSObject, NSApplicationDelegate {
-  struct Model {}
-  enum Action {
+  struct Model: Equatable {}
+  enum Action: Equatable {
     case none
   }
   private let output = BehaviorSubject(value: Action.none)
@@ -22,49 +222,49 @@ class AppDelegateStub: NSObject, NSApplicationDelegate {
   }
 }
 
-struct CycleMonitorApp: IORouter {
-  static let seed = Model()
-  struct Model {
-    enum EventHandlingState {
-      case playing
-      case playingSendingEvents
-      case playingSendingEffects
-      case recording
-    }
-    struct TimeLineView {
-      var selectedIndex: Int?
-    }
-    enum Connection {
-      case idle
-      case disconnected
-      case connecting
-      case connected
-    }
-    struct Device {
-      var name: String
-      var connection: Connection
-      var peerID: Data
-    }
-    var events: [Moment] = []
-    var timeLineView = TimeLineView(
-      selectedIndex: nil
-    )
-    var multipeer = Connection.idle
-    var application = AppDelegateStub.Model()
-    var browser = BrowserDriver.Model(state: .idle)
-    var menuBar = MenuBarDriver.Model(
-      items: [
-        .openTimeline,
-        .saveTimeline,
-        .exportTests
-      ]
-    )
-    var eventHandlingState = EventHandlingState.playing
-    var isTerminating = false
-    var devices: [Device] = []
-    var selectedPeer: Data?
+struct CycleMonitorApp {
+    static let seed = Model()
+    struct Model: Equatable {
+        enum EventHandlingState: Equatable {
+            case playing
+            case playingSendingEvents
+            case playingSendingEffects
+            case recording
+        }
+        struct TimeLineView: Equatable {
+            var selectedIndex: Int?
+        }
+        enum Connection: Equatable {
+            case idle
+            case disconnected
+            case connecting
+            case connected
+        }
+        struct Device: Equatable {
+            var name: String
+            var connection: Connection
+            var peerID: Data
+        }
+        var events: [Moment] = []
+        var timeLineView = TimeLineView(
+            selectedIndex: nil
+        )
+        var multipeer = Connection.idle
+        var application = AppDelegateStub.Model()
+        var browser = BrowserDriver.Model(state: .idle)
+        var menuBar = MenuBarDriver.Model(
+            items: [
+                .openTimeline,
+                .saveTimeline,
+                .exportTests
+            ]
+        )
+        var eventHandlingState = EventHandlingState.playing
+        var isTerminating = false
+        var devices: [Device] = []
+        var selectedPeer: Data?
   }
-  struct Drivers: MainDelegateProviding, ScreenDrivable {
+  struct Drivers {
     let screen: TimeLineViewController
     let multipeer: MultipeerJSON
     let application: AppDelegateStub
@@ -96,11 +296,11 @@ struct CycleMonitorApp: IORouter {
     incoming: Observable<Model>,
     to drivers: Drivers
   ) -> Observable<Model> {
-    let screen = drivers
-      .screen
-      .rendered(incoming.map (TimeLineViewController.Model.coerced))
-      .tupledWithLatestFrom(incoming)
-      .reduced()
+//    let screen = drivers
+//      .screen
+//      .rendered(incoming.map (TimeLineViewController.Model.coerced))
+//      .tupledWithLatestFrom(incoming)
+//      .reduced()
     
     let application = drivers
       .application
@@ -146,7 +346,7 @@ struct CycleMonitorApp: IORouter {
       .map { $0.1 }
     
     return .merge([
-      screen,
+//      screen,
       application,
       multipeer,
       browser,
@@ -157,11 +357,11 @@ struct CycleMonitorApp: IORouter {
 }
 
 extension Observable {
-  func secondToLast() -> Observable<E?> { return
+  func secondToLast() -> Observable<Element?> { return
     last(2)
     .map { $0.first }
   }
-  func lastTwo() -> Observable<(E?, E)> { return
+  func lastTwo() -> Observable<(Element?, Element)> { return
     last(2)
     .map {
       switch $0.count {
@@ -171,19 +371,10 @@ extension Observable {
       }
     }
   }
-  func last(_ count: Int) -> Observable<[E]> { return
+  func last(_ count: Int) -> Observable<[Element]> { return
     scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }
     .map (Array.init)
-  }
-}
-
-extension CycleMonitorApp.Model.TimeLineView: Equatable {
-  static func ==(
-    left: CycleMonitorApp.Model.TimeLineView,
-    right: CycleMonitorApp.Model.TimeLineView
-  ) -> Bool { return
-    left.selectedIndex == right.selectedIndex
   }
 }
 
@@ -192,18 +383,18 @@ extension CycleMonitorApp.Model {
     timeLineView
     .selectedIndex
     .flatMap { events[safe: $0] }
-    .map { $0.cause.coerced() as [AnyHashable: Any] }
+    .map { $0.frame.cause.coerced() as [AnyHashable: Any] }
     .map { ["cause": $0] }
   }
   func selectedEffect() -> [AnyHashable: Any]? { return
     timeLineView
     .selectedIndex
     .flatMap { events[safe: $0] }
-    .map { ["effect": $0.effect] }
+    .map { ["effect": $0.frame.effect] }
   }
 }
 
-extension Observable where E == CycleMonitorApp.Model {
+extension Observable where Element == CycleMonitorApp.Model {
   var connection: Observable<MultipeerJSON.Model> { return
     flatMap { model in
       Observable<MultipeerJSON.Model>.concat(
@@ -265,7 +456,7 @@ extension CycleMonitorApp.Model {
   func selectedEffect() -> String? { return
     timeLineView.selectedIndex
       .flatMap { events[safe: $0] }
-      .flatMap { $0.effect }
+    .flatMap { $0.frame.effect }
   }
 }
 
@@ -321,10 +512,10 @@ extension TimeLineViewController.Model.CauseEffect {
 extension Moment {
   func coerced() -> TimeLineViewController.Model.CauseEffect { return
     TimeLineViewController.Model.CauseEffect(
-      cause: cause.action,
-      effect: effect,
-      approved: isApproved,
-      color: cause.id.hashValue.goldenRatioColored()
+        cause: frame.cause.action,
+        effect: frame.effect,
+        approved: frame.isApproved,
+        color: frame.cause.id.hashValue.goldenRatioColored()
     )
   }
 }
@@ -343,7 +534,7 @@ extension CycleMonitorApp.Model {
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
-      presentedState: events[safe: timeLineView.selectedIndex ?? 0].map { $0.effect } ?? "",
+      presentedState: events[safe: timeLineView.selectedIndex ?? 0].map { $0.frame.effect } ?? "",
       selected: TimeLineViewController.Model.Selection(
         color: .cy_lightGray,
         index: timeLineView.selectedIndex ?? 0
@@ -389,12 +580,12 @@ extension NSColor {
 }
 
 extension ObservableType {
-  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(E, T)> { return
+  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(Element, T)> { return
     withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
-extension ObservableType where E == (TimeLineViewController.Action, CycleMonitorApp.Model) {
+extension ObservableType where Element == (TimeLineViewController.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
@@ -404,7 +595,7 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         return new
       case .toggledApproval(let index, let isApproved):
         var new = context
-        new.events[index].isApproved = isApproved
+        new.events[index].frame.isApproved = isApproved
         return new
       case .didSelectEventHandling(let new):
         switch new {
@@ -427,7 +618,7 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
         }
       case .didCreatePendingStateEdit(let newState):
         var new = context
-        new.events[new.timeLineView.selectedIndex!].effect = newState
+        new.events[new.timeLineView.selectedIndex!].frame.effect = newState
         return new
       case .didSelectClearAll:
         var new = context
@@ -450,7 +641,7 @@ extension ObservableType where E == (TimeLineViewController.Action, CycleMonitor
   }
 }
 
-extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model) {
+extension ObservableType where Element == (MultipeerJSON.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
@@ -505,7 +696,7 @@ extension ObservableType where E == (MultipeerJSON.Action, CycleMonitorApp.Model
   }
 }
 
-extension ObservableType where E == (AppDelegateStub.Action, CycleMonitorApp.Model) {
+extension ObservableType where Element == (AppDelegateStub.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       return context
@@ -532,7 +723,7 @@ extension CycleMonitorApp.Model.TimeLineView {
   }
 }
 
-extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model) {
+extension ObservableType where Element == (BrowserDriver.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
@@ -553,7 +744,7 @@ extension ObservableType where E == (BrowserDriver.Action, CycleMonitorApp.Model
   }
 }
 
-extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model) {
+extension ObservableType where Element == (MenuBarDriver.Action, CycleMonitorApp.Model) {
   func reduced() -> Observable<CycleMonitorApp.Model> { return
     map { event, context in
       switch event {
@@ -572,7 +763,7 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
         new.browser.state = .savingMany(
           context
             .events
-            .filter { $0.isApproved }
+            .filter { $0.frame.isApproved }
             .map { $0.testFile }
         )
         return new
@@ -588,12 +779,9 @@ extension ObservableType where E == (MenuBarDriver.Action, CycleMonitorApp.Model
   }
 }
 
-class TerminationDriver {
+class TerminationDriver: NSObject {
   struct Model: Equatable {
     var shouldTerminate: Bool
-    static func ==(left: Model, right: Model) -> Bool { return
-      left.shouldTerminate == right.shouldTerminate
-    }
   }
   
   enum Action {
@@ -613,6 +801,7 @@ class TerminationDriver {
   
   init(model: Model) {
     self.model = model
+    super.init()
     render(model)
   }
   
@@ -651,9 +840,9 @@ extension Moment {
         "action": $0.action,
         "id": $0.id
       ]},
-      "cause": cause.coerced() as [AnyHashable: Any],
-      "context": context,
-      "effect": effect
+      "cause": frame.cause.coerced() as [AnyHashable: Any],
+      "context": frame.context,
+      "effect": frame.effect
     ]
   }
 }
@@ -677,20 +866,26 @@ import Runes
 import Curry
 
 extension Moment: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<Moment> {
-    return curry(Moment.init)
-      <^> (json <|| "drivers")
-        .map(NonEmptyArray.init)
+  public static func decode(_ json: JSON) -> Decoded<Moment> {
+    
+    let drivers = (json <|| "drivers")
+        .map(NonEmptyArray<Driver>.init)
         .flatMap(Decoded<NonEmptyArray<Moment>>.fromOptional)
-      <*> json <| "cause"
-      <*> json <| "effect"
-      <*> json <| "context"
-      <*> (json <| "isApproved" <|> .success(false))
+    
+    let frame = curry(Moment.Frame.init)
+        <^> json <| "cause"
+        <*> json <| "effect"
+        <*> json <| "context"
+        <*> (json <| "isApproved" <|> .success(false))
+    
+    return curry(Moment.init)
+        <^> drivers
+        <*> frame
   }
 }
 
 extension Moment.Driver: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<Moment.Driver> {
+  public static func decode(_ json: JSON) -> Decoded<Moment.Driver> {
     return curry(Moment.Driver.init)
       <^> json <| "label"
       <*> json <| "action"
