@@ -24,7 +24,6 @@ PODS:
     - RxSwiftExt/Core
   - RxTest (5.0.1):
     - RxSwift (~> 5)
-  - Wrap (3.0.0)
 
 DEPENDENCIES:
   - Argo (~> 4.0)
@@ -35,7 +34,6 @@ DEPENDENCIES:
   - RxSwift
   - RxSwiftExt
   - RxTest
-  - Wrap (~> 3.0)
 
 SPEC REPOS:
   trunk:
@@ -48,7 +46,6 @@ SPEC REPOS:
     - RxSwift
     - RxSwiftExt
     - RxTest
-    - Wrap
 
 EXTERNAL SOURCES:
   Cycle:
@@ -71,8 +68,7 @@ SPEC CHECKSUMS:
   RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   RxSwiftExt: 4ca80336f43c28f11a2825cdd2fc61dd6c044697
   RxTest: 0132f952a61da82d5233abedaa559df91e5330e5
-  Wrap: 918fdb5157e4f701f9503b2633752d6f94616f84
 
-PODFILE CHECKSUM: 98a1c29ef58a9f881e2e1b26a41e8274d1763e18
+PODFILE CHECKSUM: db0a5b9eb9fb7dcb2c441c2b76a67bf38238f43a
 
 COCOAPODS: 1.8.4

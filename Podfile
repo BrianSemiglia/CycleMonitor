@@ -21,9 +21,7 @@ target 'Integer Mutation' do
   pod 'Curry',                   '~> 4.0'
   pod 'RxCoreMotion'
   pod 'Argo',                    '~> 4.0'
-  pod 'Wrap',                    '~> 3.0'
   pod 'RxSwiftExt'
-# pod 'RxUIApplicationDelegate', '~> 0.1.3'
   target 'Integer Mutation Tests' do
     inherit! :search_paths
     pod 'RxTest'
