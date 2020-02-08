@@ -15,7 +15,6 @@ import Cycle
     
     var lens: CycledLens<
         (TimeLineViewController,
-        AppDelegateStub,
         MultipeerJSON,
         BrowserDriver,
         MenuBarDriver,
@@ -50,14 +49,7 @@ import Cycle
                     view.output.tupledWithLatestFrom(states).reduced()
                 }
             )
-            
-            let appDelegate = state.lens(
-                get: { states in
-                    AppDelegateStub().rendering(states) { driver, states in }
-                },
-                set: { driver, states in states }
-            )
-            
+                        
             let multipeer = state.lens(
                 get: { states in
                     MultipeerJSON()
@@ -123,78 +115,19 @@ import Cycle
                 set: { driver, states in states }
             )
             
-            return MutatingLens.zip(
-                view,
-                appDelegate,
-                multipeer,
-                browser,
-                menuBar,
-                terminator
-            )
-                .prefixed(
-                    with: .just(CycleMonitorApp.Model.init())
+            return MutatingLens
+                .zip(
+                    view,
+                    multipeer,
+                    browser,
+                    menuBar,
+                    terminator
                 )
-            /*
-            
-            let screen = drivers
-              .screen
-              .rendered(incoming.map (TimeLineViewController.Model.coerced))
-              .tupledWithLatestFrom(incoming)
-              .reduced()
-            
-            let application = drivers
-              .application
-              .rendered(incoming.map { $0.application })
-              .tupledWithLatestFrom(incoming)
-              .reduced()
-
-            let multipeer = drivers
-              .multipeer
-              .rendered(
-                Observable.merge([
-                  incoming.connection,
-                  incoming.jsonEvents,
-                  incoming.jsonEffects
-                ])
-                .lastTwo()
-              )
-              .tupledWithLatestFrom(incoming)
-              .reduced()
-            
-            let browser = drivers
-              .browser
-              .rendered(incoming.map { $0.browser })
-              .tupledWithLatestFrom(incoming)
-              .reduced()
-            
-            let menuBar = drivers
-              .menuBar
-              .rendered(incoming.map { $0.menuBar })
-              .tupledWithLatestFrom(incoming)
-              .reduced()
-            
-            let termination = drivers
-              .termination
-              .rendered(
-                incoming.map {
-                  TerminationDriver.Model(
-                    shouldTerminate: $0.isTerminating
-                  )
-                }
-              )
-              .tupledWithLatestFrom(incoming)
-              .map { $0.1 }
-            
-            return .merge([
-              screen,
-              application,
-              multipeer,
-              browser,
-              menuBar,
-              termination
-            ])
- 
-             */
+                .prefixed(
+                    with: .just(
+                        CycleMonitorApp.Model.init()
+                    )
+                )
         }
         
         main = NSStoryboard(
@@ -211,19 +144,7 @@ import Cycle
     }
 }
 
-class AppDelegateStub: NSObject, NSApplicationDelegate {
-  struct Model: Equatable {}
-  enum Action: Equatable {
-    case none
-  }
-  private let output = BehaviorSubject(value: Action.none)
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    return output
-  }
-}
-
 struct CycleMonitorApp {
-    static let seed = Model()
     struct Model: Equatable {
         enum EventHandlingState: Equatable {
             case playing
@@ -250,7 +171,6 @@ struct CycleMonitorApp {
             selectedIndex: nil
         )
         var multipeer = Connection.idle
-        var application = AppDelegateStub.Model()
         var browser = BrowserDriver.Model(state: .idle)
         var menuBar = MenuBarDriver.Model(
             items: [
@@ -267,92 +187,9 @@ struct CycleMonitorApp {
   struct Drivers {
     let screen: TimeLineViewController
     let multipeer: MultipeerJSON
-    let application: AppDelegateStub
     let browser: BrowserDriver
     let menuBar: MenuBarDriver
     let termination: TerminationDriver
-  }
-  func driversFrom(seed: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers {
-    Drivers(
-      screen: TimeLineViewController.new(
-        model: seed.coerced()
-      ),
-      multipeer: MultipeerJSON(),
-      application: AppDelegateStub(),
-      browser: BrowserDriver(
-        initial: seed.browser
-      ),
-      menuBar: MenuBarDriver(
-        model: seed.menuBar
-      ),
-      termination: TerminationDriver(
-        model: TerminationDriver.Model(
-          shouldTerminate: seed.isTerminating
-        )
-      )
-    )
-  }
-  func effectsOfEventsCapturedAfterRendering(
-    incoming: Observable<Model>,
-    to drivers: Drivers
-  ) -> Observable<Model> {
-//    let screen = drivers
-//      .screen
-//      .rendered(incoming.map (TimeLineViewController.Model.coerced))
-//      .tupledWithLatestFrom(incoming)
-//      .reduced()
-    
-    let application = drivers
-      .application
-      .rendered(incoming.map { $0.application })
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-
-    let multipeer = drivers
-      .multipeer
-      .rendered(
-        Observable.merge([
-          incoming.connection,
-          incoming.jsonEvents,
-          incoming.jsonEffects
-        ])
-        .lastTwo()
-      )
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-    
-    let browser = drivers
-      .browser
-      .rendered(incoming.map { $0.browser })
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-    
-    let menuBar = drivers
-      .menuBar
-      .rendered(incoming.map { $0.menuBar })
-      .tupledWithLatestFrom(incoming)
-      .reduced()
-    
-    let termination = drivers
-      .termination
-      .rendered(
-        incoming.map {
-          TerminationDriver.Model(
-            shouldTerminate: $0.isTerminating
-          )
-        }
-      )
-      .tupledWithLatestFrom(incoming)
-      .map { $0.1 }
-    
-    return .merge([
-//      screen,
-      application,
-      multipeer,
-      browser,
-      menuBar,
-      termination
-    ])
   }
 }
 
@@ -455,8 +292,8 @@ extension Observable where Element == CycleMonitorApp.Model {
 extension CycleMonitorApp.Model {
   func selectedEffect() -> String? {
     timeLineView.selectedIndex
-      .flatMap { events[safe: $0] }
-    .flatMap { $0.frame.effect }
+        .flatMap { events[safe: $0] }
+        .flatMap { $0.frame.effect }
   }
 }
 
@@ -692,14 +529,6 @@ extension ObservableType where Element == (MultipeerJSON.Action, CycleMonitorApp
       default:
         return context
       }
-    }
-  }
-}
-
-extension ObservableType where Element == (AppDelegateStub.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> {
-    map { event, context in
-      return context
     }
   }
 }

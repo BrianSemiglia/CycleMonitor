@@ -14,7 +14,7 @@
 		D31169531F0B12DA004A0135 /* TimelineViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */; };
 		D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */; };
 		D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31169561F0B13A5004A0135 /* MultipeerJSON.swift */; };
-		D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */; };
+		D31D15901F0C98280009DE25 /* CycleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31D158F1F0C98280009DE25 /* CycleMonitor.swift */; };
 		D33F06E11F60F58A0099AD39 /* Integer_Mutation_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */; };
 		D33F8D451F5B37B4002C122D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D33F8D401F5B37B4002C122D /* Info.plist */; };
 		D33F8D5F1F5B3874002C122D /* BugReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D3F1F5B37B4002C122D /* BugReporter.swift */; };
@@ -77,7 +77,7 @@
 		D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineViewItem.xib; sourceTree = "<group>"; };
 		D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
 		D31169561F0B13A5004A0135 /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
-		D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Cycle-MacOS.swift"; sourceTree = "<group>"; };
+		D31D158F1F0C98280009DE25 /* CycleMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleMonitor.swift; sourceTree = "<group>"; };
 		D33F06DE1F60F5890099AD39 /* Integer Mutation Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Integer Mutation Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33F06E01F60F58A0099AD39 /* Integer_Mutation_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Integer_Mutation_Tests.swift; sourceTree = "<group>"; };
 		D33F06E21F60F58A0099AD39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -173,7 +173,7 @@
 		D31D158E1F0C98080009DE25 /* Cycle */ = {
 			isa = PBXGroup;
 			children = (
-				D31D158F1F0C98280009DE25 /* Cycle-MacOS.swift */,
+				D31D158F1F0C98280009DE25 /* CycleMonitor.swift */,
 				D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */,
 				D39E19691F5FA99B0087BF3A /* CycleMonitorTests.swift */,
 				D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */,
@@ -680,7 +680,7 @@
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
 				D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
-				D31D15901F0C98280009DE25 /* Cycle-MacOS.swift in Sources */,
+				D31D15901F0C98280009DE25 /* CycleMonitor.swift in Sources */,
 				D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */,
 				D31169571F0B13A5004A0135 /* MultipeerJSON.swift in Sources */,
 				D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */,
