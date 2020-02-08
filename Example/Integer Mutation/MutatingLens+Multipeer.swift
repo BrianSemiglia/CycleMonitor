@@ -21,12 +21,12 @@ extension Collection {
 extension MutatingLens {
     func multipeered<T>(
         reducer: @escaping (T, Moment.Frame) -> T = { t, m in t }
-    ) -> MutatingLens<A, (B, MultipeerJSON), Observable<Debug<T>>>
-        where A == Observable<Debug<T>>, C == Observable<Debug<T>> {
+    ) -> MutatingLens<A, (B, MultipeerJSON), Observable<Meta<T>>>
+        where A == Observable<Meta<T>>, C == Observable<Meta<T>> {
         
         let moments = Observable
             .merge(self.set.tagged())
-            .map { ($0.tag, $0.1.frame) }
+            .map { ($0.tag, $0.1.summary) }
             .map { states in
                 Moment(
                     drivers: NonEmptyArray(
@@ -46,7 +46,7 @@ extension MutatingLens {
                 )
             }
         
-            return MutatingLens<A, (B, MultipeerJSON), Observable<Debug<T>>>(
+            return MutatingLens<A, (B, MultipeerJSON), Observable<Meta<T>>>(
                 value: value,
                 get: { values in (
                     self.get,

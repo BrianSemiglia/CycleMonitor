@@ -51,7 +51,7 @@ import RxSwiftExt
                         value: source,
                         get: { states -> ShakeDetection in
                             ShakeDetection(initial: .init(state: .listening)).rendering(
-                                states.map { $0.model.motionReporter }
+                                states.map { $0.value.motionReporter }
                             ) { shakes, state in
                                 shakes.render(state)
                             }
@@ -60,7 +60,7 @@ import RxSwiftExt
                             shake.output.tupledWithLatestFrom(states.last(25)).map { event, xs in
                                 switch event {
                                 case .detecting:
-                                    var new = xs.last!.model
+                                    var new = xs.last!.value
                                     new.bugReporter.state = xs.map { x in
                                         Moment(
                                             drivers: NonEmptyArray(
@@ -70,16 +70,16 @@ import RxSwiftExt
                                                     id: ""
                                                 )
                                             ),
-                                            frame: x.frame
+                                            frame: x.summary
                                         )
                                     }
                                     .eventsPlayable
                                     .binaryPropertyList()
                                     .map(BugReporter.Model.State.sending)
                                     ?? .idle
-                                    return Debug(model: new, frame: xs.last!.frame)
+                                    return Meta(value: new, summary: xs.last!.summary)
                                 default:
-                                    return Debug(model: xs.last!.model, frame: xs.last!.frame)
+                                    return Meta(value: xs.last!.value, summary: xs.last!.summary)
                                 }
                             }
                         }
@@ -104,9 +104,9 @@ import RxSwiftExt
                 .multipeered()
                 .prefixed(
                     with: .just(
-                        Debug(
-                            model: IntegerMutatingApp.Model(),
-                            frame: Moment.Frame(
+                        Meta(
+                            value: IntegerMutatingApp.Model(),
+                            summary: Moment.Frame(
                                 cause: Moment.Driver(label: "", action: "", id: ""),
                                 effect: "",
                                 context: "",

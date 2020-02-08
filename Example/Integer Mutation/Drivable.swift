@@ -44,10 +44,10 @@ extension Observable {
         reducer: @escaping (Element, Driver.Event) -> T
     )
     -> MutatingLens<Observable<Element>, Driver, Observable<Element>>
-        where Element == Debug<T> {
+        where Element == Meta<T> {
         lens(
             get: { (state: Observable<Element>) -> Driver in
-                driver.rendering(state.map { $0.model }.map(lifter)) { driver, state in
+                driver.rendering(state.map { $0.value }.map(lifter)) { driver, state in
                     driver.render(state)
                 }
             },
@@ -57,16 +57,16 @@ extension Observable {
                     .tupledWithLatestFrom(state.map { $0 })
                     .map { (old: $0.1, event: $0.0, new: reducer($0.1, $0.0)) }
                     .map {
-                        Debug(
-                            model: $0.new,
-                            frame: Moment.Frame(
+                        Meta(
+                            value: $0.new,
+                            summary: Moment.Frame(
                                 cause: Moment.Driver(
                                     label: "\(type(of: driver))",
                                     action: "\($0.event)",
                                     id: ""
                                 ),
                                 effect: sourceCode($0.new),
-                                context: sourceCode($0.old.model),
+                                context: sourceCode($0.old.value),
                                 isApproved: false
                             )
                         )
@@ -84,10 +84,10 @@ extension Observable {
         Observable<Element>,
         Driver,
         Observable<Element>
-    > where Element == Debug<T> {
+    > where Element == Meta<T> {
         lens(
             get: { state in
-                driver.rendering(state.map { $0.model }.map(lifter)) { driver, state in
+                driver.rendering(state.map { $0.value }.map(lifter)) { driver, state in
                     driver.render(state)
                 }
             },
@@ -95,18 +95,18 @@ extension Observable {
                 driver
                     .events()
                     .tupledWithLatestFrom(state)
-                    .map { (old: $0.1, event: $0.0, new: reducer($0.1.model, $0.0)) }
+                    .map { (old: $0.1, event: $0.0, new: reducer($0.1.value, $0.0)) }
                     .map {
-                        Debug(
-                            model: $0.new,
-                            frame: Moment.Frame(
+                        Meta(
+                            value: $0.new,
+                            summary: Moment.Frame(
                                 cause: Moment.Driver(
                                     label: "\(type(of: driver))",
                                     action: "\($0.event)",
                                     id: ""
                                 ),
                                 effect: sourceCode($0.new),
-                                context: sourceCode($0.old.model),
+                                context: sourceCode($0.old.value),
                                 isApproved: false
                             )
                         )

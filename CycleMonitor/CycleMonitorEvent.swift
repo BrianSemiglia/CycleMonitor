@@ -6,9 +6,9 @@
 //  Copyright © 2017 Brian Semiglia. All rights reserved.
 //
 
-struct Debug<T: Equatable>: Equatable {
-    let model: T
-    let frame: Moment.Frame
+struct Meta<T: Equatable>: Equatable {
+    let value: T
+    let summary: Moment.Frame
 }
 
 public struct Moment: Equatable {
