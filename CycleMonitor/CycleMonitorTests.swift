@@ -14,7 +14,7 @@ import XCTest
 
 class CycleMonitorTests: XCTestCase {
   
-  static func eventSuccess() -> Moment? { return
+  static func eventSuccess() -> Moment? {
     curry(Moment.init(drivers:cause:effect:context:))
       <^> NonEmptyArray(
         driverWith(id: "a", action: true),
@@ -26,7 +26,7 @@ class CycleMonitorTests: XCTestCase {
       <*> "context"
   }
   
-  static func eventSuccess() -> [AnyHashable: Any] { return
+  static func eventSuccess() -> [AnyHashable: Any] {
     [
       "drivers": [
         driverWith(id: "a", action: true) as [AnyHashable: Any],
@@ -39,7 +39,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var saveFileSuccess: [AnyHashable: Any] { return
+  static var saveFileSuccess: [AnyHashable: Any] {
     [
       "drivers": [
         driverWith(id: "a", action: true) as [AnyHashable: Any],
@@ -52,7 +52,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var saveFileDriversEmpty: [AnyHashable: Any] { return
+  static var saveFileDriversEmpty: [AnyHashable: Any] {
     [
       "drivers": [],
       "cause": driverWith(id: "a", action: true) as [AnyHashable: Any],
@@ -61,11 +61,11 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var eventDriverValid: [AnyHashable: Any] { return
+  static var eventDriverValid: [AnyHashable: Any] {
     driverWith(id: "a", action: true)
   }
   
-  static var testFileSuccess: [AnyHashable: Any] { return
+  static var testFileSuccess: [AnyHashable: Any] {
     [
       "drivers": driversJSON,
       "cause": driversJSON.first!,
@@ -74,7 +74,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var driversJSON: [[AnyHashable: Any]] { return
+  static var driversJSON: [[AnyHashable: Any]] {
     [
       driverWith(id: "a", action: true),
       driverWith(id: "b", action: false),
@@ -82,7 +82,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static var drivers: [Moment.Driver] { return
+  static var drivers: [Moment.Driver] {
     [
       driverWith(id: "a", action: true),
       driverWith(id: "b", action: false),
@@ -90,7 +90,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static func driverWith(id: String, action: Bool) -> Moment.Driver { return
+  static func driverWith(id: String, action: Bool) -> Moment.Driver {
     Moment.Driver(
       label: id + "-label",
       action: action ? id + "-action" : "",
@@ -98,7 +98,7 @@ class CycleMonitorTests: XCTestCase {
     )
   }
 
-  static func driverWith(id: String, action: Bool) -> [AnyHashable: Any] { return
+  static func driverWith(id: String, action: Bool) -> [AnyHashable: Any] {
     [
       "label": id + "-label",
       "action": action ? id + "-action" : "",
@@ -106,7 +106,7 @@ class CycleMonitorTests: XCTestCase {
     ]
   }
   
-  static func model() -> CycleMonitorApp.Model { return
+  static func model() -> CycleMonitorApp.Model {
     CycleMonitorApp.Model(
       events: eventSuccess()
         .map { [$0] as [Moment] }
@@ -129,21 +129,21 @@ class CycleMonitorTests: XCTestCase {
     )
   }
   
-  static func timelineFile() -> [AnyHashable: Any] { return
+  static func timelineFile() -> [AnyHashable: Any] {
     [
       "selectedIndex": 0,
       "events": [eventSuccess() as [AnyHashable: Any]]
     ]
   }
 
-  static func timelineFileNoSelectedIndex() -> [AnyHashable: Any] { return
+  static func timelineFileNoSelectedIndex() -> [AnyHashable: Any] {
     [
       "selectedIndex": "",
       "events": [eventSuccess() as [AnyHashable: Any]]
     ]
   }
   
-  static func timelineViewNoSelectedIndex() -> CycleMonitorApp.Model.TimeLineView { return
+  static func timelineViewNoSelectedIndex() -> CycleMonitorApp.Model.TimeLineView {
     CycleMonitorApp.Model.TimeLineView(
       selectedIndex: nil
     )

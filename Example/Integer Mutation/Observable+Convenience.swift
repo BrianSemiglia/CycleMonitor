@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 extension ObservableType {
-  func pacedBy(delay: Double) -> Observable<Element> { return
+  func pacedBy(delay: Double) -> Observable<Element> {
     map {
       Observable
         .empty()
@@ -28,7 +28,7 @@ extension ObservableType {
   func tupledWithLatestFrom<X, Y>(
     _ x: Observable<X>,
     _ y: Observable<Y>
-  ) -> Observable<(Element, X, Y)> { return
+  ) -> Observable<(Element, X, Y)> {
     tupledWithLatestFrom(x)
       .tupledWithLatestFrom(y)
       .map { ($0.0, $0.1, $1) }
@@ -36,16 +36,16 @@ extension ObservableType {
   
   func tupledWithLatestFrom<T>(
     _ input: Observable<T>
-  ) -> Observable<(Element, T)> { return
+  ) -> Observable<(Element, T)> {
     withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
 extension Observable {
-  func secondToLast() -> Observable<Element?> { return
+  func secondToLast() -> Observable<Element?> {
     last(2).map { $0.first }
   }
-  func lastTwo() -> Observable<(Element?, Element)> { return
+  func lastTwo() -> Observable<(Element?, Element)> {
     last(2)
     .map {
       switch $0.count {
@@ -55,7 +55,7 @@ extension Observable {
       }
     }
   }
-  func last(_ count: Int) -> Observable<[Element]> { return
+  func last(_ count: Int) -> Observable<[Element]> {
     scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }
     .map (Array.init)

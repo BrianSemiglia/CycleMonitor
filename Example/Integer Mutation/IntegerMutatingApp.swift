@@ -167,13 +167,13 @@ struct IntegerMutatingApp: Equatable {
 // 4. section sample code into these categories
 
 extension Collection where Iterator.Element == Moment {
-  var eventsPlayable: [AnyHashable: Any] { return
+  var eventsPlayable: [AnyHashable: Any] {
     ["events": map { $0.coerced() as [AnyHashable: Any] }]
   }
 }
 
 extension JSONSerialization {
-  static func prettyPrinted(_ input: [AnyHashable: Any]) -> Data? { return
+  static func prettyPrinted(_ input: [AnyHashable: Any]) -> Data? {
     try? JSONSerialization.data(
       withJSONObject: input,
       options: .prettyPrinted
@@ -182,7 +182,7 @@ extension JSONSerialization {
 }
 
 extension Data {
-  var utf8: String? { return
+  var utf8: String? {
     String(
       data: self,
       encoding: String.Encoding.utf8
@@ -192,12 +192,12 @@ extension Data {
 
 extension IntegerMutatingApp.Model {
   
-  static func cause(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Drivers.Either? { return
+  static func cause(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Drivers.Either? {
     input["cause"]
       .flatMap(Argo.decode)
   }
   
-  static func context(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? { return
+  static func context(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? {
     input["context"]
       .flatMap { $0 as? String }
       .flatMap { $0.data(using: .utf8) }
@@ -205,7 +205,7 @@ extension IntegerMutatingApp.Model {
       .flatMap(Argo.decode)
   }
   
-  static func effect(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? { return
+  static func effect(_ input: [AnyHashable: Any]) -> IntegerMutatingApp.Model? {
     input["effect"]
       .flatMap { $0 as? String }
       .flatMap { $0.data(using: .utf8) }
@@ -258,7 +258,7 @@ extension IntegerMutatingApp.Drivers.Either: Argo.Decodable {
 // investigate chatty session events
 
 extension Data {
-  var JSON: [AnyHashable: Any]? { return
+  var JSON: [AnyHashable: Any]? {
     (
       try? JSONSerialization.jsonObject(
         with: self,
@@ -267,7 +267,7 @@ extension Data {
     )
     .flatMap { $0 as? [AnyHashable: Any] }
   }
-  var binaryPropertyList: [AnyHashable: Any]? { return
+  var binaryPropertyList: [AnyHashable: Any]? {
     (
       try? PropertyListSerialization.propertyList(
         from: self,
@@ -280,7 +280,7 @@ extension Data {
 }
 
 extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
-  func binaryPropertyList() -> Data? { return
+  func binaryPropertyList() -> Data? {
     try? PropertyListSerialization.data(
       fromPropertyList: self,
       format: .binary,
@@ -290,7 +290,7 @@ extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
 }
 
 extension ObservableType where Element == (MultipeerJSON.Action, IntegerMutatingApp.Model) {
-  func reduced() -> Observable<IntegerMutatingApp.Model> { return
+  func reduced() -> Observable<IntegerMutatingApp.Model> {
     flatMap { (event, context) -> Observable<IntegerMutatingApp.Model> in
       switch event {
       case.received(data: let new):
@@ -383,7 +383,7 @@ extension ValueToggler.Model.Button.State: Argo.Decodable {
 }
 
 extension BugReporter.Model: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<BugReporter.Model> { return
+  static func decode(_ json: JSON) -> Decoded<BugReporter.Model> {
     curry(BugReporter.Model.init)
       <^> json <| "state"
   }
@@ -398,7 +398,7 @@ extension BugReporter.Model.State: Argo.Decodable {
 }
 
 extension ShakeDetection.Model: Argo.Decodable {
-  static func decode(_ json: JSON) -> Decoded<ShakeDetection.Model> { return
+  static func decode(_ json: JSON) -> Decoded<ShakeDetection.Model> {
     curry(ShakeDetection.Model.init)
       <^> json <| "state"
   }
@@ -421,7 +421,7 @@ extension ShakeDetection.Model.State: Argo.Decodable {
 }
 
 extension ObservableType where Element == (ShakeDetection.Action, IntegerMutatingApp.Model) {
-  func reduced() -> Observable<IntegerMutatingApp.Model> { return
+  func reduced() -> Observable<IntegerMutatingApp.Model> {
     map { event, context in
       switch event {
       case .detecting:
@@ -436,7 +436,7 @@ extension ObservableType where Element == (ShakeDetection.Action, IntegerMutatin
 }
 
 extension ObservableType where Element == (BugReporter.Action, IntegerMutatingApp.Model) {
-  func reduced() -> Observable<IntegerMutatingApp.Model> { return
+  func reduced() -> Observable<IntegerMutatingApp.Model> {
     map { event, context in
       switch event {
       case .didSuccessfullySend:
@@ -451,7 +451,7 @@ extension ObservableType where Element == (BugReporter.Action, IntegerMutatingAp
 }
 
 extension ObservableType where Element == (ValueToggler.Event, IntegerMutatingApp.Model) {
-  func reduced() -> Observable<IntegerMutatingApp.Model> { return
+  func reduced() -> Observable<IntegerMutatingApp.Model> {
     map { event, context in
       switch event {
       case .incrementing:

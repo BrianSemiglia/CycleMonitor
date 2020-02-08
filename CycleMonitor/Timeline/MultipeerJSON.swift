@@ -149,10 +149,10 @@ final class MultipeerJSON:
 //      .filter { new in
 //        old?.devices.contains(
 //          where: {
-//            if case .sending = new.transmissionState { return
+//            if case .sending = new.transmissionState {
 //              $0.peerID == new.peerID &&
 //              new.transmissionState != $0.transmissionState
-//            } else { return
+//            } else {
 //              false
 //            }
 //          }
@@ -283,7 +283,7 @@ final class MultipeerJSON:
 }
 
 extension MCPeerID {
-  func coerced() -> Data { return
+  func coerced() -> Data {
     NSKeyedArchiver.archivedData(
       withRootObject: self
     )
@@ -291,7 +291,7 @@ extension MCPeerID {
 }
 
 extension Data {
-  func coerced() -> MCPeerID? { return
+  func coerced() -> MCPeerID? {
     NSKeyedUnarchiver.unarchiveObject(with: self) as? MCPeerID
   }
 }

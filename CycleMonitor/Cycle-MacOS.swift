@@ -272,7 +272,7 @@ struct CycleMonitorApp {
     let menuBar: MenuBarDriver
     let termination: TerminationDriver
   }
-  func driversFrom(seed: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers { return
+  func driversFrom(seed: CycleMonitorApp.Model) -> CycleMonitorApp.Drivers {
     Drivers(
       screen: TimeLineViewController.new(
         model: seed.coerced()
@@ -357,11 +357,11 @@ struct CycleMonitorApp {
 }
 
 extension Observable {
-  func secondToLast() -> Observable<Element?> { return
+  func secondToLast() -> Observable<Element?> {
     last(2)
     .map { $0.first }
   }
-  func lastTwo() -> Observable<(Element?, Element)> { return
+  func lastTwo() -> Observable<(Element?, Element)> {
     last(2)
     .map {
       switch $0.count {
@@ -371,7 +371,7 @@ extension Observable {
       }
     }
   }
-  func last(_ count: Int) -> Observable<[Element]> { return
+  func last(_ count: Int) -> Observable<[Element]> {
     scan ([]) { $0 + [$1] }
     .map { $0.suffix(count) }
     .map (Array.init)
@@ -379,14 +379,14 @@ extension Observable {
 }
 
 extension CycleMonitorApp.Model {
-  var selectedEvent: [AnyHashable: Any]? { return
+  var selectedEvent: [AnyHashable: Any]? {
     timeLineView
     .selectedIndex
     .flatMap { events[safe: $0] }
     .map { $0.frame.cause.coerced() as [AnyHashable: Any] }
     .map { ["cause": $0] }
   }
-  func selectedEffect() -> [AnyHashable: Any]? { return
+  func selectedEffect() -> [AnyHashable: Any]? {
     timeLineView
     .selectedIndex
     .flatMap { events[safe: $0] }
@@ -395,7 +395,7 @@ extension CycleMonitorApp.Model {
 }
 
 extension Observable where Element == CycleMonitorApp.Model {
-  var connection: Observable<MultipeerJSON.Model> { return
+  var connection: Observable<MultipeerJSON.Model> {
     flatMap { model in
       Observable<MultipeerJSON.Model>.concat(
         model
@@ -416,7 +416,7 @@ extension Observable where Element == CycleMonitorApp.Model {
       )
     }
   }
-  var jsonEvents: Observable<MultipeerJSON.Model> { return
+  var jsonEvents: Observable<MultipeerJSON.Model> {
     filter { $0.eventHandlingState == .playingSendingEvents }
     .distinctUntilChanged { $0.timeLineView.selectedIndex == $1.timeLineView.selectedIndex }
     .flatMap { model in
@@ -433,7 +433,7 @@ extension Observable where Element == CycleMonitorApp.Model {
     }
   }
   
-  var jsonEffects: Observable<MultipeerJSON.Model> { return
+  var jsonEffects: Observable<MultipeerJSON.Model> {
     filter { $0.eventHandlingState == .playingSendingEffects }
     .distinctUntilChanged {
       let a = curry(==) <^> $0.selectedEffect() as String? <*> $1.selectedEffect() as String?
@@ -453,7 +453,7 @@ extension Observable where Element == CycleMonitorApp.Model {
 }
 
 extension CycleMonitorApp.Model {
-  func selectedEffect() -> String? { return
+  func selectedEffect() -> String? {
     timeLineView.selectedIndex
       .flatMap { events[safe: $0] }
     .flatMap { $0.frame.effect }
@@ -462,7 +462,7 @@ extension CycleMonitorApp.Model {
 
 extension Data {
   // TODO: Convert to result type
-  var JSON: [AnyHashable: Any]? { return
+  var JSON: [AnyHashable: Any]? {
     (
       try? JSONSerialization.jsonObject(
         with: self,
@@ -491,7 +491,7 @@ extension Moment.Driver {
 }
 
 extension Moment.Driver {
-    func coerced() -> TimeLineViewController.Model.Driver { return
+    func coerced() -> TimeLineViewController.Model.Driver {
         TimeLineViewController.Model.Driver(
             label: label,
             action: action,
@@ -510,7 +510,7 @@ extension TimeLineViewController.Model.CauseEffect {
 }
 
 extension Moment {
-  func coerced() -> TimeLineViewController.Model.CauseEffect { return
+  func coerced() -> TimeLineViewController.Model.CauseEffect {
     TimeLineViewController.Model.CauseEffect(
         cause: frame.cause.action,
         effect: frame.effect,
@@ -527,7 +527,7 @@ extension TimeLineViewController.Model {
 }
 
 extension CycleMonitorApp.Model {
-  func coerced() -> TimeLineViewController.Model { return
+  func coerced() -> TimeLineViewController.Model {
     TimeLineViewController.Model(
       drivers: events[safe: timeLineView.selectedIndex ?? 0]
         .map { $0.drivers.map (Moment.Driver.coerced) }
@@ -569,7 +569,7 @@ extension CycleMonitorApp.Model.Connection {
 }
 
 extension NSColor {
-  static var cy_lightGray: NSColor { return
+  static var cy_lightGray: NSColor {
     NSColor(
       red: 232.0/255.0,
       green: 232.0/255.0,
@@ -580,13 +580,13 @@ extension NSColor {
 }
 
 extension ObservableType {
-  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(Element, T)> { return
+  func tupledWithLatestFrom<T>(_ input: Observable<T>) -> Observable<(Element, T)> {
     withLatestFrom(input) { ($0, $1 ) }
   }
 }
 
 extension ObservableType where Element == (TimeLineViewController.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> { return
+  func reduced() -> Observable<CycleMonitorApp.Model> {
     map { event, context in
       switch event {
       case .scrolledToIndex(let index):
@@ -642,7 +642,7 @@ extension ObservableType where Element == (TimeLineViewController.Action, CycleM
 }
 
 extension ObservableType where Element == (MultipeerJSON.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> { return
+  func reduced() -> Observable<CycleMonitorApp.Model> {
     map { event, context in
       switch event {
       case .received(let data, let peer) where context.eventHandlingState == .recording && peer == context.selectedPeer:
@@ -697,7 +697,7 @@ extension ObservableType where Element == (MultipeerJSON.Action, CycleMonitorApp
 }
 
 extension ObservableType where Element == (AppDelegateStub.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> { return
+  func reduced() -> Observable<CycleMonitorApp.Model> {
     map { event, context in
       return context
     }
@@ -705,7 +705,7 @@ extension ObservableType where Element == (AppDelegateStub.Action, CycleMonitorA
 }
 
 extension Moment {
-  static func eventsFrom(_ input: [AnyHashable: Any]) -> [Moment] { return
+  static func eventsFrom(_ input: [AnyHashable: Any]) -> [Moment] {
     input["events"]
       .flatMap { $0 as? [[AnyHashable: Any]] }
       .flatMap { $0.compactMap(Argo.decode) }
@@ -716,7 +716,7 @@ extension Moment {
 extension CycleMonitorApp.Model.TimeLineView {
   static func timelineViewFrom(
     _ input: [AnyHashable: Any]
-  ) -> CycleMonitorApp.Model.TimeLineView { return
+  ) -> CycleMonitorApp.Model.TimeLineView {
     CycleMonitorApp.Model.TimeLineView(
       selectedIndex: input["selectedIndex"].flatMap(decode)
     )
@@ -724,7 +724,7 @@ extension CycleMonitorApp.Model.TimeLineView {
 }
 
 extension ObservableType where Element == (BrowserDriver.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> { return
+  func reduced() -> Observable<CycleMonitorApp.Model> {
     map { event, context in
       switch event {
       case .didOpen(let json):
@@ -745,7 +745,7 @@ extension ObservableType where Element == (BrowserDriver.Action, CycleMonitorApp
 }
 
 extension ObservableType where Element == (MenuBarDriver.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> { return
+  func reduced() -> Observable<CycleMonitorApp.Model> {
     map { event, context in
       switch event {
       case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.openTimelineID:
@@ -824,7 +824,7 @@ class TerminationDriver: NSObject {
 }
 
 extension CycleMonitorApp.Model {
-  var timelineFile: [AnyHashable: Any] { return
+  var timelineFile: [AnyHashable: Any] {
     [
       "selectedIndex": timeLineView.selectedIndex ?? "",
       "events": events.map { $0.testFile }
@@ -833,7 +833,7 @@ extension CycleMonitorApp.Model {
 }
 
 extension Moment {
-  var testFile: [AnyHashable: Any] { return
+  var testFile: [AnyHashable: Any] {
     [
       "drivers": drivers.map {[
         "label": $0.label,
@@ -921,21 +921,21 @@ extension MenuBarDriver.Model.Item {
   static var saveTimelineID = "save timeline"
   static var exportTestsID = "export tests"
   
-  static var openTimeline: MenuBarDriver.Model.Item { return
+  static var openTimeline: MenuBarDriver.Model.Item {
     MenuBarDriver.Model.Item(
       title: "Open Timeline",
       enabled: true,
       id: openTimelineID
     )
   }
-  static var saveTimeline: MenuBarDriver.Model.Item { return
+  static var saveTimeline: MenuBarDriver.Model.Item {
     MenuBarDriver.Model.Item(
       title: "Save Timeline",
       enabled: true,
       id: saveTimelineID
     )
   }
-  static var exportTests: MenuBarDriver.Model.Item { return
+  static var exportTests: MenuBarDriver.Model.Item {
     MenuBarDriver.Model.Item(
       title: "Export Tests",
       enabled: true,

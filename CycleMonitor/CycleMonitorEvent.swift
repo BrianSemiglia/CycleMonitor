@@ -91,7 +91,7 @@ struct NonEmptyArray<T> {
 }
 
 extension String {
-  var valid: String? { return
+  var valid: String? {
     count == 0
       ? nil
       : self
@@ -99,7 +99,7 @@ extension String {
 }
 
 extension Moment.Driver {
-  func coerced() -> [AnyHashable: Any] { return [
+  func coerced() -> [AnyHashable: Any] { [
     "label": label,
     "action": action,
     "id": id
@@ -107,7 +107,7 @@ extension Moment.Driver {
 }
 
 extension Moment {
-  func coerced() -> [AnyHashable: Any] { return [
+  func coerced() -> [AnyHashable: Any] { [
     "drivers": drivers.map { $0.coerced() as [AnyHashable: Any] },
     "cause": frame.cause.coerced() as [AnyHashable: Any],
     "context": frame.context,

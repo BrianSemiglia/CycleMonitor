@@ -375,7 +375,7 @@ class TimeLineViewController:
     cell: TimelineViewItem,
     path: IndexPath,
     selection: @escaping (Bool) -> Void
-  ) -> TimelineViewItem.Model { return
+  ) -> TimelineViewItem.Model {
     TimelineViewItem.Model(
       background: model.selected
         .flatMap { $0.index == path.item ? $0 : nil }
@@ -471,7 +471,7 @@ class TimeLineViewController:
     return x?.first { $0 is DriverViewItem } as! DriverViewItem?
   }
   
-  var cell: NSSize { return
+  var cell: NSSize {
     NSSize(
       width: 42.0,
       height: 74.0
@@ -488,7 +488,7 @@ extension TimeLineViewController {
 }
 
 extension NSScrollView {
-    var documentVisibleCenter: NSPoint { return
+    var documentVisibleCenter: NSPoint {
         NSPoint(
             x: documentVisibleRect.origin.x + (bounds.size.width / 2.0),
             y: bounds.height / CGFloat(2)

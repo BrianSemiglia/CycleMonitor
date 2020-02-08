@@ -16,7 +16,7 @@ struct Change<T> {
 }
 
 extension Observable {
-    func latestWithPrevious() -> Observable<Change<Element>> { return
+    func latestWithPrevious() -> Observable<Change<Element>> {
         previous(2).map { x -> Change<Element>? in
             switch x.count {
             case 1: return
@@ -42,7 +42,7 @@ extension Observable {
         }
     }
     
-    func previous(_ count: Int) -> Observable<[Element]> { return
+    func previous(_ count: Int) -> Observable<[Element]> {
         scan (Array<Element>()) { $0 + [$1] }
             .map { $0.suffix(count) }
             .map (Array.init)
@@ -50,7 +50,7 @@ extension Observable {
 }
 
 extension ObservableType {
-    func delayLatest(delay: RxTimeInterval, scheduler: SchedulerType) -> Observable<Element> { return
+    func delayLatest(delay: RxTimeInterval, scheduler: SchedulerType) -> Observable<Element> {
         flatMapLatest {
             Observable
                 .just($0)
@@ -63,7 +63,7 @@ extension ObservableType {
 }
 
 extension Observable {
-    public func ignoringCompletions() -> Observable { return
+    public func ignoringCompletions() -> Observable {
         concat(Observable.never())
     }
 }

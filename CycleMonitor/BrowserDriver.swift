@@ -145,7 +145,7 @@ class BrowserDriver: NSObject {
 }
 
 extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
-  var binaryPList: Data? { return
+  var binaryPList: Data? {
     try? PropertyListSerialization.data(
       fromPropertyList: self,
       format: .binary,

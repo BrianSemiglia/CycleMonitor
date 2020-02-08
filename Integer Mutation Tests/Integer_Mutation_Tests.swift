@@ -56,7 +56,7 @@ class Integer_MutationTests: XCTestCase {
 }
 
 extension Bundle {
-  var moments: [URL] { return
+  var moments: [URL] {
     urls(
       forResourcesWithExtension: "moment",
       subdirectory: nil

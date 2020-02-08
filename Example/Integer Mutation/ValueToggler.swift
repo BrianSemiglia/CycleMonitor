@@ -101,7 +101,7 @@ final class ValueToggler: UIView, Drivable {
 }
 
 extension ValueToggler.Model {
-    static var empty: ValueToggler.Model { return
+    static var empty: ValueToggler.Model {
         ValueToggler.Model(
             total: "0",
             increment: ValueToggler.Model.Button(state: .enabled, title: "+"),

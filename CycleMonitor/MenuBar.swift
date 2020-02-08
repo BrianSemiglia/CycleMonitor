@@ -84,7 +84,7 @@ class MenuBarDriver: NSObject {
     NSApplication.shared.mainMenu = main
   }
   
-  func quit() -> NSMenuItem { return
+  func quit() -> NSMenuItem {
     NSMenuItem(
       title: "Quit Cycle Monitor",
       action: #selector(didReceiveEventFromQuit(_:)),

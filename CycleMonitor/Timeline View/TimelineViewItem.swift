@@ -62,7 +62,7 @@ extension TimelineViewItem.Model: Equatable {
   static func ==(
     left: TimelineViewItem.Model,
     right: TimelineViewItem.Model
-  ) -> Bool { return
+  ) -> Bool {
     left.selected == right.selected &&
     left.background == right.background &&
     left.top == right.top &&

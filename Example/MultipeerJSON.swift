@@ -178,7 +178,7 @@ public final class MultipeerJSON:
 }
 
 extension Observable where Element == MultipeerJSON.Action {
-  var isConnected: Observable<Bool> { return
+  var isConnected: Observable<Bool> {
     map {
       switch $0 {
       case .connected, .received: return true
