@@ -15,38 +15,6 @@ import Argo
 import Runes
 import RxSwiftExt
 
-//struct CycledLensDebug<Receiver, Value: Equatable> {
-//
-////    struct Debug<T: Equatable>: Equatable {
-////        let value: T
-////        let frame: Moment.Frame
-////    }
-//
-//    public let receiver: Receiver
-//    private let multipeer: MultipeerJSON
-//    private let producer = PublishSubject<Debug<Value>>()
-//    private let cleanup = DisposeBag()
-//
-//    init(
-//        lens: (Observable<Debug<Value>>) -> MutatingLens<Observable<Debug<Value>>, Receiver, Observable<Debug<Value>>>
-//    ) {
-//        let lens = lens(
-//            producer
-//                .distinctUntilChanged()
-//                .share()
-//        )
-//        .multipeered()
-//
-//        receiver = lens.get.0
-//        multipeer = lens.get.1
-//        Observable
-//            .merge(lens.set)
-//            .observeOn(MainScheduler.asyncInstance)
-//            .bind(to: producer)
-//            .disposed(by: cleanup)
-//    }
-//}
-
 @UIApplicationMain class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
