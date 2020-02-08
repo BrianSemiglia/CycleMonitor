@@ -985,8 +985,22 @@ extension Observable {
                 driver
                     .events()
                     .tupledWithLatestFrom(state.map { $0 })
-                    .map { ($0.1, reducer($0.1, $0.0)) }
-                    .map { Debug(model: $0.1, frame: $0.0.frame) }
+                    .map { ($0.1, $0.0, reducer($0.1, $0.0)) }
+                    .map {
+                        Debug(
+                            model: $0.2,
+                            frame: Moment.Frame(
+                                cause: Moment.Driver(
+                                    label: "\(type(of: driver))",
+                                    action: "\($0.1)",
+                                    id: ""
+                                ),
+                                effect: "\($0.2)",
+                                context: "\($0.0.model)",
+                                isApproved: false
+                            )
+                        )
+                    }
             }
         )
     }
@@ -1011,8 +1025,22 @@ extension Observable {
                 driver
                     .events()
                     .tupledWithLatestFrom(state)
-                    .map { (stateOld: $0.1, stateNew: reducer($0.1.model, $0.0)) }
-                    .map { Debug(model: $0.stateNew, frame: $0.stateOld.frame) }
+                    .map { (stateOld: $0.1, event: $0.0, stateNew: reducer($0.1.model, $0.0)) }
+                    .map {
+                        Debug(
+                            model: $0.2,
+                            frame: Moment.Frame(
+                                cause: Moment.Driver(
+                                    label: "\(type(of: driver))",
+                                    action: "\($0.1)",
+                                    id: ""
+                                ),
+                                effect: "\($0.2)",
+                                context: "\($0.0.model)",
+                                isApproved: false
+                            )
+                        )
+                    }
             }
         )
     }
@@ -1040,16 +1068,14 @@ extension MutatingLens {
                     drivers: NonEmptyArray(
                         possible: self.set.enumerated().map { x in
                             Moment.Driver(
-                                label: "\(type(of: self.get))", // label is coming from combined lens. need inner lens labels
+                                label: "\(type(of: self.get))", // label is coming from combined lens (eg UIViewController). need inner lens labels
                                 action: x.offset == states.0 ? states.1.cause.action : "", //
                                 id: String(x.offset)
                             )
                         }
                     )!,
                     frame: states.1.setting(
-                        cause: Moment.Driver(
-                            label: "\(type(of: self.get))",
-                            action: states.1.cause.action,
+                        cause: states.1.cause.setting(
                             id: String(states.0)
                         )
                     )
@@ -1062,7 +1088,6 @@ extension MutatingLens {
                     self.get,
                     MultipeerJSON().rendering(moments) { multipeer, state in
                         multipeer.render(state.coerced() as [AnyHashable: Any])
-                        // multipeer.render(states.map { $0.model.coerced() as [AnyHashable: Any] })
                     }
                 )},
                 set: { _, _ in self.set }
@@ -1090,6 +1115,14 @@ extension Moment.Frame {
     func setting(cause: Moment.Driver) -> Moment.Frame {
         var new = self
         new.cause = cause
+        return new
+    }
+}
+
+extension Moment.Driver {
+    func setting(id: String) -> Moment.Driver {
+        var new = self
+        new.id = id
         return new
     }
 }
