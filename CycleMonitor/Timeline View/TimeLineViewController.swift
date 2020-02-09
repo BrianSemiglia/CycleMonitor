@@ -80,7 +80,17 @@ class TimeLineViewController:
 
   @IBOutlet var drivers: NSStackView?
   @IBOutlet var timeline: NSCollectionView?
-  @IBOutlet var presentedState: NSTextView?
+    @IBOutlet var presentedState: NSTextView? {
+        didSet {
+            self.presentedState?.font = NSFont(
+                descriptor: NSFontDescriptor(
+                    name: "Courier",
+                    size: 14.0
+                ),
+                size: 14.0
+            )
+        }
+    }
   @IBOutlet var connection: NSProgressIndicator?
   @IBOutlet var disconnected: NSTextField?
   @IBOutlet var eventHandling: NSSegmentedControl?
