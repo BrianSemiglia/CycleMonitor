@@ -61,7 +61,7 @@ class TimeLineViewController:
     }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
-    var presentedState: String
+    var presentedState: NSAttributedString
     var selected: Selection?
     var connection: Connection
     var eventHandlingState: EventHandlingState
@@ -105,7 +105,7 @@ class TimeLineViewController:
   var model = Model(
     drivers: [],
     causesEffects: [],
-    presentedState: "",
+    presentedState: NSAttributedString(string: ""),
     selected: nil,
     connection: .disconnected,
     eventHandlingState: .playing,
@@ -289,9 +289,9 @@ class TimeLineViewController:
     
     eventHandling?.selectedSegment = new.eventHandlingState.rawValue    
     
-    if shouldForceRender || new.presentedState != presentedState?.string {
+    if shouldForceRender || new.presentedState != presentedState?.attributedString() {
       /* convert strings to arrays and diff them. replace one character at a time. maintains cursor? */
-      presentedState?.string = new.presentedState
+        presentedState?.textStorage?.setAttributedString(new.presentedState)
     }
     
     if shouldForceRender || new.causesEffects.count != old.causesEffects.count {

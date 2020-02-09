@@ -34,7 +34,7 @@ import Cycle
                             model: TimeLineViewController.Model(
                                 drivers: [],
                                 causesEffects: [],
-                                presentedState: "",
+                                presentedState: NSAttributedString(string: ""),
                                 selected: nil,
                                 connection: .connected,
                                 eventHandlingState: .playing,
@@ -370,7 +370,10 @@ extension CycleMonitorApp.Model {
         ?? []
       ,
       causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
-      presentedState: events[safe: timeLineView.selectedIndex ?? 0].map { $0.frame.effect } ?? "",
+      presentedState: events[safe: timeLineView.selectedIndex ?? 0]
+        .map { $0.frame.effect }
+        .flatMap { $0.syntaxHighlighted }
+        ?? NSAttributedString(string: ""),
       selected: TimeLineViewController.Model.Selection(
         color: .cy_lightGray,
         index: timeLineView.selectedIndex ?? 0
@@ -770,4 +773,15 @@ extension MenuBarDriver.Model.Item {
       id: exportTestsID
     )
   }
+}
+
+import Highlightr
+
+extension String {
+    var syntaxHighlighted: NSAttributedString? {
+        Highlightr()?.highlight(
+            self,
+            as: "swift"
+        )
+    }
 }

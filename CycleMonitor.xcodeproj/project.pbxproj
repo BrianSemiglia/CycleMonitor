@@ -22,6 +22,7 @@
 		D33F8D611F5B3874002C122D /* ShakeDetectionDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D421F5B37B4002C122D /* ShakeDetectionDriver.swift */; };
 		D33F8D621F5B3874002C122D /* ValueToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D431F5B37B4002C122D /* ValueToggler.swift */; };
 		D33F8D641F5B436E002C122D /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D631F5B436E002C122D /* MultipeerJSON.swift */; };
+		D361BBD223EFA55100702B79 /* SourceReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BDE23EF576600B090C9 /* SourceReflection.swift */; };
 		D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36F2C831F1BCC90007D8D93 /* MenuBar.swift */; };
 		D3803BD823EF563000B090C9 /* Observable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BD623EF55FC00B090C9 /* Observable+Convenience.swift */; };
 		D3803BDB23EF56AC00B090C9 /* Drivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BD923EF568A00B090C9 /* Drivable.swift */; };
@@ -587,6 +588,7 @@
 				"${BUILT_PRODUCTS_DIR}/Argo-macOS/Argo.framework",
 				"${BUILT_PRODUCTS_DIR}/Curry-macOS/Curry.framework",
 				"${BUILT_PRODUCTS_DIR}/Cycle-macOS/Cycle.framework",
+				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
 				"${BUILT_PRODUCTS_DIR}/Runes-macOS/Runes.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-macOS/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay-macOS/RxRelay.framework",
@@ -598,6 +600,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Argo.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Curry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cycle.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Runes.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
@@ -686,6 +689,7 @@
 				D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */,
 				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,
 				D3ACAE7523D41920009B7FD7 /* RxSwiftHelper.swift in Sources */,
+				D361BBD223EFA55100702B79 /* SourceReflection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,7 +861,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -909,7 +913,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

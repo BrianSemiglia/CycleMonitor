@@ -5,6 +5,7 @@ PODS:
   - Cycle (1.0.0):
     - RxCocoa (~> 5.0)
     - RxSwift (~> 5.0)
+  - Highlightr (2.1.0)
   - Runes (5.0.0)
   - RxCocoa (5.0.1):
     - RxRelay (~> 5)
@@ -29,6 +30,7 @@ DEPENDENCIES:
   - Argo (~> 4.0)
   - Curry (~> 4.0)
   - Cycle (from `https://github.com/BrianSemiglia/Cycle.swift`, branch `lens2`)
+  - Highlightr
   - RxCocoa
   - RxCoreMotion
   - RxSwift
@@ -39,6 +41,7 @@ SPEC REPOS:
   trunk:
     - Argo
     - Curry
+    - Highlightr
     - Runes
     - RxCocoa
     - RxCoreMotion
@@ -61,6 +64,7 @@ SPEC CHECKSUMS:
   Argo: d536a96befef47ea9b6405327dd604718fafc95c
   Curry: e2388a19084bb0977d7318e39048d66550569bf0
   Cycle: 87a7dc8bad8ef5fe175e01a950f8968ffc9c0da0
+  Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
   Runes: 9d61b907da720c92fbb759a0efbb39d3971c6256
   RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
   RxCoreMotion: d4edac149ab1e9c4d5bf0e22d786e8169e22a274
@@ -69,6 +73,6 @@ SPEC CHECKSUMS:
   RxSwiftExt: 4ca80336f43c28f11a2825cdd2fc61dd6c044697
   RxTest: 0132f952a61da82d5233abedaa559df91e5330e5
 
-PODFILE CHECKSUM: db0a5b9eb9fb7dcb2c441c2b76a67bf38238f43a
+PODFILE CHECKSUM: 7790827fb543ba20016012c8e7f7bf074ea05d78
 
 COCOAPODS: 1.8.4
