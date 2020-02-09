@@ -21,14 +21,14 @@ extension Observable {
     public func lens<Driver: Drivable>(
         driver: Driver,
         reducer: @escaping (Element, Driver.Event) -> Element
-    ) -> MutatingLens<Observable<Element>, Driver, Observable<Element>> where Element == Driver.Model {
+    ) -> MutatingLens<Observable<Element>, Driver, [Observable<Element>]> where Element == Driver.Model {
         lens(
-            get: { (states: Observable<Element>) -> Driver in
+            get: { states in
                 driver.rendering(states) { driver, state in
                     driver.render(state)
                 }
             },
-            set: { toggler, state -> Observable<Element> in
+            set: { toggler, state in
                 toggler
                     .events()
                     .tupledWithLatestFrom(state)
@@ -38,61 +38,61 @@ extension Observable {
         )
     }
     
-    func lens<T, Driver: Drivable>(
+    func  lens<T, Driver: Drivable>(
+        label: String? = nil,
         lifter: @escaping (T) -> Driver.Model, // Need to figure out getting subset from source -> MutatingLens wants same type on incoming stream
         driver: Driver,
         reducer: @escaping (Element, Driver.Event) -> T
-    )
-    -> MutatingLens<Observable<Element>, Driver, Observable<Element>>
-        where Element == Meta<T> {
+    ) -> MutatingLens<Observable<Element>, Driver, [Labeled<Observable<Element>>]> where Element == Meta<T> {
         lens(
-            get: { (state: Observable<Element>) -> Driver in
-                driver.rendering(state.map { $0.value }.map(lifter)) { driver, state in
+            get: { states in
+                driver.rendering(states.map { $0.value }.map(lifter)) { driver, state in
                     driver.render(state)
                 }
             },
-            set: { driver, state -> Observable<Element> in
-                driver
-                    .events()
-                    .tupledWithLatestFrom(state.map { $0 })
-                    .map { (old: $0.1, event: $0.0, new: reducer($0.1, $0.0)) }
-                    .map {
-                        Meta(
-                            value: $0.new,
-                            summary: Moment.Frame(
-                                cause: Moment.Driver(
-                                    label: "\(type(of: driver))",
-                                    action: "\($0.event)",
-                                    id: ""
-                                ),
-                                effect: sourceCode($0.new),
-                                context: sourceCode($0.old.value),
-                                isApproved: false
+            set: { driver, state in
+                Labeled(
+                    value: driver
+                        .events()
+                        .tupledWithLatestFrom(state.map { $0 })
+                        .map { (old: $0.1, event: $0.0, new: reducer($0.1, $0.0)) }
+                        .map {
+                            Meta(
+                                value: $0.new,
+                                summary: Moment.Frame(
+                                    cause: Moment.Driver(
+                                        label: "\(type(of: driver))",
+                                        action: "\($0.event)",
+                                        id: ""
+                                    ),
+                                    effect: sourceCode($0.new),
+                                    context: sourceCode($0.old.value),
+                                    isApproved: false
+                                )
                             )
-                        )
-                    }
+                        },
+                    label: label ?? "\(type(of: driver))"
+                )
+                
             }
         )
     }
     
     func lens<T, Driver: Drivable>(
+        label: String? = nil,
         lifter: @escaping (T) -> Driver.Model, // Need to figure out getting subset from source -> MutatingLens wants same type on incoming stream
         driver: Driver,
         reducer: @escaping (T, Driver.Event) -> T
-    )
-    -> MutatingLens<
-        Observable<Element>,
-        Driver,
-        Observable<Element>
-    > where Element == Meta<T> {
+    ) -> MutatingLens<Observable<Element>, Driver, [Labeled<Observable<Element>>]> where Element == Meta<T> {
         lens(
-            get: { state in
-                driver.rendering(state.map { $0.value }.map(lifter)) { driver, state in
+            get: { states in
+                driver.rendering(states.map { $0.value }.map(lifter)) { driver, state in
                     driver.render(state)
                 }
             },
-            set: { driver, state  in
-                driver
+            set: { driver, state in
+                Labeled(
+                    value: driver
                     .events()
                     .tupledWithLatestFrom(state)
                     .map { (old: $0.1, event: $0.0, new: reducer($0.1.value, $0.0)) }
@@ -110,7 +110,9 @@ extension Observable {
                                 isApproved: false
                             )
                         )
-                    }
+                    },
+                    label: label ?? "\(type(of: driver))"
+                )
             }
         )
     }

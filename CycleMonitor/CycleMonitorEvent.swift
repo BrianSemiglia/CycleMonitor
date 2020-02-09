@@ -11,6 +11,11 @@ struct Meta<T: Equatable>: Equatable {
     let summary: Moment.Frame
 }
 
+struct Labeled<T> {
+    let value: T
+    let label: String
+}
+
 public struct Moment: Equatable {
     
     public struct Driver: Equatable {

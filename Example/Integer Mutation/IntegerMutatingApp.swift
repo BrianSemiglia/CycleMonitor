@@ -49,7 +49,7 @@ import RxSwiftExt
                     ),
                     MutatingLens(
                         value: source,
-                        get: { states -> ShakeDetection in
+                        get: { states in
                             ShakeDetection(initial: .init(state: .listening)).rendering(
                                 states.map { $0.value.motionReporter }
                             ) { shakes, state in
@@ -57,31 +57,41 @@ import RxSwiftExt
                             }
                         },
                         set: { shake, states in
-                            shake.output.tupledWithLatestFrom(states.last(25)).map { event, xs in
-                                switch event {
-                                case .detecting:
-                                    var new = xs.last!.value
-                                    new.bugReporter.state = xs.map { x in
-                                        Moment(
-                                            drivers: NonEmptyArray(
-                                                Moment.Driver(
-                                                    label: "",
-                                                    action: "",
-                                                    id: ""
-                                                )
-                                            ),
-                                            frame: x.summary
+                            shake
+                                .output
+                                .tupledWithLatestFrom(states.last(25))
+                                .map { event, xs in
+                                    switch event {
+                                    case .detecting:
+                                        var new = xs.last!.value
+                                        new.bugReporter.state = xs.map { x in
+                                            Moment(
+                                                drivers: NonEmptyArray(
+                                                    Moment.Driver(
+                                                        label: "",
+                                                        action: "",
+                                                        id: ""
+                                                    )
+                                                ),
+                                                frame: x.summary
+                                            )
+                                        }
+                                        .eventsPlayable
+                                        .binaryPropertyList()
+                                        .map(BugReporter.Model.State.sending)
+                                        ?? .idle
+                                        return Meta(
+                                            value: new,
+                                            summary: xs.last!.summary
+                                        )
+                                    default:
+                                        return Meta(
+                                            value: xs.last!.value,
+                                            summary: xs.last!.summary
                                         )
                                     }
-                                    .eventsPlayable
-                                    .binaryPropertyList()
-                                    .map(BugReporter.Model.State.sending)
-                                    ?? .idle
-                                    return Meta(value: new, summary: xs.last!.summary)
-                                default:
-                                    return Meta(value: xs.last!.value, summary: xs.last!.summary)
                                 }
-                            }
+                                .labeled("Shakes")
                         }
                     ),
                     source.lens(
@@ -481,5 +491,11 @@ extension Moment.Driver {
         var new = self
         new.id = id
         return new
+    }
+}
+
+extension Observable {
+    func labeled(_ input: String) -> Labeled<Observable<Element>> {
+        Labeled(value: self, label: input)
     }
 }

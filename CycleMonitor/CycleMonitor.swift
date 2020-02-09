@@ -115,8 +115,7 @@ import Cycle
                 set: { driver, states in states }
             )
             
-            return MutatingLens
-                .zip(
+            return MutatingLens.zip(
                     view,
                     multipeer,
                     browser,
