@@ -14,7 +14,7 @@ extension MutatingLens {
     
     func multipeered<T>() -> MutatingLens<A, (B, MultipeerJSON), [Observable<Meta<T>>]>
     where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>] {
-        MutatingLens<A, (B, MultipeerJSON), [Observable<Meta<T>>]>(
+        .init(
             value: value,
             get: { values in (
                 self.get,
@@ -28,7 +28,7 @@ extension MutatingLens {
     
     func multipeered<T>() -> MutatingLens<A, (B, MultipeerJSON), C>
     where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>] {
-        MutatingLens<A, (B, MultipeerJSON), C>(
+        .init(
             value: value,
             get: { values in (
                 self.get,
@@ -44,7 +44,7 @@ extension MutatingLens {
         -> MutatingLens<A, (B, BugReporter), [Observable<Meta<T>>]>
         where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>]
     {
-        MutatingLens<A, (B, BugReporter), [Observable<Meta<T>>]>(
+        .init(
             value: value,
             get: { values in (
                 self.get,
@@ -77,13 +77,13 @@ extension MutatingLens {
     
     func momented<T>() -> MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>
     where A == Observable<Meta<T>>, C == [Labeled<Observable<Meta<T>>>] {
-        MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>(
+        .init(
             value: value,
             get: { _ in self.get },
-            set: { _, _ -> Observable<(Meta<T>, Moment)> in
+            set: { _, _ in
                 Observable
                     .merge(self.set.map { $0.value }.tagged())
-                    .map { state -> (Meta<T>, Moment) in (
+                    .map { state in (
                         state.1,
                         Moment(
                             drivers: NonEmptyArray(
