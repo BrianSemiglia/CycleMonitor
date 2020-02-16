@@ -32,8 +32,8 @@ DEPENDENCIES:
   - Cycle (from `https://github.com/BrianSemiglia/Cycle.swift`, branch `lens2`)
   - Highlightr
   - RxCallbacks
-  - RxCocoa
-  - RxSwift
+  - RxCocoa (~> 5.0)
+  - RxSwift (~> 5.0)
   - RxSwiftExt
   - RxTest
 
@@ -73,6 +73,6 @@ SPEC CHECKSUMS:
   RxSwiftExt: 4ca80336f43c28f11a2825cdd2fc61dd6c044697
   RxTest: 0132f952a61da82d5233abedaa559df91e5330e5
 
-PODFILE CHECKSUM: cb45113bea8dc7f43513cf427c91dc124551f946
+PODFILE CHECKSUM: f6e4cea6f69a11e0275e6b3fc2a2b60581414949
 
 COCOAPODS: 1.8.4

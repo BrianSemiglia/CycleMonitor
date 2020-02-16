@@ -3,8 +3,8 @@ use_frameworks!
 target 'CycleMonitor' do
   platform :macos, 10.15
   pod 'Cycle', git: 'https://github.com/BrianSemiglia/Cycle.swift', branch: 'lens2'
-  pod 'RxSwift'
-  pod 'RxCocoa'
+  pod 'RxSwift', '~> 5.0'
+  pod 'RxCocoa', '~> 5.0'
   pod 'Argo', '~> 4.0'
   pod 'Curry', '~> 4.0'
   pod 'RxSwiftExt'
@@ -17,8 +17,8 @@ end
 target 'Integer Mutation' do
   platform :ios, 9.0
   pod 'Cycle', git: 'https://github.com/BrianSemiglia/Cycle.swift', branch: 'lens2'
-  pod 'RxSwift'
-  pod 'RxCocoa'
+  pod 'RxSwift', '~> 5.0'
+  pod 'RxCocoa', '~> 5.0'
   pod 'Curry', '~> 4.0'
   pod 'RxCallbacks'
   pod 'Argo', '~> 4.0'
