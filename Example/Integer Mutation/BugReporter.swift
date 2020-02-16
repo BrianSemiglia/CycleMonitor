@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import MessageUI
+import Cycle
 
 final class BugReporter: NSObject, MFMailComposeViewControllerDelegate, Drivable {
   struct Model: Equatable {
