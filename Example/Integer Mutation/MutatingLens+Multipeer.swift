@@ -13,26 +13,26 @@ import Cycle
 extension MutatingLens {
     
     func multipeered<T>() -> MutatingLens<A, (B, MultipeerJSON), [Observable<Meta<T>>]>
-    where A == Observable<Meta<T>>, C == ([Observable<Meta<T>>], Observable<Moment>) {
+    where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>] {
         MutatingLens<A, (B, MultipeerJSON), [Observable<Meta<T>>]>(
             value: value,
             get: { values in (
                 self.get,
-                MultipeerJSON().rendering(self.set.1) { multipeer, state in
+                MultipeerJSON().rendering(Observable.merge(self.set).map { $0.1 }) { multipeer, state in
                     multipeer.render(state.coerced() as [AnyHashable: Any])
                 }
             )},
-            set: { _, _ in self.set.0 }
+            set: { _, _ in self.set.map { $0.map { $0.0 } } }
         )
     }
     
     func multipeered<T>() -> MutatingLens<A, (B, MultipeerJSON), C>
-    where A == Observable<Meta<T>>, C == ([Observable<Meta<T>>], Observable<Moment>) {
+    where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>] {
         MutatingLens<A, (B, MultipeerJSON), C>(
             value: value,
             get: { values in (
                 self.get,
-                MultipeerJSON().rendering(self.set.1) { multipeer, state in
+                MultipeerJSON().rendering(Observable.merge(self.set).map { $0.1 }) { multipeer, state in
                     multipeer.render(state.coerced() as [AnyHashable: Any])
                 }
             )},
@@ -42,7 +42,7 @@ extension MutatingLens {
     
     func bugReported<T>(when: @escaping (T) -> Bool = { _ in false })
         -> MutatingLens<A, (B, BugReporter), [Observable<Meta<T>>]>
-        where A == Observable<Meta<T>>, C == ([Observable<Meta<T>>], Observable<Moment>)
+        where A == Observable<Meta<T>>, C == [Observable<(Meta<T>, Moment)>]
     {
         MutatingLens<A, (B, BugReporter), [Observable<Meta<T>>]>(
             value: value,
@@ -53,62 +53,56 @@ extension MutatingLens {
                 )
                 .rendering(
                     Observable
-                        .merge(self.set.0)
-                        .map { $0.value }
-                        .filter(when)
-                        .map { _ in }.flatMap {
-                            self
-                            .set
-                            .1
-                            .last(25)
-                            .map { xs -> BugReporter.Model in
-                                BugReporter.Model(
-                                    state: xs
-                                        .eventsPlayable
-                                        .binaryPropertyList()
-                                        .map(BugReporter.Model.State.sending)
-                                        ?? .idle
-                                )
-                            }
+                        .merge(self.set)
+                        .filter { when($0.0.value) }
+                        .last(25)
+                        .map { xs in
+                            BugReporter.Model(
+                                state: xs
+                                    .map { $0.1 }
+                                    .eventsPlayable
+                                    .binaryPropertyList()
+                                    .map(BugReporter.Model.State.sending)
+                                    ?? .idle
+                            )
                         },
                     f: { reporter, state in
                         reporter.render(state)
                     }
                 )
             )},
-            set: { _, _ in self.set.0 }
+            set: { _, _ in self.set.map { $0.map { $0.0 } } }
         )
     }
     
-    func momented<T>() -> MutatingLens<A, B, ([Observable<Meta<T>>], Observable<Moment>)>
+    func momented<T>() -> MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>
     where A == Observable<Meta<T>>, C == [Labeled<Observable<Meta<T>>>] {
-        MutatingLens<A, B, ([Observable<Meta<T>>], Observable<Moment>)>(
+        MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>(
             value: value,
             get: { _ in self.get },
-            set: { _, _ in (
-                self.set.map { $0.value },
+            set: { _, _ -> Observable<(Meta<T>, Moment)> in
                 Observable
                     .merge(self.set.map { $0.value }.tagged())
-                    .map { ($0.tag, $0.1.summary) }
-                    .map { states in
+                    .map { state -> (Meta<T>, Moment) in (
+                        state.1,
                         Moment(
                             drivers: NonEmptyArray(
                                 possible: self.set.map { $0.label }.enumerated().map { x in
                                     Moment.Driver(
                                         label: x.element,
-                                        action: x.offset == states.0 ? states.1.cause.action : "",
+                                        action: x.offset == state.0 ? state.1.summary.cause.action : "",
                                         id: String(x.offset)
                                     )
                                 }
-                                )!,
-                            frame: states.1.setting(
-                                cause: states.1.cause.setting(
-                                    id: String(states.0)
+                            )!,
+                            frame: state.1.summary.setting(
+                                cause: state.1.summary.cause.setting(
+                                    id: String(state.0)
                                 )
                             )
                         )
-                    }
-            )}
+                    )}
+            }
         )
     }
 }
