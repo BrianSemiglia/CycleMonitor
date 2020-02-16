@@ -70,17 +70,13 @@ import Curry
             )
             
             let browser = state.lens(
-                get: { states in
-                    BrowserDriver(
-                        initial: BrowserDriver.Model(
-                            state: BrowserDriver.Model.State.opening
-                        )
+                lifter: { $0.browser },
+                driver: BrowserDriver(
+                    initial: BrowserDriver.Model(
+                        state: .opening
                     )
-                    .rendering(states) { driver, states in
-                        
-                    }
-                },
-                set: { driver, states in states }
+                ),
+                reducer: reduced
             )
             
             let menuBar = state.lens(
@@ -546,25 +542,21 @@ extension CycleMonitorApp.Model.TimeLineView {
   }
 }
 
-extension ObservableType where Element == (BrowserDriver.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> {
-    map { event, context in
-      switch event {
-      case .didOpen(let json):
+func reduced(context: CycleMonitorApp.Model, event: BrowserDriver.Action) -> CycleMonitorApp.Model {
+    switch event {
+    case .didOpen(let json):
         var new = context
         new.events = Moment.eventsFrom(json)
         new.timeLineView = CycleMonitorApp.Model.TimeLineView.timelineViewFrom(json)
         new.browser.state = .idle
         return new
-      case .cancelling, .none:
+    case .cancelling, .none:
         var new = context
         new.browser.state = .idle
         return new
-      default:
+    default:
         return context
-      }
     }
-  }
 }
 
 extension ObservableType where Element == (MenuBarDriver.Action, CycleMonitorApp.Model) {

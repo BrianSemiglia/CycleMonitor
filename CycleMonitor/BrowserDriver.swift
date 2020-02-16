@@ -10,8 +10,9 @@ import AppKit
 import Foundation
 import RxSwift
 import Runes
+import Cycle
 
-class BrowserDriver: NSObject {
+final class BrowserDriver: NSObject, Drivable {
   
   struct Model {
     enum State {
@@ -58,22 +59,18 @@ class BrowserDriver: NSObject {
     return x
   }
   
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input
-      .observeOn(MainScheduler.instance)
-      .subscribe(
-        onNext: {
-          let old = self.model
-          self.model = $0
-          self.render(
-            old: old,
-            new: $0
-          )
-        }
-      )
-      .disposed(by: cleanup)
-    return output
+  func render(_ input: Model) {
+    let old = self.model
+    self.model = input
+    self.render(
+        old: old,
+        new: self.model
+    )
   }
+    
+    func events() -> Observable<BrowserDriver.Action> {
+        output.asObservable()
+    }
   
   func render(old: Model, new: Model) {
     if new != old {
