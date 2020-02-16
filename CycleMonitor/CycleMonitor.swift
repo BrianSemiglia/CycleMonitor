@@ -91,7 +91,8 @@ import Curry
                 reducer: { m, e in m } // has no outputs. make optional?
             )
             
-            let zipped = MutatingLens<Any, Any, Any>.zip(
+            return MutatingLens<Any, Any, Any>
+                .zip(
                     view,
                     multipeer,
                     browser,
@@ -101,8 +102,6 @@ import Curry
                 .prefixed(
                     with: CycleMonitorApp.Model.init()
                 )
-            
-            return zipped
         }
         
         main = NSStoryboard(

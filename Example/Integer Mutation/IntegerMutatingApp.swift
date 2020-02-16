@@ -31,73 +31,71 @@ import RxSwiftExt
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         
-        let lens = CycledLens(
-            lens: { source in
-                MutatingLens<Any, Any, Any>.zip(
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.screen },
-                        driver: ValueToggler(),
-                        reducer: mutatingInteger
-                    ),
-                    source.lens(
-                        lifter: { $0.motionReporter },
-                        driver: ShakeDetection(initial: .init(state: .listening)),
-                        reducer: reportingOnShake
-                    )
+        let lens = CycledLens { source in
+            MutatingLens<Any, Any, Any>.zip(
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.screen },
+                    driver: ValueToggler(),
+                    reducer: mutatingInteger
+                ),
+                source.lens(
+                    lifter: { $0.motionReporter },
+                    driver: ShakeDetection(initial: .init(state: .listening)),
+                    reducer: reportingOnShake
                 )
-                .map { state, toggle -> UIViewController in
-                    toggle.0.backgroundColor = .white
-                    toggle.1.backgroundColor = .lightGray
-                    toggle.2.backgroundColor = .darkGray
-                    toggle.3.backgroundColor = .white
-                    toggle.4.backgroundColor = .lightGray
-                    toggle.5.backgroundColor = .darkGray
+            )
+            .map { state, toggle -> UIViewController in
+                toggle.0.backgroundColor = .white
+                toggle.1.backgroundColor = .lightGray
+                toggle.2.backgroundColor = .darkGray
+                toggle.3.backgroundColor = .white
+                toggle.4.backgroundColor = .lightGray
+                toggle.5.backgroundColor = .darkGray
 
-                    let stack = UIStackView(arrangedSubviews: [
-                        toggle.0,
-                        toggle.1,
-                        toggle.2,
-                        toggle.3,
-                        toggle.4,
-                        toggle.5
-                    ])
-                    stack.axis = .vertical
-                    stack.distribution = .fillEqually
-                    let vc = UIViewController()
-                    vc.view = stack
-                    return vc
-                }
-                .momented()
-                .multipeered()
-                .prefixed(with: IntegerMutatingApp.Model())
-//              .bugReported(when: { $0.shouldReport })
+                let stack = UIStackView(arrangedSubviews: [
+                    toggle.0,
+                    toggle.1,
+                    toggle.2,
+                    toggle.3,
+                    toggle.4,
+                    toggle.5
+                ])
+                stack.axis = .vertical
+                stack.distribution = .fillEqually
+                let vc = UIViewController()
+                vc.view = stack
+                return vc
             }
-        )
+            .momented()
+            .multipeered()
+            .prefixed(with: IntegerMutatingApp.Model())
+//            .bugReported(when: { $0.shouldReport })
+        }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
