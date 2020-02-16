@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import CoreMotion
 import RxCoreMotion
+import Cycle
 
 final class ShakeDetection: NSObject, Drivable {
   struct Model: Equatable {
