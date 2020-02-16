@@ -33,15 +33,7 @@ import Curry
             let view = state.lens(
                 lifter: TimeLineViewController.Model.coerced,
                 driver: TimeLineViewController.new(
-                    model: TimeLineViewController.Model(
-                        drivers: [],
-                        causesEffects: [],
-                        presentedState: NSAttributedString(string: ""),
-                        selected: nil,
-                        connection: .connected,
-                        eventHandlingState: .playing,
-                        devices: []
-                    )
+                    model: .empty
                 ),
                 reducer: reduced
             )

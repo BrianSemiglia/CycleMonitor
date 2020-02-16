@@ -515,3 +515,15 @@ extension Int {
     }
   }
 }
+
+extension TimeLineViewController.Model {
+    static var empty = TimeLineViewController.Model(
+        drivers: [],
+        causesEffects: [],
+        presentedState: NSAttributedString(string: ""),
+        selected: nil,
+        connection: .connected,
+        eventHandlingState: .playing,
+        devices: []
+    )
+}
