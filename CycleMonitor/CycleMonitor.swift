@@ -90,17 +90,13 @@ import Curry
             )
             
             let terminator = state.lens(
-                get: { states in
-                    TerminationDriver(
-                        model: TerminationDriver.Model(
-                            shouldTerminate: false
-                        )
+                lifter: { TerminationDriver.Model(shouldTerminate: $0.isTerminating) },
+                driver: TerminationDriver(
+                    model: TerminationDriver.Model(
+                        shouldTerminate: false
                     )
-                    .rendering(states) { driver, states in
-                        
-                    }
-                },
-                set: { driver, states in states }
+                ),
+                reducer: { m, e in m } // has no outputs. make optional?
             )
             
             let zipped = MutatingLens<Any, Any, Any>.zip(
@@ -584,50 +580,6 @@ func reduced(context: CycleMonitorApp.Model, event: MenuBarDriver.Action) -> Cyc
         break
     }
     return context
-}
-
-class TerminationDriver: NSObject {
-  struct Model: Equatable {
-    var shouldTerminate: Bool
-  }
-  
-  enum Action {
-    case none
-  }
-  
-  let cleanup = DisposeBag()
-  let output = BehaviorSubject(value: Action.none)
-
-  var model: Model {
-    didSet {
-      if model != oldValue {
-        render(model)
-      }
-    }
-  }
-  
-  init(model: Model) {
-    self.model = model
-    super.init()
-    render(model)
-  }
-  
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input
-      .observeOn(MainScheduler.instance)
-      .distinctUntilChanged()
-      .subscribe(onNext: render)
-      .disposed(by: cleanup)
-    return output
-  }
-  
-  func render(_ input: Model) {
-    if input.shouldTerminate {
-      NSApplication
-        .shared
-        .terminate(nil)
-    }
-  }
 }
 
 extension CycleMonitorApp.Model {
