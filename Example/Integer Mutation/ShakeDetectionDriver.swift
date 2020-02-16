@@ -9,8 +9,9 @@
 import Foundation
 import RxSwift
 import CoreMotion
-import RxCoreMotion
 import Cycle
+import RxCallbacks
+import Curry
 
 final class ShakeDetection: NSObject, Drivable {
   struct Model: Equatable {
@@ -33,9 +34,9 @@ final class ShakeDetection: NSObject, Drivable {
   init(initial: Model) {
     model = initial
     super.init()
-    motions
-      .rx
-      .accelerometerData
+    Observable<CMAccelerometerData>
+      .fromCallback(curry(motions.startAccelerometerUpdates)(.main))
+      .map { $0.0! }
       .map { $0.acceleration }
       .scan([]) { $0 + [$1] }
       .map { $0.suffix(2) }
@@ -73,4 +74,8 @@ final class ShakeDetection: NSObject, Drivable {
 //      motions.startAccelerometerUpdates()
 //    }
   }
+    
+    deinit {
+        motions.stopAccelerometerUpdates()
+    }
 }
