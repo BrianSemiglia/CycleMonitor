@@ -31,26 +31,19 @@ import Curry
         
         self.lens = CycledLens { state in
             let view = state.lens(
-                get: { states in
-                    TimeLineViewController
-                        .new(
-                            model: TimeLineViewController.Model(
-                                drivers: [],
-                                causesEffects: [],
-                                presentedState: NSAttributedString(string: ""),
-                                selected: nil,
-                                connection: .connected,
-                                eventHandlingState: .playing,
-                                devices: []
-                            )
-                        )
-                        .rendering(states) { view, state in
-                            view.rendered(state.coerced())
-                        }
-                },
-                set: { view, states in
-                    view.output.tupledWithLatestFrom(states).reduced()
-                }
+                lifter: TimeLineViewController.Model.coerced,
+                driver: TimeLineViewController.new(
+                    model: TimeLineViewController.Model(
+                        drivers: [],
+                        causesEffects: [],
+                        presentedState: NSAttributedString(string: ""),
+                        selected: nil,
+                        connection: .connected,
+                        eventHandlingState: .playing,
+                        devices: []
+                    )
+                ),
+                reducer: reduced
             )
                         
             let multipeer = state.lens(
@@ -427,60 +420,56 @@ extension ObservableType {
   }
 }
 
-extension ObservableType where Element == (TimeLineViewController.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> {
-    map { event, context in
-      switch event {
-      case .scrolledToIndex(let index):
+func reduced(context: CycleMonitorApp.Model, event: TimeLineViewController.Action) -> CycleMonitorApp.Model {
+    switch event {
+    case .scrolledToIndex(let index):
         var new = context
         new.timeLineView.selectedIndex = index
         return new
-      case .toggledApproval(let index, let isApproved):
+    case .toggledApproval(let index, let isApproved):
         var new = context
         new.events[index].frame.isApproved = isApproved
         return new
-      case .didSelectEventHandling(let new):
+    case .didSelectEventHandling(let new):
         switch new {
         case .playing:
-          var new = context
-          new.eventHandlingState = .playing
-          return new
+            var new = context
+            new.eventHandlingState = .playing
+            return new
         case .playingSendingEvents:
-          var new = context
-          new.eventHandlingState = .playingSendingEvents
-          return new
+            var new = context
+            new.eventHandlingState = .playingSendingEvents
+            return new
         case .playingSendingEffects:
-          var new = context
-          new.eventHandlingState = .playingSendingEffects
-          return new
+            var new = context
+            new.eventHandlingState = .playingSendingEffects
+            return new
         case .recording:
-          var new = context
-          new.eventHandlingState = .recording
-          return new
+            var new = context
+            new.eventHandlingState = .recording
+            return new
         }
-      case .didCreatePendingStateEdit(let newState):
+    case .didCreatePendingStateEdit(let newState):
         var new = context
         new.events[new.timeLineView.selectedIndex!].frame.effect = newState
         return new
-      case .didSelectClearAll:
+    case .didSelectClearAll:
         var new = context
         new.events = []
         new.timeLineView.selectedIndex = nil
         return new
-      case .didSelectItemWith(id: let id):
+    case .didSelectItemWith(id: let id):
         var new = context
         new.selectedPeer = context.devices.filter { $0.name == id }.first?.peerID
         new.devices = context.devices.map {
-          var x = $0
-          x.connection = id != $0.name ? .idle : .connecting
-          return x
+            var x = $0
+            x.connection = id != $0.name ? .idle : .connecting
+            return x
         }
         return new
-      default:
+    default:
         return context
-      }
     }
-  }
 }
 
 extension ObservableType where Element == (MultipeerJSON.Action, CycleMonitorApp.Model) {

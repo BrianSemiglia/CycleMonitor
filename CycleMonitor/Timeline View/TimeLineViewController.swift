@@ -14,11 +14,12 @@ import Curry
 import Runes
 import Cycle
 
-class TimeLineViewController:
+final class TimeLineViewController:
       NSViewController,
       NSCollectionViewDataSource,
       NSCollectionViewDelegateFlowLayout,
-      NSTextViewDelegate {
+      NSTextViewDelegate,
+      Drivable {
   
   struct Model: Equatable {
     struct Driver: Equatable {
@@ -245,21 +246,18 @@ class TimeLineViewController:
         )
     }
     
-  public func rendered(_ input: Observable<Model>) {
-    input
-      .observeOn(MainScheduler.instance)
-      .subscribe(
-        onNext: {
-          let old = self.model
-          self.model = $0
-          self.render(
+    public func render(_ input: Model) {
+        let old = self.model
+        self.model = input
+        self.render(
             old: old,
-            new: $0
-          )
-        }
-      )
-      .disposed(by: cleanup)
-  }
+            new: self.model
+        )
+    }
+    
+    func events() -> Observable<TimeLineViewController.Action> {
+        return output.asObservable()
+    }
       
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
     if let new = input.selectedSegment.eventHandlingState {
