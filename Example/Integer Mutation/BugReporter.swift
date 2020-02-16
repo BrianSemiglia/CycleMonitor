@@ -28,6 +28,7 @@ final class BugReporter: NSObject, MFMailComposeViewControllerDelegate, Drivable
   let cleanup = DisposeBag()
   let output = BehaviorSubject(value: Action.none)
   var model: Model
+  private var mail: MFMailComposeViewController?
   
   init(initial: Model) {
     model = initial
@@ -64,13 +65,15 @@ final class BugReporter: NSObject, MFMailComposeViewControllerDelegate, Drivable
         fileName: "bug-report"
       )
       x.mailComposeDelegate = self
+      mail = x
       UIApplication.shared.keyWindow?.rootViewController?.present(
         x,
         animated: true
       )
     case .idle:
-      if UIApplication.shared.keyWindow?.rootViewController?.presentedViewController?.isKind(of: MFMailComposeViewController.self) == true {
+      if UIApplication.shared.keyWindow?.rootViewController?.presentedViewController == mail {
         UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true)
+        mail = nil
       }
     default:
       break
@@ -82,6 +85,6 @@ final class BugReporter: NSObject, MFMailComposeViewControllerDelegate, Drivable
     didFinishWith result: MFMailComposeResult,
     error: Error?
   ) {
-    output.on(.next(.didSuccessfullySend))
+    self.render(.init(state: .idle)) // revisit
   }
 }
