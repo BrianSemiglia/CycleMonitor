@@ -10,6 +10,9 @@ import Cocoa
 import RxSwift
 import RxSwiftExt
 import Cycle
+import Argo
+import Runes
+import Curry
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     
@@ -115,7 +118,7 @@ import Cycle
                 set: { driver, states in states }
             )
             
-            return MutatingLens.zip(
+            let zipped = MutatingLens<Any, Any, Any>.zip(
                     view,
                     multipeer,
                     browser,
@@ -123,10 +126,10 @@ import Cycle
                     terminator
                 )
                 .prefixed(
-                    with: .just(
-                        CycleMonitorApp.Model.init()
-                    )
+                    with: CycleMonitorApp.Model.init()
                 )
+            
+            return zipped
         }
         
         main = NSStoryboard(
