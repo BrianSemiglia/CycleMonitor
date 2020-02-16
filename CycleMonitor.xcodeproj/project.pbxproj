@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0526538E40CACE3DAB2D8863 /* Pods_CycleMonitorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986B829C38D97A3FD95D8C59 /* Pods_CycleMonitorTests.framework */; };
+		D30971A223F8F377000DE989 /* MutatingLens+Prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */; };
+		D30971A523F8F446000DE989 /* EncodedDecoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A323F8F3AD000DE989 /* EncodedDecoded.swift */; };
+		D30971A623F8F44E000DE989 /* MutatingLens+Prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */; };
+		D30971A823F8F52F000DE989 /* EncodedDecoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A723F8F52F000DE989 /* EncodedDecoded.swift */; };
 		D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694B1F0B12DA004A0135 /* DriverViewItem.swift */; };
 		D31169511F0B12DA004A0135 /* DriverViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = D311694C1F0B12DA004A0135 /* DriverViewItem.xib */; };
 		D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */; };
@@ -23,9 +27,9 @@
 		D33F8D621F5B3874002C122D /* ValueToggler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D431F5B37B4002C122D /* ValueToggler.swift */; };
 		D33F8D641F5B436E002C122D /* MultipeerJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33F8D631F5B436E002C122D /* MultipeerJSON.swift */; };
 		D361BBD223EFA55100702B79 /* SourceReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BDE23EF576600B090C9 /* SourceReflection.swift */; };
+		D366333D23F8AF8F00A3D552 /* Drivable+Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = D366333C23F8AF8F00A3D552 /* Drivable+Meta.swift */; };
 		D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36F2C831F1BCC90007D8D93 /* MenuBar.swift */; };
 		D3803BD823EF563000B090C9 /* Observable+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BD623EF55FC00B090C9 /* Observable+Convenience.swift */; };
-		D3803BDB23EF56AC00B090C9 /* Drivable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BD923EF568A00B090C9 /* Drivable.swift */; };
 		D3803BDD23EF572300B090C9 /* MutatingLens+Multipeer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BDC23EF572300B090C9 /* MutatingLens+Multipeer.swift */; };
 		D3803BDF23EF576600B090C9 /* SourceReflection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3803BDE23EF576600B090C9 /* SourceReflection.swift */; };
 		D39E196A1F5FA99B0087BF3A /* CycleMonitorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D39E19691F5FA99B0087BF3A /* CycleMonitorTests.swift */; };
@@ -37,6 +41,7 @@
 		D3ACAE7523D41920009B7FD7 /* RxSwiftHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */; };
 		D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
 		D3CA844B1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */; };
+		D3D668E923F8BC4000F88341 /* Drivable+Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = D366333C23F8AF8F00A3D552 /* Drivable+Meta.swift */; };
 		D3E8E3271F1735F400B0E918 /* BrowserDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E3261F1735F400B0E918 /* BrowserDriver.swift */; };
 		D3F5B7131EFF08530020290A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3F5B7121EFF08530020290A /* Assets.xcassets */; };
 		D3FB48CF1F0B54F6001B33A7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3FB48CD1F0B54F6001B33A7 /* Main.storyboard */; };
@@ -72,6 +77,9 @@
 		986B829C38D97A3FD95D8C59 /* Pods_CycleMonitorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CycleMonitorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DE827C396E201676F42419F /* Pods-Integer Mutation Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation Tests/Pods-Integer Mutation Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		ADFACFACEDF671E39855239D /* Pods-CycleMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitor.release.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor.release.xcconfig"; sourceTree = "<group>"; };
+		D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MutatingLens+Prefix.swift"; sourceTree = "<group>"; };
+		D30971A323F8F3AD000DE989 /* EncodedDecoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodedDecoded.swift; sourceTree = "<group>"; };
+		D30971A723F8F52F000DE989 /* EncodedDecoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncodedDecoded.swift; sourceTree = "<group>"; };
 		D311694B1F0B12DA004A0135 /* DriverViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverViewItem.swift; sourceTree = "<group>"; };
 		D311694C1F0B12DA004A0135 /* DriverViewItem.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverViewItem.xib; sourceTree = "<group>"; };
 		D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineViewItem.swift; sourceTree = "<group>"; };
@@ -89,9 +97,9 @@
 		D33F8D431F5B37B4002C122D /* ValueToggler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueToggler.swift; sourceTree = "<group>"; };
 		D33F8D4D1F5B383F002C122D /* Integer Mutation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Integer Mutation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33F8D631F5B436E002C122D /* MultipeerJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultipeerJSON.swift; sourceTree = "<group>"; };
+		D366333C23F8AF8F00A3D552 /* Drivable+Meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Drivable+Meta.swift"; sourceTree = "<group>"; };
 		D36F2C831F1BCC90007D8D93 /* MenuBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		D3803BD623EF55FC00B090C9 /* Observable+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+Convenience.swift"; sourceTree = "<group>"; };
-		D3803BD923EF568A00B090C9 /* Drivable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drivable.swift; sourceTree = "<group>"; };
 		D3803BDC23EF572300B090C9 /* MutatingLens+Multipeer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MutatingLens+Multipeer.swift"; sourceTree = "<group>"; };
 		D3803BDE23EF576600B090C9 /* SourceReflection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceReflection.swift; sourceTree = "<group>"; };
 		D39E19691F5FA99B0087BF3A /* CycleMonitorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CycleMonitorTests.swift; sourceTree = "<group>"; };
@@ -175,9 +183,11 @@
 			isa = PBXGroup;
 			children = (
 				D31D158F1F0C98280009DE25 /* CycleMonitor.swift */,
+				D30971A723F8F52F000DE989 /* EncodedDecoded.swift */,
 				D3CA84491F5E0E1A0054B6C8 /* CycleMonitorEvent.swift */,
 				D39E19691F5FA99B0087BF3A /* CycleMonitorTests.swift */,
 				D3ACAE7423D41920009B7FD7 /* RxSwiftHelper.swift */,
+				D366333C23F8AF8F00A3D552 /* Drivable+Meta.swift */,
 			);
 			name = Cycle;
 			sourceTree = "<group>";
@@ -215,8 +225,9 @@
 				D33F8D421F5B37B4002C122D /* ShakeDetectionDriver.swift */,
 				D33F8D431F5B37B4002C122D /* ValueToggler.swift */,
 				D3803BD623EF55FC00B090C9 /* Observable+Convenience.swift */,
-				D3803BD923EF568A00B090C9 /* Drivable.swift */,
 				D3803BDC23EF572300B090C9 /* MutatingLens+Multipeer.swift */,
+				D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */,
+				D30971A323F8F3AD000DE989 /* EncodedDecoded.swift */,
 				D3803BDE23EF576600B090C9 /* SourceReflection.swift */,
 				D33F8D401F5B37B4002C122D /* Info.plist */,
 			);
@@ -663,14 +674,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D30971A623F8F44E000DE989 /* MutatingLens+Prefix.swift in Sources */,
 				D3CA844B1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
 				D33F8D611F5B3874002C122D /* ShakeDetectionDriver.swift in Sources */,
 				D3803BDD23EF572300B090C9 /* MutatingLens+Multipeer.swift in Sources */,
-				D3803BDB23EF56AC00B090C9 /* Drivable.swift in Sources */,
 				D33F8D641F5B436E002C122D /* MultipeerJSON.swift in Sources */,
 				D33F8D5F1F5B3874002C122D /* BugReporter.swift in Sources */,
+				D3D668E923F8BC4000F88341 /* Drivable+Meta.swift in Sources */,
 				D33F8D621F5B3874002C122D /* ValueToggler.swift in Sources */,
 				D3803BD823EF563000B090C9 /* Observable+Convenience.swift in Sources */,
+				D30971A523F8F446000DE989 /* EncodedDecoded.swift in Sources */,
 				D33F8D601F5B3874002C122D /* IntegerMutatingApp.swift in Sources */,
 				D3803BDF23EF576600B090C9 /* SourceReflection.swift in Sources */,
 			);
@@ -680,8 +693,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D30971A823F8F52F000DE989 /* EncodedDecoded.swift in Sources */,
+				D30971A223F8F377000DE989 /* MutatingLens+Prefix.swift in Sources */,
 				D31169521F0B12DA004A0135 /* TimelineViewItem.swift in Sources */,
 				D36F2C841F1BCC90007D8D93 /* MenuBar.swift in Sources */,
+				D366333D23F8AF8F00A3D552 /* Drivable+Meta.swift in Sources */,
 				D3CA844A1F5E0E1A0054B6C8 /* CycleMonitorEvent.swift in Sources */,
 				D31D15901F0C98280009DE25 /* CycleMonitor.swift in Sources */,
 				D31169541F0B12DA004A0135 /* TimeLineViewController.swift in Sources */,
