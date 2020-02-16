@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import Cycle
 
-public extension Observable {
+extension Observable {
     func lens<T, Driver: Drivable>(
         label: String? = nil,
         lifter: @escaping (T) -> Driver.Model,

@@ -12,7 +12,7 @@ struct Meta<T: Equatable>: Equatable {
 }
 
 struct Labeled<T> {
-    let value: T
+    var value: T
     let label: String
 }
 
