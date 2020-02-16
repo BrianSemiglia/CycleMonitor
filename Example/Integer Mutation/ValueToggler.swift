@@ -37,7 +37,7 @@ final class ValueToggler: UIView, Drivable {
         frame: CGRect(
             origin: CGPoint(
                 x: 50,
-                y: 100
+                y: 50
             ),
             size: CGSize(
                 width: 100,
@@ -48,13 +48,13 @@ final class ValueToggler: UIView, Drivable {
     
     var increment = UIButton(
         frame: CGRect(
-            origin: CGPoint(x: 114, y: 144),
+            origin: CGPoint(x: 114, y: 94),
             size: CGSize(width: 44, height: 44)
         )
     )
     var decrement = UIButton(
         frame: CGRect(
-            origin: CGPoint(x: 50, y: 144),
+            origin: CGPoint(x: 50, y: 94),
             size: CGSize(width: 44, height: 44)
         )
     )

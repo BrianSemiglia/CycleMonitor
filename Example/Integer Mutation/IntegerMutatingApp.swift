@@ -17,8 +17,13 @@ import RxSwiftExt
     var lens: Any?
     
     /* TODO
-        1. new type that enforces a prefix on a lens that must be returned by CycledLens init to ensure kickoff
-        2. Debug CycledLens that records Moments and wraps/unwraps inner lenses for convenience
+        🤷‍♂️ 1. new type that enforces a prefix on a lens that must be returned by CycledLens init to ensure kickoff
+        ✅ 2. Debug CycledLens that records Moments and wraps/unwraps inner lenses for convenience
+           3. Handle initial values for drivers
+        💪 4. Refactor Lens to use single A (observable). be careful about multi-instances when `getting`. oh right: `set` needs results of `A` which needs to be same instance
+        ✅ 5. Threading parameter in driver lens factory
+           6. Fix duplicate events
+           7. Delta highlights for monitor state
     */
     
     func application(
@@ -28,7 +33,7 @@ import RxSwiftExt
         
         let lens = CycledLens(
             lens: { source in
-                MutatingLens.zip(
+                MutatingLens<Any, Any, Any>.zip(
                     source.lens(
                         lifter: { $0.screen },
                         driver: ValueToggler(),
@@ -44,84 +49,53 @@ import RxSwiftExt
                         driver: ValueToggler(),
                         reducer: mutatingInteger
                     ),
-                    MutatingLens(
-                        value: source,
-                        get: { states in
-                            ShakeDetection(initial: .init(state: .listening)).rendering(
-                                states.map { $0.value.motionReporter }
-                            ) { shakes, state in
-                                shakes.render(state)
-                            }
-                        },
-                        set: { shake, states in
-                            shake
-                                .output
-                                .tupledWithLatestFrom(states.last(25))
-                                .map { event, xs in
-                                    switch event {
-                                    case .detecting:
-                                        var new = xs.last!.value
-                                        new.bugReporter.state = xs.map { x in
-                                            Moment(
-                                                drivers: NonEmptyArray(
-                                                    Moment.Driver(
-                                                        label: "",
-                                                        action: "",
-                                                        id: ""
-                                                    )
-                                                ),
-                                                frame: x.summary
-                                            )
-                                        }
-                                        .eventsPlayable
-                                        .binaryPropertyList()
-                                        .map(BugReporter.Model.State.sending)
-                                        ?? .idle
-                                        return Meta(
-                                            value: new,
-                                            summary: xs.last!.summary
-                                        )
-                                    default:
-                                        return Meta(
-                                            value: xs.last!.value,
-                                            summary: xs.last!.summary
-                                        )
-                                    }
-                                }
-                                .labeled("Shakes")
-                        }
+                    source.lens(
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
                     ),
                     source.lens(
-                        lifter: { $0.bugReporter },
-                        driver: BugReporter(initial: .init(state: .idle)),
-                        reducer: { s, _ in s }
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
+                    ),
+                    source.lens(
+                        lifter: { $0.screen },
+                        driver: ValueToggler(),
+                        reducer: mutatingInteger
+                    ),
+                    source.lens(
+                        lifter: { $0.motionReporter },
+                        driver: ShakeDetection(initial: .init(state: .listening)),
+                        reducer: reportingOnShake
                     )
                 )
                 .map { state, toggle -> UIViewController in
                     toggle.0.backgroundColor = .white
                     toggle.1.backgroundColor = .lightGray
                     toggle.2.backgroundColor = .darkGray
-                    let stack = UIStackView(arrangedSubviews: [toggle.0, toggle.1, toggle.2])
+                    toggle.3.backgroundColor = .white
+                    toggle.4.backgroundColor = .lightGray
+                    toggle.5.backgroundColor = .darkGray
+
+                    let stack = UIStackView(arrangedSubviews: [
+                        toggle.0,
+                        toggle.1,
+                        toggle.2,
+                        toggle.3,
+                        toggle.4,
+                        toggle.5
+                    ])
                     stack.axis = .vertical
                     stack.distribution = .fillEqually
                     let vc = UIViewController()
                     vc.view = stack
                     return vc
                 }
+                .momented()
                 .multipeered()
-                .prefixed(
-                    with: .just(
-                        Meta(
-                            value: IntegerMutatingApp.Model(),
-                            summary: Moment.Frame(
-                                cause: Moment.Driver(label: "", action: "", id: ""),
-                                effect: "",
-                                context: "",
-                                isApproved: false
-                            )
-                        )
-                    )
-                )
+                .prefixed(with: IntegerMutatingApp.Model())
+//              .bugReported(when: { $0.shouldReport })
             }
         )
         
@@ -153,11 +127,25 @@ func mutatingInteger(
     }
 }
 
+func reportingOnShake(
+    state: IntegerMutatingApp.Model,
+    event: ShakeDetection.Event
+) -> IntegerMutatingApp.Model {
+    switch event {
+    case .detecting:
+        var new = state
+        new.shouldReport = true
+        return new
+    default:
+        return state
+    }
+}
+
 struct IntegerMutatingApp: Equatable {
     struct Model: Equatable {
         var screen = ValueToggler.Model.empty
-        var bugReporter = BugReporter.Model(state: .idle)
         var motionReporter = ShakeDetection.Model(state: .listening)
+        var shouldReport = false
     }
     struct Drivers {
         let screen: ValueToggler
