@@ -80,17 +80,13 @@ import Curry
             )
             
             let menuBar = state.lens(
-                get: { states in
-                    MenuBarDriver(
-                        model: MenuBarDriver.Model(
-                            items: []
-                        )
+                lifter: { $0.menuBar },
+                driver: MenuBarDriver(
+                    model: MenuBarDriver.Model(
+                        items: []
                     )
-                    .rendering(states) { driver, states in
-                        
-                    }
-                },
-                set: { driver, states in states }
+                ),
+                reducer: reduced
             )
             
             let terminator = state.lens(
@@ -559,39 +555,35 @@ func reduced(context: CycleMonitorApp.Model, event: BrowserDriver.Action) -> Cyc
     }
 }
 
-extension ObservableType where Element == (MenuBarDriver.Action, CycleMonitorApp.Model) {
-  func reduced() -> Observable<CycleMonitorApp.Model> {
-    map { event, context in
-      switch event {
-      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.openTimelineID:
+func reduced(context: CycleMonitorApp.Model, event: MenuBarDriver.Action) -> CycleMonitorApp.Model {
+    switch event {
+    case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.openTimelineID:
         var new = context
         new.browser.state = .opening
         return new
-      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.saveTimelineID:
+    case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.saveTimelineID:
         var new = context
         new.browser.state = .saving(
-          context.timelineFile
+            context.timelineFile
         )
         return new
-      case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.exportTestsID:
+    case .didSelectItemWith(id: let id) where id == MenuBarDriver.Model.Item.exportTestsID:
         var new = context
         new.browser.state = .savingMany(
-          context
-            .events
-            .filter { $0.frame.isApproved }
-            .map { $0.testFile }
+            context
+                .events
+                .filter { $0.frame.isApproved }
+                .map { $0.testFile }
         )
         return new
-      case .didSelectQuit:
+    case .didSelectQuit:
         var new = context
         new.isTerminating = true
         return new
-      default:
+    default:
         break
-      }
-      return context
     }
-  }
+    return context
 }
 
 class TerminationDriver: NSObject {

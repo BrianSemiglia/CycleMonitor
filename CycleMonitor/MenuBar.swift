@@ -10,8 +10,9 @@ import Foundation
 import AppKit
 import RxSwift
 import Runes
+import Cycle
 
-class MenuBarDriver: NSObject {
+final class MenuBarDriver: NSObject, Drivable {
   
   struct Model: Equatable {
     struct MenuItem: Equatable {
@@ -39,15 +40,6 @@ class MenuBarDriver: NSObject {
   init(model: Model) {
     super.init()
     render(model)
-  }
-  
-  func rendered(_ input: Observable<Model>) -> Observable<Action> {
-    input
-      .observeOn(MainScheduler.instance)
-      .distinctUntilChanged()
-      .subscribe(onNext: render)
-      .disposed(by: cleanup)
-    return output
   }
   
   func render(_ input: Model) {
@@ -82,6 +74,10 @@ class MenuBarDriver: NSObject {
     )
     main.addItem(item)
     NSApplication.shared.mainMenu = main
+  }
+    
+  func events() -> Observable<MenuBarDriver.Action> {
+    return output.asObservable()
   }
   
   func quit() -> NSMenuItem {
