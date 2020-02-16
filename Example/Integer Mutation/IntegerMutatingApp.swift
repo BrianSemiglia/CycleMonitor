@@ -17,12 +17,12 @@ import RxSwiftExt
     var lens: Any?
     
     /* TODO
-        🤷‍♂️ 1. new type that enforces a prefix on a lens that must be returned by CycledLens init to ensure kickoff
+        🤔 1. new type that enforces a prefix on a lens that must be returned by CycledLens init to ensure kickoff
         ✅ 2. Debug CycledLens that records Moments and wraps/unwraps inner lenses for convenience
            3. Handle initial values for drivers
-        💪 4. Refactor Lens to use single A (observable). be careful about multi-instances when `getting`. oh right: `set` needs results of `A` which needs to be same instance
+        🤔 4. Refactor Lens to use single A (observable). be careful about multi-instances when `getting`. oh right: `set` needs results of `A` which needs to be same instance
         ✅ 5. Threading parameter in driver lens factory
-           6. Fix duplicate events
+        ✅ 6. Fix duplicate events
            7. Delta highlights for monitor state
     */
     

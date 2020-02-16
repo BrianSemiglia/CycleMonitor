@@ -62,7 +62,7 @@ final class ShakeDetection: NSObject, Drivable {
   }
       
     func events() -> Observable<ShakeDetection.Action> {
-        return output.asObservable()
+        output.asObservable()
     }
   
   func render(_ input: Model) {

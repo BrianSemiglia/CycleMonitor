@@ -96,7 +96,7 @@ extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
 
 extension IntegerMutatingApp.Model: Argo.Decodable {
     static func decode(_ json: JSON) -> Decoded<IntegerMutatingApp.Model> {
-        return curry(IntegerMutatingApp.Model.init)
+        curry(IntegerMutatingApp.Model.init)
             <^> json <| "screen"
             <*> json <| "motionReporter"
             <*> .success(false)
@@ -105,7 +105,7 @@ extension IntegerMutatingApp.Model: Argo.Decodable {
 
 extension ValueToggler.Model: Argo.Decodable {
     static func decode(_ json: JSON) -> Decoded<ValueToggler.Model> {
-        return curry(ValueToggler.Model.init)
+        curry(ValueToggler.Model.init)
             <^> json <| "total"
             <*> json <| "increment"
             <*> json <| "decrement"
@@ -143,7 +143,7 @@ extension ShakeDetection.Action: Argo.Decodable {
 
 extension ValueToggler.Model.Button: Argo.Decodable {
     static func decode(_ json: JSON) -> Decoded<ValueToggler.Model.Button> {
-        return curry(ValueToggler.Model.Button.init)
+        curry(ValueToggler.Model.Button.init)
             <^> json <| "state"
             <*> json <| "title"
     }

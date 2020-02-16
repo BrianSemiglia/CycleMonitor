@@ -44,7 +44,7 @@ final class MenuBarDriver: NSObject, Drivable {
   
   func render(_ input: Model) {
     let new: [NSMenuItem] = input.items.enumerated().map { index, item in
-      return NSMenuItem(
+      NSMenuItem(
         title: item.title,
         action: #selector(didReceiveEventFrom(_:)),
         target: self,
@@ -77,7 +77,7 @@ final class MenuBarDriver: NSObject, Drivable {
   }
     
   func events() -> Observable<MenuBarDriver.Action> {
-    return output.asObservable()
+    output.asObservable()
   }
   
   func quit() -> NSMenuItem {

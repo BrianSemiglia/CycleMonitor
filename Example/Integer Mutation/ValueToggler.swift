@@ -93,9 +93,9 @@ final class ValueToggler: UIView, Drivable {
     }
     
     func events() -> Observable<ValueToggler.Event> {
-        return Observable.merge(
-            self.increment.rx.tap.asObservable().map { Event.incrementing },
-            self.decrement.rx.tap.asObservable().map { Event.decrementing }
+        .merge(
+            self.increment.rx.tap.map { .incrementing },
+            self.decrement.rx.tap.map { .decrementing }
         )
     }
 }

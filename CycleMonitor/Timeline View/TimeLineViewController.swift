@@ -232,10 +232,6 @@ final class TimeLineViewController:
       new: model
     )
   }
-  
-  var root: NSViewController {
-    return self
-  }
 
     public func rendered(_ input: Model) {
         let old = self.model
@@ -256,7 +252,7 @@ final class TimeLineViewController:
     }
     
     func events() -> Observable<TimeLineViewController.Action> {
-        return output.asObservable()
+        output.asObservable()
     }
       
   @IBAction func didReceiveEventFromEventHandling(_ input: NSSegmentedControl) {
@@ -413,7 +409,7 @@ final class TimeLineViewController:
     _ collectionView: NSCollectionView,
     numberOfItemsInSection section: Int
   ) -> Int {
-      return model.causesEffects.count
+      model.causesEffects.count
   }
   
   func collectionView(
@@ -454,7 +450,7 @@ final class TimeLineViewController:
     layout collectionViewLayout: NSCollectionViewLayout,
     sizeForItemAt indexPath: IndexPath
   ) -> NSSize {
-    return cell
+    cell
   }
   
   func collectionView(

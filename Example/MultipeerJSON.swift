@@ -54,22 +54,6 @@ public final class MultipeerJSON:
     advertiser.startAdvertisingPeer()
   }
   
-  public func rendered(_ input: Observable<[AnyHashable: Any]>) -> Observable<Action> {
-    input.subscribe { [weak self] in
-      if let element = $0.element {
-        self?.input.on(.next(element))
-      }
-    }
-    .disposed(by: cleanup)
-    self.input.pausableBuffered(output.isConnected, limit: nil).subscribe(
-      onNext: { [weak self] new in
-        self?.render(new)
-      }
-    )
-    .disposed(by: cleanup)
-    return output
-  }
-  
   func render(_ input: [AnyHashable: Any]) {
     if let connected = session?.connectedPeers {
       try? session?.send(

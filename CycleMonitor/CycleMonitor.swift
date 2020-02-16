@@ -297,7 +297,7 @@ extension CycleMonitorApp.Model.EventHandlingState {
 
 extension Moment.Driver {
   static func coerced(_ x: Moment.Driver) -> TimeLineViewController.Model.Driver {
-    return x.coerced()
+    x.coerced()
   }
 }
 
@@ -316,7 +316,7 @@ extension Moment.Driver {
 
 extension TimeLineViewController.Model.CauseEffect {
   static func coerced(_ x: Moment) -> TimeLineViewController.Model.CauseEffect {
-    return x.coerced()
+    x.coerced()
   }
 }
 
@@ -333,7 +333,7 @@ extension Moment {
 
 extension TimeLineViewController.Model {
   static func coerced(_ x: CycleMonitorApp.Model) -> TimeLineViewController.Model {
-    return x.coerced()
+    x.coerced()
   }
 }
 
@@ -367,7 +367,7 @@ extension CycleMonitorApp.Model {
 
 extension Array {
   subscript (safe index: Int) -> Element? {
-    return index < count ? self[index] : nil
+    index < count ? self[index] : nil
   }
 }
 

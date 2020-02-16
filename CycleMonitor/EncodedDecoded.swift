@@ -32,7 +32,7 @@ extension Moment: Argo.Decodable {
 
 extension Moment.Driver: Argo.Decodable {
   public static func decode(_ json: JSON) -> Decoded<Moment.Driver> {
-    return curry(Moment.Driver.init)
+    curry(Moment.Driver.init)
       <^> json <| "label"
       <*> json <| "action"
       <*> json <| "id"
@@ -41,7 +41,7 @@ extension Moment.Driver: Argo.Decodable {
 
 extension TimeLineViewController.Model.Driver: Argo.Decodable {
   static func decode(_ json: JSON) -> Decoded<TimeLineViewController.Model.Driver> {
-    return curry(TimeLineViewController.Model.Driver.init)
+    curry(TimeLineViewController.Model.Driver.init)
       <^> json <| "label"
       <*> json <|? "action"
       <*> json <| "id"

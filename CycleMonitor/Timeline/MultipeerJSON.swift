@@ -53,15 +53,6 @@ final class MultipeerJSON:
     browser.startBrowsingForPeers()
   }
   
-  public func rendered(
-    _ input: Observable<(Model?, Model)>
-  ) -> Observable<Action> {
-    input
-      .subscribe(onNext: render)
-      .disposed(by: cleanup)
-    return output
-  }
-  
   public func render(old: Model?, new: Model) {
     if session == nil {
       let session = MCSession(

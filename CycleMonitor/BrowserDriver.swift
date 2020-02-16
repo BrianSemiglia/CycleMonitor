@@ -153,7 +153,7 @@ extension Collection where Iterator.Element == (key: AnyHashable, value: Any) {
 
 extension BrowserDriver.Model: Equatable {
   static func ==(left: BrowserDriver.Model, right: BrowserDriver.Model) -> Bool {
-    return left.state == right.state
+    left.state == right.state
   }
 }
 
