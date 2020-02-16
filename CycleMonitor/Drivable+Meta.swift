@@ -30,6 +30,7 @@ extension Observable {
                     value: driver
                     .events()
                     .tupledWithLatestFrom(state)
+                    .share()
                     .observeOn(reducedOn)
                     .map { (old: $0.1, event: $0.0, new: reducer($0.1.value, $0.0)) }
                     .map {
