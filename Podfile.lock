@@ -57,7 +57,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Cycle:
-    :commit: 4af6e633a6f8b236c45255b1f2fc589aa1831cdf
+    :commit: c12e26c40fff5f511d11d0715cc0d895f088850c
     :git: https://github.com/BrianSemiglia/Cycle.swift
 
 SPEC CHECKSUMS:
