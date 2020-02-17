@@ -83,18 +83,24 @@ extension MutatingLens {
             get: { _ in self.get },
             set: { _, _ in
                 Observable
-                    .merge(self.set.map { $0.value }.tagged())
+                    .merge(self.set.map { $0.value }.sourceTagged())
                     .map { state in (
                         state.1,
                         Moment(
                             drivers: NonEmptyArray(
-                                possible: self.set.map { $0.label }.enumerated().map { x in
-                                    Moment.Driver(
-                                        label: x.element,
-                                        action: x.offset == state.0 ? state.1.summary.cause.action : "",
-                                        id: String(x.offset)
-                                    )
-                                }
+                                possible: self
+                                    .set
+                                    .map { $0.label }
+                                    .enumerated()
+                                    .map { x in
+                                        Moment.Driver(
+                                            label: x.element,
+                                            action: x.offset == state.0
+                                                ? state.1.summary.cause.action :
+                                                "",
+                                            id: String(x.offset)
+                                        )
+                                    }
                             )!,
                             frame: state.1.summary.setting(
                                 cause: state.1.summary.cause.setting(
@@ -109,7 +115,7 @@ extension MutatingLens {
 }
 
 private extension Collection {
-    func tagged<T>() -> [Observable<(tag: Int, element: T)>] where Element == Observable<T> {
+    func sourceTagged<T>() -> [Observable<(tag: Int, element: T)>] where Element == Observable<T> {
         enumerated().map { indexed in
             indexed.element.map { x in (indexed.offset, x) }
         }
