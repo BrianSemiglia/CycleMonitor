@@ -82,7 +82,7 @@ import RxSwiftExt
                 vc.view = stack
                 return vc
             }
-            .momented()
+            .withLabeledMetaValues()
             .multipeered()
             .bugReported(when: { $0.shouldReport })
             .prefixed(with: IntegerMutatingApp.Model())

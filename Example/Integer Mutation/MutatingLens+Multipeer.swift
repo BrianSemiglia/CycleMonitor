@@ -77,7 +77,7 @@ extension MutatingLens {
         )
     }
     
-    func momented<T>() -> MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>
+    func withLabeledMetaValues<T>() -> MutatingLens<A, B, [Observable<(Meta<T>, Moment)>]>
     where A == Observable<Meta<T>>, C == [Labeled<Observable<Meta<T>>>] {
         .init(
             value: value,
