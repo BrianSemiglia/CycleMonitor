@@ -34,31 +34,6 @@ final class ShakeDetection: NSObject, Drivable {
   init(initial: Model) {
     model = initial
     super.init()
-    Observable<CMAccelerometerData>
-      .fromCallback(curry(motions.startAccelerometerUpdates)(.main))
-      .map { $0.0! }
-      .map { $0.acceleration }
-      .scan([]) { $0 + [$1] }
-      .map { $0.suffix(2) }
-      .map (Array.init)
-      .filter { _ in self.model.state == ShakeDetection.Model.State.listening }
-      .filter {
-        if $0.count > 1 { return
-          fabs($0[0].x) > (fabs($0[1].x) + 0.65) ||
-          fabs($0[0].y) > (fabs($0[1].y) + 0.65) ||
-          fabs($0[0].z) > (fabs($0[1].z) + 0.65)
-        } else {
-          return false
-        }
-      }
-      .debounce(
-        .milliseconds(250),
-        scheduler: MainScheduler.asyncInstance
-      )
-      .subscribe { [weak self] x in
-        self?.output.on(.next(.detecting))
-      }
-      .disposed(by: cleanup)
     render(initial)
   }
       
@@ -67,12 +42,37 @@ final class ShakeDetection: NSObject, Drivable {
     }
   
   func render(_ input: Model) {
-//    switch input.state {
-//    case .idle:
-//      motions.stopAccelerometerUpdates()
-//    case .listening:
-//      motions.startAccelerometerUpdates()
-//    }
+    switch input.state {
+    case .idle:
+      motions.stopAccelerometerUpdates()
+    case .listening:
+        motions.stopAccelerometerUpdates()
+        Observable<CMAccelerometerData>
+        .fromCallback(curry(motions.startAccelerometerUpdates)(.main))
+        .map { $0.0! }
+        .map { $0.acceleration }
+        .scan([]) { $0 + [$1] }
+        .map { $0.suffix(2) }
+        .map (Array.init)
+        .filter { _ in self.model.state == ShakeDetection.Model.State.listening }
+        .filter {
+          if $0.count > 1 { return
+            fabs($0[0].x) > (fabs($0[1].x) + 0.65) ||
+            fabs($0[0].y) > (fabs($0[1].y) + 0.65) ||
+            fabs($0[0].z) > (fabs($0[1].z) + 0.65)
+          } else {
+            return false
+          }
+        }
+        .debounce(
+          .milliseconds(250),
+          scheduler: MainScheduler.asyncInstance
+        )
+        .subscribe { [weak self] x in
+          self?.output.on(.next(.detecting))
+        }
+        .disposed(by: cleanup)
+    }
   }
     
     deinit {
