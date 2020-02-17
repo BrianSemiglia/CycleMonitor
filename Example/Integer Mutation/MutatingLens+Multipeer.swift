@@ -65,7 +65,8 @@ extension MutatingLens {
                                     .map(BugReporter.Model.State.sending)
                                     ?? .idle
                             )
-                        },
+                        }
+                    .observeOn(MainScheduler()),
                     f: { reporter, state in
                         reporter.render(state)
                     }
