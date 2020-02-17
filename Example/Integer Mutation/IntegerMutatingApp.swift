@@ -59,13 +59,8 @@ import RxSwiftExt
                     reducer: mutatingInteger
                 ),
                 source.lens(
-                    lifter: { $0.screen },
-                    driver: ValueToggler(),
-                    reducer: mutatingInteger
-                ),
-                source.lens(
                     lifter: { $0.motionReporter },
-                    driver: ShakeDetection(initial: .init(state: .listening)),
+                    driver: ShakeDetection(initial: ShakeDetection.Model(state: .listening)),
                     reducer: reportingOnShake
                 )
             )
@@ -74,16 +69,12 @@ import RxSwiftExt
                 toggle.1.backgroundColor = .lightGray
                 toggle.2.backgroundColor = .darkGray
                 toggle.3.backgroundColor = .white
-                toggle.4.backgroundColor = .lightGray
-                toggle.5.backgroundColor = .darkGray
 
                 let stack = UIStackView(arrangedSubviews: [
                     toggle.0,
                     toggle.1,
                     toggle.2,
-                    toggle.3,
-                    toggle.4,
-                    toggle.5
+                    toggle.3
                 ])
                 stack.axis = .vertical
                 stack.distribution = .fillEqually
@@ -93,13 +84,13 @@ import RxSwiftExt
             }
             .momented()
             .multipeered()
+            .bugReported(when: { $0.shouldReport })
             .prefixed(with: IntegerMutatingApp.Model())
-//            .bugReported(when: { $0.shouldReport })
         }
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = lens.receiver.0
+        window?.rootViewController = lens.receiver.0.0
         self.lens = lens
 
         return true
