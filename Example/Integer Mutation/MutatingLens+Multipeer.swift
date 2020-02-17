@@ -54,6 +54,7 @@ extension MutatingLens {
                 .rendering(
                     Observable
                         .merge(self.set)
+                        .share()
                         .filter { when($0.0.value) }
                         .last(25)
                         .map { xs in
@@ -66,7 +67,7 @@ extension MutatingLens {
                                     ?? .idle
                             )
                         }
-                    .observeOn(MainScheduler()),
+                        .observeOn(MainScheduler()),
                     f: { reporter, state in
                         reporter.render(state)
                     }

@@ -51,8 +51,8 @@ final class ShakeDetection: NSObject, Drivable {
           return false
         }
       }
-      .throttle(
-        .milliseconds(500),
+      .debounce(
+        .milliseconds(250),
         scheduler: MainScheduler.asyncInstance
       )
       .subscribe { [weak self] x in
