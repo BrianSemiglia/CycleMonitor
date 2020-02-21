@@ -25,7 +25,7 @@ import Curry
         CycleMonitorApp.Model
     >?
     let cleanup = DisposeBag()
-    var main: NSWindowController?
+    var window: NSWindow!
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         
@@ -103,18 +103,17 @@ import Curry
                     with: CycleMonitorApp.Model.init()
                 )
         }
-        
-        main = NSStoryboard(
-            name: "Main",
-            bundle: nil
-        )
-        .instantiateController(
-            withIdentifier: "MainWindow"
-        )
-        as? NSWindowController
 
-        main?.window?.contentViewController = lens?.receiver.0
-        main?.window?.makeKeyAndOrderFront(nil)
+        window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        window.center()
+        window.setFrameAutosaveName("Main Window")
+        window.contentViewController = lens?.receiver.0
+        window.makeKeyAndOrderFront(nil)
     }
 }
 
