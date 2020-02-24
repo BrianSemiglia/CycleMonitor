@@ -22,22 +22,25 @@ final class TimeLineViewController:
       Drivable {
   
   struct Model: Equatable {
-    struct Driver: Equatable {
+    struct Driver: Equatable, Identifiable {
       let label: String
       let action: String?
       let background: NSColor
       let side: NSColor
+      let id: AnyHashable
     }
-    struct CauseEffect: Equatable {
+    struct CauseEffect: Equatable, Identifiable {
       var cause: String
       var effect: String
       var approved: Bool
       var color: NSColor
-      init(cause: String, effect: String, approved: Bool = false, color: NSColor) {
+      var id: AnyHashable
+      init(cause: String, effect: String, approved: Bool = false, color: NSColor, id: AnyHashable) {
         self.cause = cause
         self.effect = effect
         self.approved = approved
         self.color = color
+        self.id = id
       }
     }
     enum Connection: Equatable {
@@ -56,9 +59,10 @@ final class TimeLineViewController:
       case playingSendingEffects
       case recording
     }
-    struct Device: Equatable {
-      var name: String
-      var connection: Connection
+    struct Device: Equatable, Identifiable {
+        var name: String
+        var connection: Connection
+        var id: AnyHashable
     }
     var drivers: [Driver]
     var causesEffects: [CauseEffect]
@@ -67,6 +71,7 @@ final class TimeLineViewController:
     var connection: Connection
     var eventHandlingState: EventHandlingState
     var devices: [Device]
+    var selectedIndex = 0
   }
   
   enum Action: Equatable {
@@ -508,6 +513,17 @@ extension Int {
     case 2: return .playingSendingEffects
     case 3: return .recording
     default: return nil
+    }
+  }
+}
+
+extension TimeLineViewController.Model.EventHandlingState {
+  var index: Int {
+    switch self {
+    case .playing: return 0
+    case .playingSendingEvents: return 1
+    case .playingSendingEffects: return 2
+    case .recording: return 3
     }
   }
 }

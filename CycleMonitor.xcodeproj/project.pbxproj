@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0526538E40CACE3DAB2D8863 /* Pods_CycleMonitorTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 986B829C38D97A3FD95D8C59 /* Pods_CycleMonitorTests.framework */; };
+		5B55C9A123FF92DF008E301C /* TimelineViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B55C9A023FF92DF008E301C /* TimelineViewSwiftUI.swift */; };
 		D30971A223F8F377000DE989 /* MutatingLens+Prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */; };
 		D30971A523F8F446000DE989 /* EncodedDecoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A323F8F3AD000DE989 /* EncodedDecoded.swift */; };
 		D30971A623F8F44E000DE989 /* MutatingLens+Prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30971A123F8F377000DE989 /* MutatingLens+Prefix.swift */; };
@@ -72,6 +73,7 @@
 		092B0EE280255CA5077022C8 /* Pods_Integer_Mutation_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Integer_Mutation_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		33C9813CB0D5810BF73BD00A /* Pods-CycleMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitor.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitor/Pods-CycleMonitor.debug.xcconfig"; sourceTree = "<group>"; };
 		5ACB92A2DB81B2F017B414B9 /* Pods-Integer Mutation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation.release.xcconfig"; sourceTree = "<group>"; };
+		5B55C9A023FF92DF008E301C /* TimelineViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewSwiftUI.swift; sourceTree = "<group>"; };
 		61AC60D60FE23B1A3848C889 /* Pods-CycleMonitorTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitorTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests.release.xcconfig"; sourceTree = "<group>"; };
 		631FCE458EC1589069AEF597 /* Pods-Integer Mutation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Integer Mutation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Integer Mutation/Pods-Integer Mutation.debug.xcconfig"; sourceTree = "<group>"; };
 		873F573C3DFD2D7950ACE350 /* Pods-CycleMonitorTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CycleMonitorTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CycleMonitorTests/Pods-CycleMonitorTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				D311694D1F0B12DA004A0135 /* TimelineViewItem.swift */,
 				D311694E1F0B12DA004A0135 /* TimelineViewItem.xib */,
 				D311694F1F0B12DA004A0135 /* TimeLineViewController.swift */,
+				5B55C9A023FF92DF008E301C /* TimelineViewSwiftUI.swift */,
 			);
 			path = "Timeline View";
 			sourceTree = "<group>";
@@ -710,6 +713,7 @@
 				D31169501F0B12DA004A0135 /* DriverViewItem.swift in Sources */,
 				D3ACAE7523D41920009B7FD7 /* RxSwiftHelper.swift in Sources */,
 				D361BBD223EFA55100702B79 /* SourceReflection.swift in Sources */,
+				5B55C9A123FF92DF008E301C /* TimelineViewSwiftUI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

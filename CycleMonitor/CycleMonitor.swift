@@ -308,26 +308,28 @@ extension Moment.Driver {
             background: id.hashValue.goldenRatioColored(),
             side: id.hashValue.goldenRatioColored(
                 brightness: action.count == 0 ? 0.95 : 0.5
-            )
+            ),
+            id: id
         )
     }
 }
 
 extension TimeLineViewController.Model.CauseEffect {
-  static func coerced(_ x: Moment) -> TimeLineViewController.Model.CauseEffect {
-    x.coerced()
-  }
+    static func coerced(id: String, _ x: Moment) -> TimeLineViewController.Model.CauseEffect {
+        x.coerced(id: id)
+    }
 }
 
 extension Moment {
-  func coerced() -> TimeLineViewController.Model.CauseEffect {
-    TimeLineViewController.Model.CauseEffect(
-        cause: frame.cause.action,
-        effect: frame.effect,
-        approved: frame.isApproved,
-        color: frame.cause.id.hashValue.goldenRatioColored()
-    )
-  }
+    func coerced(id: String) -> TimeLineViewController.Model.CauseEffect {
+        TimeLineViewController.Model.CauseEffect(
+            cause: frame.cause.action,
+            effect: frame.effect,
+            approved: frame.isApproved,
+            color: frame.cause.id.hashValue.goldenRatioColored(),
+            id: id
+        )
+    }
 }
 
 extension TimeLineViewController.Model {
@@ -343,7 +345,10 @@ extension CycleMonitorApp.Model {
         .map { $0.drivers.map (Moment.Driver.coerced) }
         ?? []
       ,
-      causesEffects: events.map (TimeLineViewController.Model.CauseEffect.coerced),
+      causesEffects: events
+        .enumerated()
+        .map { (String($0), $1) }
+        .map (TimeLineViewController.Model.CauseEffect.coerced),
       presentedState: events[safe: timeLineView.selectedIndex ?? 0]
         .map { $0.frame.effect }
         .flatMap { $0.syntaxHighlighted }
@@ -357,7 +362,8 @@ extension CycleMonitorApp.Model {
       devices: devices.map {
         TimeLineViewController.Model.Device(
           name: $0.name,
-          connection: $0.connection.timeLineViewControllerConnection
+          connection: $0.connection.timeLineViewControllerConnection,
+          id: $0.peerID.hashValue
         )
       }
     )
@@ -618,7 +624,8 @@ extension TimeLineViewController.Model.Driver {
       background: id.hashValue.goldenRatioColored(),
       side: id.hashValue.goldenRatioColored(
         brightness: action.map { $0.count == 0 ? 0.95 : 0.5 } ?? 0.95
-      )
+      ),
+      id: id
     )
   }
 }
