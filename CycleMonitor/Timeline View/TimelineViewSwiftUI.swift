@@ -14,7 +14,7 @@ struct TimelineViewSwiftUI: View, DrivableSwiftUI {
 
     @ObservedObject var model: PublishedObservable<TimeLineViewController.Model>
     var output = PublishSubject<TimeLineViewController.Action>()
-    var control: Map! = nil
+    @State var selectedDevice = 0
 
     struct Map {
         var selectedSegment: Binding<Int>
@@ -123,43 +123,46 @@ struct TimelineViewSwiftUI: View, DrivableSwiftUI {
         .padding(10)
     }
 
-    init(model: PublishedObservable<TimeLineViewController.Model>) {
-        self.model = model
-        let proxy = self // Escaping closure captures mutating 'self' parameter
-        self.control = Map(
+    var control: Map {
+        Map(
             selectedSegment: Binding(
                 get: {
-                    model.value.eventHandlingState.index
+                    self.model.value.eventHandlingState.index
                 },
                 set: { x in
                     if let new = x.eventHandlingState {
-                        proxy.output.onNext(
+                        self.output.onNext(
                             .didSelectEventHandling(new)
                         )
                     }
                 }
             ),
             selectedDevice: Binding(
-                get: { 0 },
+                get: { self.selectedDevice },
                 set: { x in
-                    proxy.output.onNext(
+                    self.selectedDevice = x
+                    self.output.onNext(
                         .didSelectItemWith(
-                            id: proxy.model.value.devices[x].name
+                            id: self.model.value.devices[x].name
                         )
                     )
                 }
             ),
             pendingState: Binding(
                 get: {
-                    proxy.model.value.presentedState.string
+                    self.model.value.presentedState.string
                 },
                 set: { x in
-                    proxy.output.onNext(
+                    self.output.onNext(
                         .didCreatePendingStateEdit(x)
                     )
                 }
             )
         )
+    }
+
+    init(model: PublishedObservable<TimeLineViewController.Model>) {
+        self.model = model
     }
 
     func events() -> Observable<TimeLineViewController.Action> {
