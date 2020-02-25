@@ -109,9 +109,8 @@ struct TimelineViewSwiftUI: View, DrivableSwiftUI {
                     selection: control.selectedDevice,
                     label: Text("Device")
                 ) {
-                    Text("Select Device")
-                    ForEach(model.value.devices.enumerated()) {
-                        Text($0.value.name).tag($0.index)
+                    ForEach(model.value.devices.enumerated()) { device in
+                        Text(device.value.name).tag(device.index)
                     }
                 }
                 Spacer(minLength: 20)
