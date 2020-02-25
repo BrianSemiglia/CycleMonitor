@@ -71,7 +71,7 @@ final class TimeLineViewController:
     var connection: Connection
     var eventHandlingState: EventHandlingState
     var devices: [Device]
-    var selectedIndex = 0
+    var indexOfSelectedDevice: Int
   }
   
   enum Action: Equatable {
@@ -115,7 +115,8 @@ final class TimeLineViewController:
     selected: nil,
     connection: .disconnected,
     eventHandlingState: .playing,
-    devices: []
+    devices: [],
+    indexOfSelectedDevice: 0
   )
   
   override func viewDidLoad() {
@@ -536,6 +537,7 @@ extension TimeLineViewController.Model {
         selected: nil,
         connection: .connected,
         eventHandlingState: .playing,
-        devices: []
+        devices: [],
+        indexOfSelectedDevice: 0
     )
 }

@@ -365,7 +365,12 @@ extension CycleMonitorApp.Model {
           connection: $0.connection.timeLineViewControllerConnection,
           id: $0.peerID.hashValue
         )
-      }
+      },
+      indexOfSelectedDevice: devices
+        .enumerated()
+        .first { $0.element.peerID == selectedPeer }?
+        .offset
+        ?? 0
     )
   }
 }

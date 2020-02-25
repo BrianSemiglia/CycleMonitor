@@ -14,7 +14,6 @@ struct TimelineViewSwiftUI: View, DrivableSwiftUI {
 
     @ObservedObject var model: PublishedObservable<TimeLineViewController.Model>
     var output = PublishSubject<TimeLineViewController.Action>()
-    @State var selectedDevice = 0
 
     struct Map {
         var selectedSegment: Binding<Int>
@@ -138,14 +137,15 @@ struct TimelineViewSwiftUI: View, DrivableSwiftUI {
                 }
             ),
             selectedDevice: Binding(
-                get: { self.selectedDevice },
+                get: { self.model.value.indexOfSelectedDevice },
                 set: { x in
-                    self.selectedDevice = x
-                    self.output.onNext(
-                        .didSelectItemWith(
-                            id: self.model.value.devices[x].name
+                    if let new = self.model.value.devices[safe: x]?.name {
+                        self.output.onNext(
+                            .didSelectItemWith(
+                                id: new
+                            )
                         )
-                    )
+                    }
                 }
             ),
             pendingState: Binding(
@@ -388,7 +388,8 @@ extension TimeLineViewController.Model {
                     connection: .idle,
                     id: ""
                 )
-            ]
+            ],
+            indexOfSelectedDevice: 0
         )
     }
 }
